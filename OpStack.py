@@ -8,7 +8,7 @@ class OpStack():
         """ Push operator onto stack """
         op = Operator(name)
         self.operators.append(op)
-        self.Sort()         # Keep sorted
+        #self.Sort()         # Keep sorted
 
     def Pop(self, x):
         """ Pop from stack """

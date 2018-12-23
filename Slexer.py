@@ -18,12 +18,14 @@ class Slexer():
         print(self.postfix)
 
     def counter(self, c):
+        """ Return corresponding brace """
         if c in self.braces_open:
             return self.braces_closed[self.braces_open.index(c)]
         elif c in self.braces_closed:
             return self.braces_open[self.braces_closed.index(c)]
 
     def build_op(self, c):
+        """ Try to construct multi-token operator """
         while self.l_stack:
             a = self.l_stack.pop()
             a += c
@@ -34,6 +36,7 @@ class Slexer():
 
     def handle_operators(self, c):
         """ Add valid operators and build operators from sub-operator tokens """
+        # FIXME: check stack for higher precedence operators
         if c in self.log_ops:
             self.op_stack.append(c)
         elif c in self.half_ops:
@@ -50,12 +53,12 @@ class Slexer():
             if not self.b_stack:
                 raise Exception('invalid braces') 
             else:
-                if self.counter(c) == self.b_stack.pop():
-                    pass
-                else:
-                    raise Exception('invalid braces')
+                a = self.b_stack.pop()
+                while a != self.counter(c):
+                    self.postfix.append(a)
 
     def open_file(self, filename):
+        """ Try to open the file """
         try:
             fileObj = open(filename, 'r')
             return fileObj
