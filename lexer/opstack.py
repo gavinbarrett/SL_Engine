@@ -9,11 +9,19 @@ class OpStack():
         op = Operator(name)
         self.operators.append(op)
         #self.Sort()         # Keep sorted
+    
+    def Top(self):
+        if not self.operators:
+            raise Exception('OpStack is empty!\n')
+        a = self.operators.pop()
+        self.operators.push(a)
+        return a
 
-    def Pop(self, x):
+    def Pop(self):
         """ Pop from stack """
         if not self.operators:
             raise Exception('OpStack is empty!\n')
+        self.operators.pop()
 
     def Sort(self):
         """ Sort operators in stack according to precedence """

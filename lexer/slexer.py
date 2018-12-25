@@ -8,6 +8,7 @@ class Slexer():
         self.braces = ['(', ')', '[', ']', '{', '}']
         self.braces_open = ['(', '[', '{']
         self.braces_closed = [')', ']', '}']
+        self.w_space = ['\n', '\t', ' ']
         self.terms = [chr(i) for i in range(65, 91)]
         self.op_stack = []
         self.b_stack = []
@@ -36,9 +37,19 @@ class Slexer():
 
     def handle_operators(self, c):
         """ Add valid operators and build operators from sub-operator tokens """
-        # FIXME: check stack for higher precedence operators
+
         if c in self.log_ops:
-            self.op_stack.append(c)
+            if self.op_stack:
+                a = self.op_stack.pop()
+                self.op_stack.append(a)
+                if c <= a:
+                    self.postfix.append(a)
+                elif c > a:
+                    self.op_stack.append(c)
+                elif a == self.counter(c):
+                    return
+            else:
+                self.op_stack.append(c)
         elif c in self.half_ops:
             if not self.l_stack:
                 self.l_stack.append(c)
@@ -48,14 +59,16 @@ class Slexer():
     def handle_braces(self, c):
         """ Make sure braces are balanced """
         if c in self.braces_open:
-            self.b_stack.append(c)
+            self.op_stack.append(c)
         else:
-            if not self.b_stack:
-                raise Exception('invalid braces') 
+            if not self.op_stack:
+                if c in self.braces_closed:
+                    raise Exception('invalid braces')
             else:
-                a = self.b_stack.pop()
+                a = self.op_stack.pop()
                 while a != self.counter(c):
                     self.postfix.append(a)
+                    a = self.op_stack.pop()
 
     def open_file(self, filename):
         """ Try to open the file """
@@ -67,23 +80,24 @@ class Slexer():
 
     def read_token(self, token):
         """ Read in tokens """
-        print('Token: ' + token + '\n')
         if token in self.terms:             # handle terms
             self.postfix.append(token)
         elif token in self.braces:          # handle braces
             self.handle_braces(token)
-            # sort op_stack
         elif token in self.poss_ops:        # handle operators
             self.handle_operators(token)
-            # sort op_stack
+        elif token in self.w_space:
+            pass
         else:
-            # throw error -> token outside symbolic domain
-            print(token)
+            raise Exception('invalid token: ' + token)
 
     def read_expression(self, fileObj):
-        print(self.terms)
         """ Read in entire expression """
         for line in fileObj:
             for c in line:
                 self.read_token(c)
+
+        while self.op_stack:
+            a = self.op_stack.pop()
+            self.postfix.append(a)
         return

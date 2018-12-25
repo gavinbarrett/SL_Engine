@@ -1,4 +1,4 @@
-- finish postfix algo
-- draft AST class
-
-- run pystylecode on files
+-> Test postfix output extensively
+-> draft AST class
+-> build ASTs
+-> run pystylecode on files
