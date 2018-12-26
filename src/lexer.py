@@ -143,4 +143,4 @@ class Slexer():
             if a in self.braces_open:
                 raise Exception('no matching closing brace\n')
             self.postfix.append(a)
-        return
+        return self.postfix
