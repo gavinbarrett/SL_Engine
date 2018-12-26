@@ -1,4 +1,4 @@
-import src.slexer as sl
+import src.lexer as sl
 class Parser:
 
     def __init__(self):

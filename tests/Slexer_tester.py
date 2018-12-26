@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 sys.path.append("..")
-from src import slexer as sl
+from src import lexer as sl
 s = sl.Slexer()
 
 fileObj = s.open_file(sys.argv[1])

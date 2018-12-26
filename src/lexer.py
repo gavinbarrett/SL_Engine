@@ -140,5 +140,7 @@ class Slexer():
 
         while self.op_stack:
             a = self.op_stack.pop()
+            if a in self.braces_open:
+                raise Exception('no matching closing brace\n')
             self.postfix.append(a)
         return
