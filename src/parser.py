@@ -1,4 +1,4 @@
-import modules.slexer as sl
+import src.slexer as sl
 class Parser:
 
     def __init__(self):
