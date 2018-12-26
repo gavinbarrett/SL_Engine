@@ -1,5 +1,7 @@
-class Slexer():
+#12/25/18
 
+class Slexer():
+    """ Sentential Logic Lexer """
     def __init__(self):
         self.un_op = '~'
         self.log_ops = ['~', '^', 'v', '=>', '<=>']
@@ -17,9 +19,11 @@ class Slexer():
         self.postfix = []
 
     def print_exp(self):
+        """ Print expression """
         print(self.postfix)
 
     def get_prec(self, c):
+        """ Get precedence of operator """
         return self.prec.index(c)
 
     def counter(self, c):
@@ -73,13 +77,11 @@ class Slexer():
             else:
                 self.build_op(c)
 
-
     def open_brace(self, c):
         if self.op_stack:
             a = self.op_stack.pop()
             if self.get_prec(a) < self.get_prec(c):
                 while self.get_prec(a) < self.get_prec(c):
-                    # as long as it isnt a paren
                     self.postfix.append(a)
                     if self.op_stack:
                         a = self.op_stack.pop()
@@ -102,7 +104,6 @@ class Slexer():
                     a = self.op_stack.pop()
                 else:
                     raise Exception('Invalid braces; no opening brace detected\n')
-            # account for when we reach opening brace
 
     def handle_braces(self, c):
         """ Make sure braces are balanced """
@@ -110,35 +111,6 @@ class Slexer():
             self.open_brace(c)
         elif c in self.braces_closed:
             self.closed_brace(c)
-        # if c in self.braces_open:
-        #     if self.op_stack:
-        #         a = self.op_stack.pop()
-        #         if a in self.braces_open:
-        #             self.op_stack.append(a)
-        #             self.op_stack.append(c)
-        #         elif a <= c:
-        #             while a <= c:
-        #                 self.postfix.append(a)
-        #                 if self.op_stack:
-        #                     a = self.op_stack.pop()
-        #                 else:
-        #                     self.op_stack.append(c)
-        #         elif a > c:
-        #             self.op_stack.append(a)
-        #     else:
-        #         self.op_stack.append(c)
-        # else:
-        #     if not self.op_stack:
-        #         if c in self.braces_closed:
-        #             raise Exception('invalid braces')
-        #     else:
-        #         a = self.op_stack.pop()
-        #         while a != self.counter(c):
-        #             self.postfix.append(a)
-        #             if self.op_stack:
-        #                 a = self.op_stack.pop()
-        #             else:
-        #                 return
 
     def open_file(self, filename):
         """ Try to open the file """

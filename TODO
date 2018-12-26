@@ -1,4 +1,5 @@
 -> Test postfix output extensively
+-> Fix square bracket error
 -> draft AST class
 -> build ASTs
 -> run pystylecode on files
