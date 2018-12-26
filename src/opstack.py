@@ -1,4 +1,6 @@
 from operator import *
+
+
 class OpStack():
 
     def __init__(self):
@@ -8,8 +10,7 @@ class OpStack():
         """ Push operator onto stack """
         op = Operator(name)
         self.operators.append(op)
-        #self.Sort()         # Keep sorted
-    
+
     def Top(self):
         if not self.operators:
             raise Exception('OpStack is empty!\n')

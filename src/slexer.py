@@ -1,4 +1,3 @@
-#12/25/18
 
 class Slexer():
     """ Sentential Logic Lexer """
@@ -12,7 +11,7 @@ class Slexer():
         self.braces_open = ['(', '[', '{']
         self.braces_closed = [')', ']', '}']
         self.w_space = ['\n', '\t', ' ']
-        self.terms = [chr(i) for i in range(65, 91)]  # generate valid terms A-Z
+        self.terms = [chr(i) for i in range(65, 91)]
         self.op_stack = []
         self.b_stack = []
         self.l_stack = []
@@ -53,7 +52,7 @@ class Slexer():
             self.l_stack.append(op)
 
     def handle_operators(self, c):
-        """ Add valid operators and build operators from sub-operator tokens """
+        """ Add valid operators; build ops from sub-op tokens """
 
         if c in self.log_ops:
             if self.op_stack:
@@ -103,7 +102,7 @@ class Slexer():
                 if self.op_stack:
                     a = self.op_stack.pop()
                 else:
-                    raise Exception('Invalid braces; no opening brace detected\n')
+                    raise Exception('No opening brace detected\n')
 
     def handle_braces(self, c):
         """ Make sure braces are balanced """
@@ -117,7 +116,7 @@ class Slexer():
         try:
             fileObj = open(filename, 'r')
             return fileObj
-        except:
+        except RuntimeError:
             print('File could not be opened\n')
 
     def read_token(self, token):
