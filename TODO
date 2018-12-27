@@ -1,5 +1,5 @@
--> Test postfix output extensively
 -> Fix square bracket error
--> draft AST class
--> build ASTs
+-> Fix tree level order printing
+-> develop function for producing truth table
+-> use argparse to better implement arguement passing
 -> run pystylecode on files

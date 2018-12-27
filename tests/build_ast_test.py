@@ -5,4 +5,5 @@ import src.parser as ps
 
 tree = ps.Parser()
 tree.read(sys.argv[1])
-tree.print_stack()
+tree.print_hierarchy()
+#tree.print_ast()

@@ -5,11 +5,36 @@ class Parser:
     def __init__(self):
         self.lexer = sl.Slexer()
         self.tree_stack = []
-   
-    def print_stack(self):
-        while self.tree_stack:
-            a = self.tree_stack.pop()
-            print(a.name + " ")
+
+    def print_ast_(self, root):
+        if root is None:
+            return
+        else:
+            self.print_ast_(root.right)
+            print(root.name, end=" ")
+            self.print_ast_(root.left)
+
+    def print_ast(self):
+        if self.tree_stack:
+            tree = self.tree_stack.pop()
+            self.print_ast_(tree)
+
+    def print_hierarchy_(self, root):
+        q = []
+        q.append(root)
+        while q:
+            a = q.pop(0)
+            print(a.name, end=" ")
+
+            if a.right:
+                q.append(a.right)
+            if a.left:
+                q.append(a.left)
+
+    def print_hierarchy(self):
+        if self.tree_stack:
+            tree = self.tree_stack.pop()
+            self.print_hierarchy_(tree)
 
     def insert_op(self, op):
         """ Pop stack and make new operator ast """
@@ -27,9 +52,9 @@ class Parser:
         elif op in self.lexer.log_ops:
             if self.tree_stack:
                 tree = self.tree_stack.pop()
-                t.right = tree
-                tree = self.tree_stack.pop()
                 t.left = tree
+                tree = self.tree_stack.pop()
+                t.right = tree
                 self.tree_stack.append(t)
             else:
                 raise Exception('Stack empty')
