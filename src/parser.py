@@ -52,8 +52,11 @@ class Parser:
 
     def print_hierarchy(self):
         """ Print AST from root to leaves in level order """
-        if self.tree_stack:
-            tree = self.tree_stack.pop()
+        prop = 0
+        while self.set:
+            print('\nProposition ' + str(prop+1) + ': \n')
+            prop += 1
+            tree = self.set.pop(0)
             h = self.get_height(tree)
             for i in range(1, h+1):
                 s = self.get_space(i, h)

@@ -2,4 +2,3 @@
 -> develop function for producing truth table
 -> use argparse to better implement arguement passing
 -> run pystylecode on files
--> change parser to work with lexer's ability to capture multiple exp
