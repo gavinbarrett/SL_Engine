@@ -134,13 +134,16 @@ class Slexer():
 
     def read_expression(self, fileObj):
         """ Read in entire expression """
+        output = []
         for line in fileObj:
             for c in line:
                 self.read_token(c)
 
-        while self.op_stack:
-            a = self.op_stack.pop()
-            if a in self.braces_open:
-                raise Exception('no matching closing brace\n')
-            self.postfix.append(a)
-        return self.postfix
+            while self.op_stack:
+                a = self.op_stack.pop()
+                if a in self.braces_open:
+                    raise Exception('no matching closing brace\n')
+                self.postfix.append(a)
+            output.append(self.postfix)
+            self.postfix = []
+        return output
