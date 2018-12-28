@@ -4,8 +4,9 @@ class Parser:
     """ This parser class builds an AST that contains the logical expression """
     def __init__(self):
         """ Create parser with expression lexer and tree stack"""
-        self.lexer = sl.Slexer()
+        self.lexer = sl.Lexer()
         self.tree_stack = []
+        self.set = []
 
     def get_height(self, root):
         """ Return height of the tree """
@@ -36,9 +37,6 @@ class Parser:
 
     def get_space(self, i, h):
         return int((h - i) * 2)
-        #space = int((h - i) * 2)
-        #for n in range(1, space+1):
-            #print(' ', end='')
 
     def print_hierarchy_(self, root, h, s):
         """ Recursively print levels """
@@ -58,7 +56,6 @@ class Parser:
             tree = self.tree_stack.pop()
             h = self.get_height(tree)
             for i in range(1, h+1):
-                #self.print_space(i, h)
                 s = self.get_space(i, h)
                 self.print_hierarchy_(tree, i, s)
                 print('\n')
@@ -70,28 +67,19 @@ class Parser:
             if self.tree_stack:
                 tree = self.tree_stack.pop()
                 t.left = tree
-                t.level = tree.level + 1
                 self.tree_stack.append(t)
             else:
                 self.tree_stack.append(op)
-                #raise Exception('Postfix is out of order')
 
         elif op in self.lexer.log_ops:
             if self.tree_stack:
                 tree = self.tree_stack.pop()
                 t.left = tree
-                a = tree.level
                 tree = self.tree_stack.pop()
                 t.right = tree
-                b = tree.level
-                if a >= b:
-                    t.level = a + 1
-                else:
-                    t.level = b + 1
                 self.tree_stack.append(t)
             else:
                 raise Exception('Stack empty')
-
 
     def insert_term(self, t):
         """ Create new ast with term as root """
@@ -110,6 +98,8 @@ class Parser:
     def read(self, f):
         """ Read file f into postfix order """
         file_obj = self.lexer.open_file(f)
-        postfix = self.lexer.read_expression(file_obj)
-        for a in postfix:
-            self.insert(a)
+        output = self.lexer.read_expression(file_obj)
+        for postfix in output:
+            for a in postfix:
+                self.insert(a)
+            self.set.append(self.tree_stack.pop())

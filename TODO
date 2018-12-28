@@ -1,7 +1,5 @@
 -> Fix square bracket error
--> Fix tree level order printing
 -> develop function for producing truth table
 -> use argparse to better implement arguement passing
 -> run pystylecode on files
--> Refactor read_expression in lexer file
 -> change parser to work with lexer's ability to capture multiple exp

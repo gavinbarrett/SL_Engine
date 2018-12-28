@@ -2,7 +2,7 @@
 import sys
 sys.path.append("..")
 from src import lexer as sl
-s = sl.Slexer()
+s = sl.Lexer()
 
 fileObj = s.open_file(sys.argv[1])
 

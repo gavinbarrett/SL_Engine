@@ -1,5 +1,5 @@
 
-class Slexer():
+class Lexer():
     """ Sentential Logic Lexer """
     def __init__(self):
         self.un_op = '~'
@@ -119,6 +119,16 @@ class Slexer():
         except RuntimeError:
             print('File could not be opened\n')
 
+    def pop_remaining(self, output):
+        """ Moves remaining tokens from op_stack to output """
+        while self.op_stack:
+            a = self.op_stack.pop()
+            if a in self.braces_open:
+                raise Exception('no matching closing brace\n')
+            self.postfix.append(a)
+        output.append(self.postfix)
+        self.postfix = []
+
     def read_token(self, token):
         """ Read in tokens """
         if token in self.terms:             # handle terms
@@ -135,15 +145,9 @@ class Slexer():
     def read_expression(self, fileObj):
         """ Read in entire expression """
         output = []
-        for line in fileObj:
-            for c in line:
-                self.read_token(c)
-
-            while self.op_stack:
-                a = self.op_stack.pop()
-                if a in self.braces_open:
-                    raise Exception('no matching closing brace\n')
-                self.postfix.append(a)
-            output.append(self.postfix)
-            self.postfix = []
+        for line in fileObj:            # for each expression
+            for c in line:              # for each token in exp
+                self.read_token(c)      # read tokens up to \n
+            self.pop_remaining(output)  # pop remaining to output
+        fileObj.close()
         return output
