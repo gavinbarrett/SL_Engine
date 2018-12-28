@@ -6,6 +6,7 @@ class AST:
         self.left = None
         self.right = None
         self.t_value = False
+        self.level = 0
         self.name = c
 
     def init_t(self):
