@@ -1,7 +1,9 @@
 import src.lexer as sl
 import src.ast as ast
+
+
 class Parser:
-    """ This parser class builds an AST that contains the logical expression """
+    """ This parser builds ASTs that contain logical exps """
     def __init__(self):
         """ Create parser with expression lexer and tree stack"""
         self.lexer = sl.Lexer()
@@ -97,7 +99,7 @@ class Parser:
 
         elif c in self.lexer.log_ops:
             self.insert_op(c)
-    
+
     def read(self, f):
         """ Read file f into postfix order """
         file_obj = self.lexer.open_file(f)

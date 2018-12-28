@@ -1,7 +1,7 @@
 
 class AST:
     """ Atomic node of expression tree """
-    
+
     def __init__(self, c):
         self.left = None
         self.right = None
