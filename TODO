@@ -1,4 +1,3 @@
 -> Fix square bracket error
 -> develop function for producing truth table
--> use argparse to better implement arguement passing
--> run pystylecode on files
+-> tests/sl_shell.py contains the beginnings of the interactive shell loop

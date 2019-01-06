@@ -60,7 +60,7 @@ class Parser:
             prop += 1
             tree = self.set.pop(0)
             h = self.get_height(tree)
-            for i in range(1, h+1):
+            for i in range(1, h + 1):
                 s = self.get_space(i, h)
                 self.print_hierarchy_(tree, i, s)
                 print('\n')
