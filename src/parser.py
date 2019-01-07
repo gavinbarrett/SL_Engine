@@ -100,6 +100,12 @@ class Parser:
         elif c in self.lexer.log_ops:
             self.insert_op(c)
 
+    def get_file(self):
+        print('Enter the file you would like to load..')
+        f = input()
+        self.read(f)
+        #return f
+
     def read(self, f):
         """ Read file f into postfix order """
         file_obj = self.lexer.open_file(f)

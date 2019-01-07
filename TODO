@@ -1,3 +1,3 @@
 -> Fix square bracket error
 -> develop function for producing truth table
--> tests/sl_shell.py contains the beginnings of the interactive shell loop
+-> tests/sl_shell.py is the current tester/main
