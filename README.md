@@ -3,7 +3,7 @@
 ###
 ###	Project Goals/ Motivation
 ###
-This is a project for studying and utilizing propositional logic; from truth trees and translations to *hopefully* complete derivations. The SL_Engine is currently capable of lexicographical analysis of symbolic tokens that constitute valid formulae in propositional caluculus. 
+This is a project for studying and utilizing propositional logic; from truth trees and translations to *hopefully* complete derivations. The SL_Engine is currently capable of lexicographical analysis of symbolic tokens that constitute valid formulae in the propositional calculus. 
 
 Valid Tokens for the SL_Engine include:
 
@@ -18,4 +18,10 @@ With formulae represented as abstract syntax trees, we can perform operations an
 ###
 ###	Building
 ###
-Source files are located in src/; Test files are located in tests/. Run the main script from its correct place in the file structure, that of the highest level, to run the Engine.
+Source files are located in src/; Test files are located in tests/. Run the main script from the top directory to run the Engine, (i.e. run ./sl_shell.py).
+
+###
+###	Input file formatting
+###
+Input files are to be constructed with valid expression in the sentential calculus, seperated by newlines. e.g. '(P -> (Q ^ R))\n
+		   ((Q v P) ^ S)'

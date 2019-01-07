@@ -23,7 +23,7 @@ class Parser:
             return rh + 1
 
     def print_ast_(self, root):
-        """ Recursively print AST"""
+        ''' Recursively print AST '''
         if root is None:
             return
         else:
@@ -32,7 +32,7 @@ class Parser:
             self.print_ast_(root.left)
 
     def print_ast(self):
-        """ Print AST out sequentially (In-Order) """
+        ''' Print AST out sequentially (In-Order) '''
         if self.tree_stack:
             tree = self.tree_stack.pop()
             self.print_ast_(tree)
@@ -41,7 +41,7 @@ class Parser:
         return int((h - i) * 2)
 
     def print_hierarchy_(self, root, h, s):
-        """ Recursively print levels """
+        ''' Recursively print levels '''
         if root is None:
             return
         if h == 1:
@@ -101,13 +101,14 @@ class Parser:
             self.insert_op(c)
 
     def get_file(self):
+        ''' Ask for file within shell '''
         print('Enter the file you would like to load..')
         f = input()
         self.read(f)
-        #return f
+        print('Loaded file ' + f)
 
     def read(self, f):
-        """ Read file f into postfix order """
+        ''' Read file f into postfix order '''
         file_obj = self.lexer.open_file(f)
         output = self.lexer.read_expression(file_obj)
         for postfix in output:
