@@ -1,2 +1,5 @@
 def print_help():
-    print('SL_Engine is an interactive shell capable of handling sentential calculus\n')
+    ''' Print help prompt '''
+    print("input ':h' for help")
+    print("input ':q' to quit")
+    print("input ':l' to load file")

@@ -20,7 +20,8 @@ class SL_Shell:
         if self.check_cmd(cmd):
             return self.cmd_table[cmd]
         else:
-            print("Command '" + cmd + "' not found\n", end='')
+            print("Command '" + cmd + "' not found")
+            print("Input ':h' for help", end='')
 
     def get_cmds(self):
         ''' Grab commands from input '''
