@@ -1,6 +1,7 @@
+import os
 import src.lexer as sl
 import src.ast as ast
-
+from src.colors import colors
 
 class Parser:
     """ This parser builds ASTs that contain logical exps """
@@ -28,7 +29,7 @@ class Parser:
             return
         else:
             self.print_ast_(root.right)
-            print(root.name, end='')
+            print(colors.green + root.name + colors.default, end='')
             self.print_ast_(root.left)
 
     def print_ast(self):
@@ -41,13 +42,13 @@ class Parser:
         return int((h - i) * 2)
 
     def print_hierarchy_(self, root, h, s):
-        ''' Recursively print levels '''
+        ''' Print level order '''
         if root is None:
             return
         if h == 1:
             for i in range(1, s+1):
                 print(' ', end='')
-            print(root.name, end=' ')
+            print(colors.green + root.name + colors.default, end=' ')
         elif h > 1:
             self.print_hierarchy_(root.right, h-1, s)
             self.print_hierarchy_(root.left, h-1, s)
@@ -100,12 +101,23 @@ class Parser:
         elif c in self.lexer.log_ops:
             self.insert_op(c)
 
+    def valid_file(self, f):
+        ''' Check to see if file exists '''
+        if os.path.isfile(f):
+            return True
+        else:
+            return False
+
+
     def get_file(self):
         ''' Ask for file within shell '''
         print('Enter the file you would like to load..')
         f = input()
-        self.read(f)
-        print('Loaded file ' + f)
+        if self.valid_file(f):
+            self.read(f)
+            print('Loaded file ' + f)
+        else:
+            print(colors.err + 'File does not exist..' + colors.default)
 
     def read(self, f):
         ''' Read file f into postfix order '''

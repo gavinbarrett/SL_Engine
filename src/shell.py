@@ -1,10 +1,12 @@
 import sys
 import src.parser as ps
 import src.help as hlp
-
+import src.text as txt
+from src.colors import colors 
 class SL_Shell:
 
     def __init__(self):
+        txt.print_text()
         self.parser = ps.Parser()
         self.cmd_table = { ':q' : lambda: sys.exit(0), ':h' : lambda: hlp.print_help(), ':l' : lambda: self.parser.get_file() }
 
@@ -21,7 +23,7 @@ class SL_Shell:
             return self.cmd_table[cmd]
         else:
             print("Command '" + cmd + "' not found")
-            print("Input ':h' for help", end='')
+            print("Input ':h' for help")
 
     def get_cmds(self):
         ''' Grab commands from input '''
@@ -29,7 +31,7 @@ class SL_Shell:
 
     def print_prompt(self):
         ''' Print prompt for engine '''
-        print('-> ', end='')
+        print(colors.purple + '-> ' + colors.default, end='')
 
     def exit_cond(self, c):
         ''' Check to see if exit conditions have been passed '''

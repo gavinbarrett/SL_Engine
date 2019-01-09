@@ -2,11 +2,10 @@
 import sys
 sys.path.append('..')
 import src.shell as sh
-import src.text as txt
-def loop():
-    c = None
+
+def main():
+    ''' Main engine loop '''
     shell = sh.SL_Shell()
-    txt.print_text()
     while True:
         shell.print_prompt()
         c = shell.get_cmds()
@@ -15,4 +14,5 @@ def loop():
             fn()
         shell.parser.print_hierarchy()
 
-loop()
+if __name__ == "__main__":
+    main()

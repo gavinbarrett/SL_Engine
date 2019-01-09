@@ -1,6 +1,8 @@
-
+import os
+from src.colors import colors
 class Lexer():
-    """ Sentential Logic Lexer """
+
+    ''' Sentential Logic Lexer '''
     def __init__(self):
         self.un_op = '~'
         self.log_ops = ['~', '^', 'v', '=>', '<=>']
@@ -16,24 +18,25 @@ class Lexer():
         self.b_stack = []
         self.l_stack = []
         self.postfix = []
+        self.t_count = 0
 
     def print_exp(self):
-        """ Print expression """
+        ''' Print expression '''
         print(self.postfix)
 
     def get_prec(self, c):
-        """ Get precedence of operator """
+        ''' Get precedence of operator '''
         return self.prec.index(c)
 
     def counter(self, c):
-        """ Return corresponding brace """
+        ''' Return corresponding brace '''
         if c in self.braces_open:
             return self.braces_closed[self.braces_open.index(c)]
         elif c in self.braces_closed:
             return self.braces_open[self.braces_closed.index(c)]
 
     def build_op(self, c):
-        """ Try to construct multi-token operator """
+        ''' Try to construct multi-token operator '''
         while self.l_stack:
             op = self.l_stack.pop()
             op += c
@@ -52,8 +55,7 @@ class Lexer():
             self.l_stack.append(op)
 
     def handle_operators(self, c):
-        """ Add valid operators; build ops from sub-op tokens """
-
+        ''' Add valid operators; build ops from sub-op tokens '''
         if c in self.log_ops:
             if self.op_stack:
                 a = self.op_stack.pop()
@@ -77,6 +79,7 @@ class Lexer():
                 self.build_op(c)
 
     def open_brace(self, c):
+        ''' Handle opening brace '''
         if self.op_stack:
             a = self.op_stack.pop()
             if self.get_prec(a) < self.get_prec(c):
@@ -93,6 +96,7 @@ class Lexer():
             self.op_stack.append(c)
 
     def closed_brace(self, c):
+        ''' Handle closing brace '''
         if not self.op_stack:
             raise Exception('Stack empty!\n')
         else:
@@ -105,22 +109,28 @@ class Lexer():
                     raise Exception('No opening brace detected\n')
 
     def handle_braces(self, c):
-        """ Make sure braces are balanced """
+        ''' Make sure braces are balanced '''
         if c in self.braces_open:
             self.open_brace(c)
         elif c in self.braces_closed:
             self.closed_brace(c)
+    
+    #def handle_terms(self, 
+
 
     def open_file(self, filename):
-        """ Try to open the file """
-        try:
-            fileObj = open(filename, 'r')
-            return fileObj
-        except RuntimeError:
-            print('File could not be opened\n')
-
+        ''' Try to open the file '''
+        if os.path.isfile(filename):
+            try:
+                fileObj = open(filename, 'r')
+                return fileObj
+            except FileNotFoundError as fnf:
+                print('File cannot be opened', fnf)
+        else:
+            print(colors.err + 'File could not be opened' + colors.default)
+        
     def pop_remaining(self, output):
-        """ Moves remaining tokens from op_stack to output """
+        ''' Moves remaining tokens from op_stack to output '''
         while self.op_stack:
             a = self.op_stack.pop()
             if a in self.braces_open:
@@ -130,7 +140,7 @@ class Lexer():
         self.postfix = []
 
     def read_token(self, token):
-        """ Read in tokens """
+        ''' Read in tokens '''
         if token in self.terms:             # handle terms
             self.postfix.append(token)
         elif token in self.braces:          # handle braces
@@ -143,7 +153,7 @@ class Lexer():
             raise Exception('invalid token: ' + token)
 
     def read_expression(self, fileObj):
-        """ Read in entire expression """
+        ''' Read in entire expression '''
         output = []
         for line in fileObj:            # for each expression
             for c in line:              # for each token in exp
