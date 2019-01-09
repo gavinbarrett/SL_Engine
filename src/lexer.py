@@ -142,6 +142,7 @@ class Lexer():
     def read_token(self, token):
         ''' Read in tokens '''
         if token in self.terms:             # handle terms
+            # check terms
             self.postfix.append(token)
         elif token in self.braces:          # handle braces
             self.handle_braces(token)
@@ -152,8 +153,8 @@ class Lexer():
         else:
             raise Exception('invalid token: ' + token)
 
-    def read_expression(self, fileObj):
-        ''' Read in entire expression '''
+    def shunting_yard(self, fileObj):
+        ''' Return expressions in postfix notation '''
         output = []
         for line in fileObj:            # for each expression
             for c in line:              # for each token in exp

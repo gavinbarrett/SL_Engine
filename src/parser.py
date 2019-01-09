@@ -122,7 +122,7 @@ class Parser:
     def read(self, f):
         ''' Read file f into postfix order '''
         file_obj = self.lexer.open_file(f)
-        output = self.lexer.read_expression(file_obj)
+        output = self.lexer.shunting_yard(file_obj)
         for postfix in output:
             for a in postfix:
                 self.insert(a)
