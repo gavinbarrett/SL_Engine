@@ -18,6 +18,7 @@ class Lexer():
         self.b_stack = []
         self.l_stack = []
         self.postfix = []
+        self.seen = []
         self.t_count = 0
 
     def print_exp(self):
@@ -115,8 +116,14 @@ class Lexer():
         elif c in self.braces_closed:
             self.closed_brace(c)
     
-    #def handle_terms(self, 
-
+    def handle_terms(self, t):
+        ''' Append token t to postfix; track term count '''
+        if t in self.seen:
+            pass
+        else:
+            self.seen.append(t)
+            self.t_count += 1
+        self.postfix.append(t)
 
     def open_file(self, filename):
         ''' Try to open the file '''
@@ -140,10 +147,9 @@ class Lexer():
         self.postfix = []
 
     def read_token(self, token):
-        ''' Read in tokens '''
+        ''' Read in tokens and  '''
         if token in self.terms:             # handle terms
-            # check terms
-            self.postfix.append(token)
+            self.handle_terms(token)
         elif token in self.braces:          # handle braces
             self.handle_braces(token)
         elif token in self.poss_ops:        # handle operators
