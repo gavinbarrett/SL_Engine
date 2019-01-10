@@ -1,3 +1,7 @@
+#################
+###   Shell   ###
+#################
+import os
 import sys
 import src.parser as ps
 import src.help as hlp
@@ -8,7 +12,7 @@ class SL_Shell:
     def __init__(self):
         txt.print_text()
         self.parser = ps.Parser()
-        self.cmd_table = { ':q' : lambda: sys.exit(0), ':h' : lambda: hlp.print_help(), ':l' : lambda: self.parser.get_file() }
+        self.cmd_table = { ':q' : lambda: sys.exit(0), ':h' : lambda: hlp.print_help(), ':l' : lambda: self.parser.get_file(), ':p' : lambda: self.parser.get_set(), ':c' : lambda: self.clear_shell() }
 
     def check_cmd(self, cmd):
         ''' Return true if command is valid '''
@@ -31,7 +35,11 @@ class SL_Shell:
 
     def print_prompt(self):
         ''' Print prompt for engine '''
-        print(colors.purple + '-> ' + colors.default, end='')
+        print(colors.purple + '=>> ' + colors.default, end='')
+    
+    def clear_shell(self):
+        ''' Clears the shell of text '''
+        os.system('clear')
 
     def exit_cond(self, c):
         ''' Check to see if exit conditions have been passed '''

@@ -12,7 +12,7 @@ def main():
         fn = shell.get_func(c)
         if fn:
             fn()
-        shell.parser.print_hierarchy()
+        #shell.parser.print_hierarchy()
 
 if __name__ == "__main__":
     main()

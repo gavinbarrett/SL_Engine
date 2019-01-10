@@ -4,12 +4,13 @@ import src.ast as ast
 from src.colors import colors
 
 class Parser:
-    """ This parser builds ASTs that contain logical exps """
+    ''' This parser builds ASTs that contain logical exps '''
     def __init__(self):
-        """ Create parser with expression lexer and tree stack"""
+        ''' Create parser with expression lexer and tree stack '''
         self.lexer = sl.Lexer()
         self.tree_stack = []
         self.set = []
+    
 
     def get_height(self, root):
         """ Return height of the tree """
@@ -37,6 +38,14 @@ class Parser:
         if self.tree_stack:
             tree = self.tree_stack.pop()
             self.print_ast_(tree)
+
+    def get_set(self):
+        ''' Print proposition set '''
+        i = 0
+        for exp in self.set:
+            print('[' + str(i) + ']: ')
+            self.print_ast_(exp)
+            i += 1
 
     def get_space(self, i, h):
         return int((h - i) * 2)
@@ -123,6 +132,7 @@ class Parser:
         ''' Read file f into postfix order '''
         file_obj = self.lexer.open_file(f)
         output = self.lexer.shunting_yard(file_obj)
+        self.lexer.print_t_count()
         for postfix in output:
             for a in postfix:
                 self.insert(a)

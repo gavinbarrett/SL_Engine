@@ -10,3 +10,6 @@ class AST:
 
     def init_t(self):
         self.t_value = True
+
+    def __str__(self):
+        return self.name

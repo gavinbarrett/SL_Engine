@@ -146,6 +146,9 @@ class Lexer():
         output.append(self.postfix)
         self.postfix = []
 
+    def print_t_count(self):
+        print('t_count is: ' + str(self.t_count))
+
     def read_token(self, token):
         ''' Read in tokens and  '''
         if token in self.terms:             # handle terms

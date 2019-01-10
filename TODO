@@ -1,3 +1,2 @@
 -> Fix square bracket error
--> tests/sl_shell.py is the current tester/main
 -> create method to print truth table and map to function :tt

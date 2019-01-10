@@ -1,6 +1,8 @@
+import os
 from src.colors import colors
 def print_text():
-    ''' Print initial text for the shell '''
+    ''' Clear screen and print shell text '''
+    os.system('clear')
     print(colors.purple + '       .__      _________.__           .__  .__   ')
     print('  _____|  |    /   _____/|  |__   ____ |  | |  |  ')
     print(' /  ___/  |    \\_____  \\ |  |  \\_/ __ \\|  | |  |  ')
