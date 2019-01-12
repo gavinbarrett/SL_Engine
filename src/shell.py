@@ -12,7 +12,7 @@ class SL_Shell:
     def __init__(self):
         txt.print_text()
         self.parser = ps.Parser()
-        self.cmd_table = { ':q' : lambda: sys.exit(0), ':h' : lambda: hlp.print_help(), ':l' : lambda: self.parser.get_file(), ':p' : lambda: self.parser.get_set(), ':c' : lambda: self.clear_shell() }
+        self.cmd_table = { ':q' : lambda: sys.exit(0), ':h' : lambda: hlp.print_help(), ':l' : lambda: self.parser.get_file(), ':p' : lambda: self.parser.get_set(), ':c' : lambda: self.clear_shell(), ':d' : lambda: self.del_prop() }
 
     def check_cmd(self, cmd):
         ''' Return true if command is valid '''
@@ -32,6 +32,21 @@ class SL_Shell:
     def get_cmds(self):
         ''' Grab commands from input '''
         return input()
+    
+    def add_prop(self):
+        ''' Add exp to list of exps '''
+        exp = input('Please enter the sentence to add')
+        #FIXME: parse and add expression
+
+    def del_prop(self):
+        ''' Delete particular exp '''
+        print('\nWhich sentence would you like to delete?\n')
+        self.parser.get_set()
+        #FIXME: check that n is a valid number
+        n = input()
+        del self.parser.lexer.expressions[int(n)]
+        self.parser.get_set()
+
 
     def print_prompt(self):
         ''' Print prompt for engine '''

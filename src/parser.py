@@ -42,9 +42,10 @@ class Parser:
     def get_set(self):
         ''' Print proposition set '''
         i = 0
-        for exp in self.set:
-            print('[' + str(i) + ']: ')
-            self.print_ast_(exp)
+        print('\nProposition set:\n')
+        for exp in self.lexer.expressions:
+            print('[' + str(i) + ']: ', end='')
+            print(colors.green + exp + colors.white + '\n')
             i += 1
 
     def get_space(self, i, h):
@@ -132,7 +133,7 @@ class Parser:
         ''' Read file f into postfix order '''
         file_obj = self.lexer.open_file(f)
         output = self.lexer.shunting_yard(file_obj)
-        self.lexer.print_t_count()
+        #self.lexer.print_t_count()
         for postfix in output:
             for a in postfix:
                 self.insert(a)

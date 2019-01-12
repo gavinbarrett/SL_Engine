@@ -13,12 +13,16 @@ class Lexer():
         self.braces_open = ['(', '[', '{']
         self.braces_closed = [')', ']', '}']
         self.w_space = ['\n', '\t', ' ']
+        self.space = ' '
+        self.newline = '\n'
         self.terms = [chr(i) for i in range(65, 91)]
         self.op_stack = []
         self.b_stack = []
         self.l_stack = []
         self.postfix = []
         self.seen = []
+        self.tmp = ''
+        self.expressions = []
         self.t_count = 0
 
     def print_exp(self):
@@ -152,13 +156,19 @@ class Lexer():
     def read_token(self, token):
         ''' Read in tokens and  '''
         if token in self.terms:             # handle terms
+            self.tmp += token
             self.handle_terms(token)
         elif token in self.braces:          # handle braces
+            self.tmp += token
             self.handle_braces(token)
         elif token in self.poss_ops:        # handle operators
+            self.tmp += token
             self.handle_operators(token)
-        elif token in self.w_space:
-            pass
+        elif token is self.space:
+            self.tmp += token
+        elif token is self.newline:
+            self.expressions.append(self.tmp)
+            self.tmp = ''
         else:
             raise Exception('invalid token: ' + token)
 
