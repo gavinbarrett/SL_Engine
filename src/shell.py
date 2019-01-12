@@ -40,10 +40,15 @@ class SL_Shell:
 
     def del_prop(self):
         ''' Delete particular exp '''
+        if len(self.parser.lexer.expressions) == 0:
+            print(colors.err + '\nNo sentences loaded\n' + colors.default)
+            return
         print('\nWhich sentence would you like to delete?\n')
         self.parser.get_set()
-        #FIXME: check that n is a valid number
         n = input()
+        if int(n) >= len(self.parser.lexer.expressions):
+                print(colors.err + '\nProposition ' + n + ' does not exist\n' + colors.default)
+                return
         del self.parser.lexer.expressions[int(n)]
         self.parser.get_set()
 
@@ -62,4 +67,12 @@ class SL_Shell:
             return True
         else:
             return False
-
+    
+    def run(self):
+        ''' Run Shell '''
+        while True:
+            self.print_prompt()
+            c = self.get_cmds()
+            fn = self.get_func(c)
+            if fn:
+                fn()

@@ -1,5 +1,5 @@
 -> Fix square bracket error
 -> print out trees by root
 -> create method to print truth table and map to function :tt
--> create method to add propositions; add error checking to this and to delete
+-> create method to add propositions; add error checking to this
 -> enable shell to retrieve history of past commands

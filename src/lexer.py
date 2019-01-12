@@ -136,7 +136,7 @@ class Lexer():
                 fileObj = open(filename, 'r')
                 return fileObj
             except FileNotFoundError as fnf:
-                print('File cannot be opened', fnf)
+                print(colors.err + '\nFile cannot be opened\n' + colors.default, fnf)
         else:
             print(colors.err + 'File could not be opened' + colors.default)
         

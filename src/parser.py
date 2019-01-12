@@ -41,6 +41,9 @@ class Parser:
 
     def get_set(self):
         ''' Print proposition set '''
+        if len(self.lexer.expressions) == 0:
+            print('\nNo sentences loaded\n')
+            return
         i = 0
         print('\nProposition set:\n')
         for exp in self.lexer.expressions:
