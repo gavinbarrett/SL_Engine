@@ -12,7 +12,7 @@ class SL_Shell:
     def __init__(self):
         txt.print_text()
         self.parser = ps.Parser()
-        self.cmd_table = { ':q' : lambda: sys.exit(0), ':h' : lambda: hlp.print_help(), ':l' : lambda: self.parser.get_file(), ':p' : lambda: self.parser.get_set(), ':c' : lambda: self.clear_shell(), ':d' : lambda: self.del_prop() }
+        self.cmd_table = { ':q' : lambda: sys.exit(0), ':h' : lambda: hlp.print_help(), ':l' : lambda: self.parser.get_file(), ':p' : lambda: self.parser.get_set(), ':c' : lambda: self.clear_shell(), ':d' : lambda: self.del_prop(), ':tt' : lambda: self.print_tt() }
 
     def check_cmd(self, cmd):
         ''' Return true if command is valid '''
@@ -51,6 +51,11 @@ class SL_Shell:
                 return
         del self.parser.lexer.expressions[int(n)]
         self.parser.get_set()
+
+    def print_tt(self):
+        for exp in self.parser.set:
+            self.parser.handle_root(exp)
+            print('printing should have worked')
 
 
     def print_prompt(self):

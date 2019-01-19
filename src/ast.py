@@ -7,6 +7,7 @@ class AST:
         self.right = None
         self.t_value = False
         self.name = c
+        self.eval_stack = []
 
     def init_t(self):
         self.t_value = True

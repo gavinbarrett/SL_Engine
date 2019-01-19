@@ -32,6 +32,41 @@ class Parser:
             self.print_ast_(root.right)
             print(colors.green + root.name + colors.default, end='')
             self.print_ast_(root.left)
+    
+
+
+    ##############
+
+    def evaluate(self, root):
+        ''' Perform evaluation of operators and terms '''
+        print(root.name)
+        #if root.name in self.lexer.log_ops:
+            #if root.name is self.lexer.un_op:
+                # operator is unary (~)
+            #else:
+                # operator is binary (^, v, =>, <=>)
+        #else:
+            # return respective truth value for term
+
+    def handle_root(self, root):
+        ''' Recursively return true values '''
+        if not root:
+            return
+        #push return to ast's eval stack?
+        self.handle_root(root.right)
+        self.handle_root(root.left)
+        self.evaluate(root)
+    ##############
+
+
+
+
+    def print_tt(self, root):
+        if root is None:
+            return
+        print_tt(root.left)
+        print_tt(root.right)
+        handle_root(root)
 
     def print_ast(self):
         ''' Print AST out sequentially (In-Order) '''
