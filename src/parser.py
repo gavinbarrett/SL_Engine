@@ -1,7 +1,11 @@
+###########
+#SL_Engine#
+###########
 import os
 import src.lexer as sl
 import src.ast as ast
 from src.colors import colors
+from src.gen import generate
 
 class Parser:
     ''' This parser builds ASTs that contain logical exps '''
@@ -10,7 +14,7 @@ class Parser:
         self.lexer = sl.Lexer()
         self.tree_stack = []
         self.set = []
-    
+        self.seen = []
 
     def get_height(self, root):
         """ Return height of the tree """
@@ -37,36 +41,46 @@ class Parser:
 
     ##############
 
-    def evaluate(self, root):
+    def evaluate(self, root, tt):
         ''' Perform evaluation of operators and terms '''
-        print(root.name)
-        #if root.name in self.lexer.log_ops:
-            #if root.name is self.lexer.un_op:
+        print(root.name, end='')
+        if root.name in self.lexer.log_ops:
+            if root.name is self.lexer.un_op:
+                pass
                 # operator is unary (~)
-            #else:
+            else:
+                pass
+                #t2 = self.eval_stack.pop()
+                #t1 = self.eval_stack.pop()
                 # operator is binary (^, v, =>, <=>)
-        #else:
+        else:
+            #FIXME delete below
+            pass
             # return respective truth value for term
 
-    def handle_root(self, root):
+    def handle_root(self, root, tt):
         ''' Recursively return true values '''
         if not root:
             return
         #push return to ast's eval stack?
-        self.handle_root(root.right)
-        self.handle_root(root.left)
-        self.evaluate(root)
+        self.handle_root(root.left, tt)
+        self.handle_root(root.right, tt)
+        self.evaluate(root, tt)
     ##############
 
 
+    def get_truth_table(self):
+        tt = list(generate(len(self.seen)))
+        root = self.set[0]
+        self.print_tt(root, tt)
 
-
-    def print_tt(self, root):
+    def print_tt(self, root, tt):
         if root is None:
             return
-        print_tt(root.left)
-        print_tt(root.right)
-        handle_root(root)
+        #self.print_tt(root.left, tt)
+        #self.print_tt(root.right, tt)
+        self.handle_root(root, tt)
+        print("HELLO")
 
     def print_ast(self):
         ''' Print AST out sequentially (In-Order) '''
@@ -137,6 +151,8 @@ class Parser:
 
     def insert_term(self, t):
         """ Create new ast with term as root """
+        if t not in self.seen:
+            self.seen += t
         tree = ast.AST(t)  # create tree with term as root
         tree.init_t()      # initialize t_val to true
         self.tree_stack.append(tree)
