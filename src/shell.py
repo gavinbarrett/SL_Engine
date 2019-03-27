@@ -14,7 +14,12 @@ class SL_Shell:
     def __init__(self):
         txt.print_text()
         self.parser = ps.Parser()
-        self.cmd_table = { ':q' : lambda: sys.exit(0), ':h' : lambda: hlp.print_help(), ':l' : lambda: self.parser.get_file(), ':p' : lambda: self.parser.get_set(), ':c' : lambda: self.clear_shell(), ':d' : lambda: self.del_prop(), ':tt' : lambda: self.print_tt(), ':hist' : lambda: self.print_hist()}
+        self.cmd_table = {':q' : lambda: sys.exit(0), ':h' : lambda: hlp.print_help(),
+                           ':l' : lambda: self.parser.get_file(), ':p' : lambda: self.parser.get_set(),
+                           ':c' : lambda: self.clear_shell(), ':d' : lambda: self.del_prop(),
+                           ':tt' : lambda: self.print_tt(), ':hist' : lambda: self.print_hist(),
+                           ':ph' : lambda: self.parser.print_hierarchy()
+                           }
         self.cmd_hist = []
 
     def check_cmd(self, cmd):
@@ -60,6 +65,7 @@ class SL_Shell:
                 return
         del self.parser.lexer.expressions[int(n)]
         self.parser.get_set()
+        self.parser.clear_parser()
 
     def print_tt(self):
         ''' Print truth tree '''

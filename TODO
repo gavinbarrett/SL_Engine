@@ -3,6 +3,7 @@
 -> create method to print truth table and map to function :tt
 -> create method to add propositions; add error checking to this
 -> enable shell to retrieve history of past commands - use history.py or integrate into the shell, since we must keep track of commands
+-> Check insertion algorithm; inserting on opposite side of the one desired.
 
 01/19/2019
 -> Added evaluation and handle_root functions to the parser for printing the truth trees. Tree traversal seems to be looking nice; all we need is to generate values on the fly, determined by the logical expression, and evaluate all operators and terms, thus returning the value of the expression

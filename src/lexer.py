@@ -148,6 +148,8 @@ class Lexer():
                 raise Exception('no matching closing brace\n')
             self.postfix.append(a)
         output.append(self.postfix)
+        #FIXME: trial of reversing the list
+        output.reverse()
         self.postfix = []
 
     def print_t_count(self):
@@ -180,4 +182,5 @@ class Lexer():
                 self.read_token(c)      # read tokens up to \n
             self.pop_remaining(output)  # pop remaining to output
         fileObj.close()
+        print(output)
         return output
