@@ -67,14 +67,67 @@ class Parser:
                 print('F')
             # return respective truth value for term
 
-    def handle_root(self, root, tt):
+    def neg(atom):
+        ''' Return the negation of the binary truth value '''
+        return 0 if atom == 1 else 1
+
+    def and_val(x, y):
+        ''' Return logical and '''
+        return x and y
+
+    def or_val(x, y):
+        ''' Return logical or '''
+        return x or y
+    
+    def cond_val(x, y):
+        ''' Return logical conditional '''
+        if x and not y:
+            return 0
+        return 1
+
+    def bicond_val(x, y):
+        ''' Return logical biconditional '''
+        if (x and y) or (not x and not y):
+            return 1
+        return 0
+
+    #FIXME: Refactor code to use polymorphism
+    def determine_truth(x, y, rootname):
+        if rootname == '^':
+            return and_val(x, y)
+        elif rootname == 'v':
+            return or_val(x, y)
+        elif rootname == '=>':
+            return cond_val(x, y)
+        elif rootname == '<=>':
+            return bicond_val(x, y)
+
+    def eval(self, root, tt, truth):
+        if root.name in self.lexer.terms:
+            truth += root.name
+        elif root.name in self.lexer.un_op:
+            x = truth.pop()
+            truth += neg(x)
+            truth += x
+        elif root.name in self.lexer.log_ops:
+            # x is the second argument; it would be the
+            # consequent if it were part of a conditional
+            # therefore, we will pass it second
+            x = truth.pop()
+            y = truth.pop()
+            z = determine_truth(y,x,root.name)
+            truth += y
+            truth += z
+            truth += x
+
+    def handle_root(self, root, tt, truth):
         ''' Recursively return true values '''
         if not root:
             return
         #push return to ast's eval stack?
-        self.handle_root(root.left, tt)
-        self.handle_root(root.right, tt)
-        self.evaluate(root, tt)
+        self.handle_root(root.left, tt, truth)
+        self.handle_root(root.right, tt, truth)
+        self.eval(root, tt, truth)
     ##############
 
 
@@ -85,15 +138,16 @@ class Parser:
             print('No sentences loaded..')
             return
         root = self.set[0]
-        self.print_tt(root, tt)
+        determined = []
+        self.print_tt(root, tt, determined)
 
-    def print_tt(self, root, tt):
+    def print_tt(self, root, tt, determined):
         if root is None:
             return
 
-        self.print_tt(root.left, tt)
-        self.print_tt(root.right, tt)
-        self.handle_root(root.left, tt)
+        self.print_tt(root.left, tt, determined)
+        self.print_tt(root.right, tt, determined)
+        self.handle_root(root.left, tt, determined)
 
     def print_ast(self):
         ''' Print AST out sequentially (In-Order) '''
@@ -127,8 +181,8 @@ class Parser:
             #print(colors.green + root.name + colors.default, end=' ')
             stack += root.name
         elif h > 1:
-            self.print_hierarchy_(root.right, h-1, s, stack)
             self.print_hierarchy_(root.left, h-1, s, stack)
+            self.print_hierarchy_(root.right, h-1, s, stack)
 
     def draw_tree(self, tree_string):
         ''' Draw a pretty tree with drawtree '''
