@@ -43,6 +43,7 @@ class Parser:
         self.set.clear()
         self.seen.clear()
 
+
     ##############
 
     def evaluate(self, root, tt):
@@ -120,7 +121,7 @@ class Parser:
         if h == 1:
             #for i in range(1, s+1):
             #    print(' ', end='')
-            #Print(colors.green + root.name + colors.default, end=' ')
+            #print(colors.green + root.name + colors.default, end=' ')
             stack += root.name
         elif h > 1:
             self.print_hierarchy_(root.right, h-1, s, stack)
@@ -150,6 +151,7 @@ class Parser:
             string += e
             if e != '=':
                 string += ','
+        string = string[:-1]
         string += '}'
         print(string)
         self.draw_tree(string)
@@ -159,6 +161,7 @@ class Parser:
         t = ast.AST(op)
         if op in self.lexer.un_op:
             if self.tree_stack:
+                # if it is a negation, put as right child
                 tree = self.tree_stack.pop()
                 t.left = tree
                 self.tree_stack.append(t)
