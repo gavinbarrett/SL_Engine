@@ -16,6 +16,7 @@ class Parser:
         self.tree_stack = []
         self.set = []
         self.seen = []
+        self.output = []
 
     def get_height(self, root):
         ''' Return height of the tree '''
@@ -79,6 +80,7 @@ class Parser:
 
     def get_truth_table(self):
         tt = list(generate(len(self.seen)))
+        print(tt)
         if not self.set:
             print('No sentences loaded..')
             return
@@ -88,6 +90,7 @@ class Parser:
     def print_tt(self, root, tt):
         if root is None:
             return
+
         self.print_tt(root.left, tt)
         self.print_tt(root.right, tt)
         self.handle_root(root.left, tt)
@@ -171,9 +174,9 @@ class Parser:
         elif op in self.lexer.log_ops:
             if self.tree_stack:
                 tree = self.tree_stack.pop()
-                t.left = tree
-                tree = self.tree_stack.pop()
                 t.right = tree
+                tree = self.tree_stack.pop()
+                t.left = tree
                 self.tree_stack.append(t)
             else:
                 raise Exception('Stack empty')
@@ -217,7 +220,10 @@ class Parser:
         file_obj = self.lexer.open_file(f)
         output = self.lexer.shunting_yard(file_obj)
         #self.lexer.print_t_count()
+        self.output = output
         for postfix in output:
             for a in postfix:
                 self.insert(a)
             self.set.append(self.tree_stack.pop())
+        print("printing set:")
+        print(self.set)

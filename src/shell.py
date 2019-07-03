@@ -18,7 +18,8 @@ class SL_Shell:
                            ':l' : lambda: self.parser.get_file(), ':p' : lambda: self.parser.get_set(),
                            ':c' : lambda: self.clear_shell(), ':d' : lambda: self.del_prop(),
                            ':tt' : lambda: self.print_tt(), ':hist' : lambda: self.print_hist(),
-                           ':ph' : lambda: self.parser.print_hierarchy(), ':e' : lambda: self.parser.eval()
+                           ':ph' : lambda: self.parser.print_hierarchy(), ':e' : lambda: self.parser.eval(),
+                           ':gt' : lambda: self.parser.get_truth_table()
                            }
         self.cmd_hist = []
 
