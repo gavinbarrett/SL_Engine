@@ -2,22 +2,40 @@ function Page(props) {
 	return React.createElement(
 		"div",
 		{ id: "message" },
-		React.createElement("input", null)
+		React.createElement(Heading, { heading: "Organon" })
 	);
 }
 
 function Bottom(props) {
-	return React.createElement("div", { id: "bottom" });
+	return React.createElement(
+		"div",
+		{ id: "bottom" },
+		React.createElement(InputRedirect, { click: "click here to enter the repl" })
+	);
+}
+
+function Heading(props) {
+	return React.createElement(
+		"div",
+		{ id: "heading" },
+		props.heading
+	);
+}
+
+function InputRedirect(props) {
+	return React.createElement(
+		"div",
+		{ id: "inputWrapper" },
+		props.click
+	);
 }
 
 function Main(props) {
 	return React.createElement(
 		"div",
-		null,
+		{ id: "initialFBox" },
 		React.createElement(Page, null),
-		",",
-		React.createElement(Bottom, null),
-		","
+		React.createElement(Bottom, null)
 	);
 }
 

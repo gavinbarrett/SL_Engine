@@ -1,18 +1,31 @@
 function Page(props) {
 	return(<div id="message">
-	<input></input>
+		<Heading heading="Organon" />
 	</div>);
 }
 
 function Bottom(props) {
 	return(<div id="bottom">
+		<InputRedirect click="click here to enter the repl" />
+	</div>);
+}
+
+function Heading(props) {
+	return(<div id="heading">
+		{props.heading}
+	</div>);
+}
+
+function InputRedirect(props) {
+	return(<div id="inputWrapper">
+		{props.click}
 	</div>);
 }
 
 function Main(props) {
-	return(<div>
-	<Page />,
-	<Bottom />,
+	return(<div id="initialFBox">
+	<Page />
+	<Bottom />
 	</div>);
 }
 

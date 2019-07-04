@@ -1,13 +1,24 @@
 html, body {
-	height: 100vh;
-	width: 100vw;
+	height: 100%;
+	width: 100%;
 	background-color: white;
 	padding: 0;
 	margin: 0;
 }
 
+#initialFBox {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+}
+
 #message {
-	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	background-color: #3adb21;
 	border: 0;
 	margin: 0;
@@ -18,16 +29,45 @@ html, body {
 	background-image: linear-gradient(#3adb21, #3db32b);
 	transform: skewY(-6deg);
 	transform-origin: top left;
+	box-shadow: 0px 0px 90px rgba(0,0,0,0.7);
 }
 
-input {
-	position: absolute;
+#heading {
+	display: flex;
+	font-family: Trebuchet MS;
+	justify-content: center;
+	align-items: center;
+	height: 50%;
+	width: 60%;
 	transform: skewY(6deg);
         transform-origin: top left;
+	color: green;
+	font-size: 20vw;
+	text-align: center;
+}
+
+#inputWrapper {
+	width: 30vw;
+	background-color: green;
+	font-family: Trebuchet MS;
+	margin: 0;
+	padding: 0;
+	border-radius: 7px;
+	color: #e0e0e0;
+}
+
+#inputWrapper:hover {
+	color: white;
 }
 
 #bottom {
-	height: 20vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	height: 10vh;
 	width: 100vw;
 	background-color: white;
+	margin: 0;
+	padding: 0;
 }
