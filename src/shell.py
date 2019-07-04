@@ -70,9 +70,7 @@ class SL_Shell:
 
     def print_tt(self):
         ''' Print truth tree '''
-        tt = self.parser.get_truth_table()
-        for exp in self.parser.set:
-            self.parser.print_tt(exp, tt)
+        self.parser.gen_truth_table()
 
     def print_prompt(self):
         ''' Print prompt for engine '''

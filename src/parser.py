@@ -6,6 +6,7 @@ import src.lexer as sl
 import src.ast as ast
 from src.colors import colors
 from src.gen import generate
+from collections import defaultdict
 import drawtree
 
 class Parser:
@@ -67,47 +68,54 @@ class Parser:
                 print('F')
             # return respective truth value for term
 
-    def neg(atom):
+    def neg(self, atom):
         ''' Return the negation of the binary truth value '''
         return 0 if atom == 1 else 1
 
-    def and_val(x, y):
+    def and_val(self, x, y):
         ''' Return logical and '''
         return x and y
 
-    def or_val(x, y):
+    def or_val(self, x, y):
         ''' Return logical or '''
         return x or y
     
-    def cond_val(x, y):
+    def cond_val(self, x, y):
         ''' Return logical conditional '''
         if x and not y:
             return 0
         return 1
 
-    def bicond_val(x, y):
+    def bicond_val(self, x, y):
         ''' Return logical biconditional '''
         if (x and y) or (not x and not y):
             return 1
         return 0
 
     #FIXME: Refactor code to use polymorphism
-    def determine_truth(x, y, rootname):
+    def determine_truth(self, x, y, rootname):
         if rootname == '^':
-            return and_val(x, y)
+            return self.and_val(x, y)
         elif rootname == 'v':
-            return or_val(x, y)
+            return self.or_val(x, y)
         elif rootname == '=>':
-            return cond_val(x, y)
+            return self.cond_val(x, y)
         elif rootname == '<=>':
-            return bicond_val(x, y)
+            return self.bicond_val(x, y)
 
     def eval(self, root, tt, truth):
         if root.name in self.lexer.terms:
-            truth += root.name
+            #FIXME: truth should be whatever value from tt
+            #FIXME: tt is just the truth values of the terms
+            # need to write a function to take in the expression
+            # and the list of values in order to determine how many truth
+            # values need to be inside of the list
+            t = tt[0]
+            tt = tt[1:]
+            truth.append(t)
         elif root.name in self.lexer.un_op:
             x = truth.pop()
-            truth += neg(x)
+            truth += self.neg(x)
             truth += x
         elif root.name in self.lexer.log_ops:
             # x is the second argument; it would be the
@@ -115,10 +123,10 @@ class Parser:
             # therefore, we will pass it second
             x = truth.pop()
             y = truth.pop()
-            z = determine_truth(y,x,root.name)
-            truth += y
-            truth += z
-            truth += x
+            z = self.determine_truth(y,x,root.name)
+            truth.append(y)
+            truth.append(z)
+            truth.append(x)
 
     def handle_root(self, root, tt, truth):
         ''' Recursively return true values '''
@@ -130,16 +138,47 @@ class Parser:
         self.eval(root, tt, truth)
     ##############
 
+    def generate_terms(self, t, exp, newExp):
+        tmpExp = []
+        df = defaultdict(lambda: None)
+        for e in exp:
+            if df[e] == None:
+                x = t[0]
+                t = t[1:]
+                df[e] = x
+                tmpExp.append(x)
+            elif df[e] != None:
+                x = df[e]
+                tmpExp.append(x)
+        newExp.append(tmpExp)
+
+    def strip_terms(self, exp):
+        newArray = []
+        for e in exp:
+            if e in self.lexer.terms:
+                newArray.append(e)
+        return newArray
 
     def get_truth_table(self):
+        truth_table = []
+        newExp = []
         tt = list(generate(len(self.seen)))
-        print(tt)
+        s = self.strip_terms(self.lexer.expressions[0])
+        for t in tt:
+            self.generate_terms(t, s, newExp)
+        print(newExp)
+        
         if not self.set:
             print('No sentences loaded..')
             return
         root = self.set[0]
-        determined = []
-        self.print_tt(root, tt, determined)
+
+        for t in newExp:
+            print(t)
+            #FIXME: call function to generate test string from truth values
+            determined = []
+            self.print_tt(root, t, determined)
+            print(determined)
 
     def print_tt(self, root, tt, determined):
         if root is None:
@@ -148,6 +187,9 @@ class Parser:
         self.print_tt(root.left, tt, determined)
         self.print_tt(root.right, tt, determined)
         self.handle_root(root.left, tt, determined)
+    
+    def gen_truth_table(self):
+        self.get_truth_table()
 
     def print_ast(self):
         ''' Print AST out sequentially (In-Order) '''
