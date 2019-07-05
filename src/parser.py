@@ -9,6 +9,10 @@ from src.gen import generate
 from collections import defaultdict
 import drawtree
 
+def Formula(formula):
+    print("printy formula:")
+    print(formula)
+
 class Parser:
     ''' This parser builds ASTs that contain logical exps '''
     def __init__(self):
@@ -38,7 +42,7 @@ class Parser:
             return
         else:
             self.print_ast_(root.right)
-            print(colors.green + root.name + colors.default, end='')
+            #print(colors.green + root.name + colors.default, end='')
             self.print_ast_(root.left)
     
     def clear_parser(self):
@@ -187,7 +191,7 @@ class Parser:
         i = 0
         print('\nProposition set:\n')
         for exp in self.lexer.expressions:
-            print('[' + str(i) + ']: ', end='')
+            #print('[' + str(i) + ']: ', end='')
             print(colors.green + exp + colors.white + '\n')
             i += 1
 

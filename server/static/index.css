@@ -94,7 +94,8 @@ html, body {
 
 #replInput {
 	display: flex;
-	font-size: 1vw;
+	font-size: 3vw;
+	text-align: center;
 	resize: none;
 	width: 90%;
 	height: 80%;

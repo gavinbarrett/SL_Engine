@@ -1,3 +1,21 @@
+function request(url, method) {
+	/* Open an http request */
+	let xhr = new XMLHttpRequest();
+	xhr.open(url, method, true);
+	return xhr
+}
+
+function retrieveTruthTable(formulas) {
+	let xhr = request('POST', '/ajax');
+	xhr.onload = () => {
+		console.log(xhr.responseText);
+	};
+	console.log(formulas);
+	for (let i = 0; i < formulas.length; i++) {
+		xhr.send(formulas);	
+	}
+}
+
 function validateFormula(formula) {
 	/* Return true if formula is valid in SL */
 
@@ -5,9 +23,10 @@ function validateFormula(formula) {
 
 function retrieveInput(event) {
 	let formulas = event.target.value;
+	/*FIXME: parse inputs*/
 	if ((formulas.slice(-1) == "\n")) {
 		if (event.keyCode == "13")
-			console.log("entered a formula");
+			retrieveTruthTable(formulas);
 		else if (event.keyCode == "8")
 			console.log("deleted a formula");
 	}
