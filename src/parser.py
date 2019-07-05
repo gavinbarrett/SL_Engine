@@ -18,6 +18,7 @@ class Parser:
         self.set = []
         self.seen = []
         self.output = []
+        self.tt = []
 
     def get_height(self, root):
         ''' Return height of the tree '''
@@ -44,29 +45,6 @@ class Parser:
         self.tree_stack.clear()
         self.set.clear()
         self.seen.clear()
-
-
-    ##############
-
-    def evaluate(self, root, tt):
-        ''' Perform evaluation of operators and terms '''
-        print(root.name, end='')
-        if root.name in self.lexer.log_ops:
-            if root.name is self.lexer.un_op:
-                pass
-                # operator is unary (~)
-            else:
-                pass
-                #t2 = self.eval_stack.pop()
-                #t1 = self.eval_stack.pop()
-                # operator is binary (^, v, =>, <=>)
-        else:
-            #FIXME delete below
-            if root.t_value == True:
-                print('T')
-            else:
-                print('F')
-            # return respective truth value for term
 
     def neg(self, atom):
         ''' Return the negation of the binary truth value '''
@@ -103,40 +81,34 @@ class Parser:
         elif rootname == '<=>':
             return self.bicond_val(x, y)
 
-    def eval(self, root, tt, truth):
+    def eval(self, root):
         if root.name in self.lexer.terms:
             #FIXME: truth should be whatever value from tt
             #FIXME: tt is just the truth values of the terms
             # need to write a function to take in the expression
             # and the list of values in order to determine how many truth
             # values need to be inside of the list
-            t = tt[0]
-            tt = tt[1:]
-            truth.append(t)
+            t = self.tt[0]
+            self.tt = self.tt[1:]
+            root.eval_stack.append(t)
         elif root.name in self.lexer.un_op:
-            x = truth.pop()
-            truth += self.neg(x)
-            truth += x
+            l = root.right.eval_stack[0]
+            m = self.neg(l)
+            root.eval_stack.append(m)
         elif root.name in self.lexer.log_ops:
-            # x is the second argument; it would be the
-            # consequent if it were part of a conditional
-            # therefore, we will pass it second
-            x = truth.pop()
-            y = truth.pop()
-            z = self.determine_truth(y,x,root.name)
-            truth.append(y)
-            truth.append(z)
-            truth.append(x)
+            x = root.left.eval_stack[0]
+            y = root.right.eval_stack[0]
+            z = self.determine_truth(x,y,root.name)
+            root.eval_stack.append(z)
 
-    def handle_root(self, root, tt, truth):
+    def handle_root(self, root):
         ''' Recursively return true values '''
         if not root:
             return
         #push return to ast's eval stack?
-        self.handle_root(root.left, tt, truth)
-        self.handle_root(root.right, tt, truth)
-        self.eval(root, tt, truth)
-    ##############
+        self.handle_root(root.left)
+        self.handle_root(root.right)
+        self.eval(root)
 
     def generate_terms(self, t, exp, newExp):
         tmpExp = []
@@ -159,6 +131,15 @@ class Parser:
                 newArray.append(e)
         return newArray
 
+    def in_order(self, root, table):
+        if root is None:
+            return
+        self.in_order(root.left, table)
+        table.append(root.eval_stack[0])
+        root.eval_stack.pop()
+        self.in_order(root.right, table)
+
+
     def get_truth_table(self):
         truth_table = []
         newExp = []
@@ -166,27 +147,28 @@ class Parser:
         s = self.strip_terms(self.lexer.expressions[0])
         for t in tt:
             self.generate_terms(t, s, newExp)
-        print(newExp)
-        
         if not self.set:
             print('No sentences loaded..')
             return
-        root = self.set[0]
 
         for t in newExp:
-            print(t)
-            #FIXME: call function to generate test string from truth values
-            determined = []
-            self.print_tt(root, t, determined)
-            print(determined)
+            root = self.set[0]
+            table = []
+            self.tt = list(t)
+            self.print_tt(root)
+            self.in_order(root, table)
+            truth_table.append(table)
+        truth_table = truth_table[::-1]
+        print('\n')
+        for tru in truth_table:
+            print(tru)
 
-    def print_tt(self, root, tt, determined):
+    def print_tt(self, root):
         if root is None:
             return
-
-        self.print_tt(root.left, tt, determined)
-        self.print_tt(root.right, tt, determined)
-        self.handle_root(root.left, tt, determined)
+        self.handle_root(root.left)
+        self.handle_root(root.right)
+        self.eval(root)
     
     def gen_truth_table(self):
         self.get_truth_table()
@@ -262,7 +244,7 @@ class Parser:
             if self.tree_stack:
                 # if it is a negation, put as right child
                 tree = self.tree_stack.pop()
-                t.left = tree
+                t.right = tree
                 self.tree_stack.append(t)
             else:
                 self.tree_stack.append(op)

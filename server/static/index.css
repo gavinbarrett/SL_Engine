@@ -71,3 +71,33 @@ html, body {
 	margin: 0;
 	padding: 0;
 }
+
+#replPage {
+	height: 100vh;
+	width: 100vw;
+        background-image: linear-gradient(#3adb21, #3db32b);
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+#replContainer {
+	margin: 3%;
+	background-color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 60%;
+	height: 40%;
+
+}
+
+#replInput {
+	display: flex;
+	font-size: 1vw;
+	resize: none;
+	width: 90%;
+	height: 80%;
+
+}
+

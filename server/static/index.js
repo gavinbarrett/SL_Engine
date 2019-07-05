@@ -1,3 +1,31 @@
+function retrieveInput(event) {
+	var formulas = event.target.value;
+	if (formulas.slice(-1) == "\n") {
+		if (event.keyCode == "13") console.log("entered a formula");else if (event.keyCode == "8") console.log("deleted a formula");
+	}
+	console.log(formulas.split("\n"));
+}
+
+function ReplPage(props) {
+	return React.createElement(
+		"div",
+		{ id: "replPage" },
+		React.createElement(ReplContainer, null)
+	);
+}
+
+function ReplContainer(props) {
+	return React.createElement(
+		"div",
+		{ id: "replContainer" },
+		React.createElement("textarea", { id: "replInput", onKeyUp: retrieveInput })
+	);
+}
+
+function RenderRepl() {
+	ReactDOM.render(React.createElement(ReplPage, null), document.getElementById('root'));
+}
+
 function Page(props) {
 	return React.createElement(
 		"div",
@@ -25,12 +53,12 @@ function Heading(props) {
 function InputRedirect(props) {
 	return React.createElement(
 		"div",
-		{ id: "inputWrapper" },
+		{ id: "inputWrapper", onClick: RenderRepl },
 		props.click
 	);
 }
 
-function Main(props) {
+function RenderLanding(props) {
 	return React.createElement(
 		"div",
 		{ id: "initialFBox" },
@@ -39,4 +67,4 @@ function Main(props) {
 	);
 }
 
-ReactDOM.render(React.createElement(Main, null), document.getElementById('root'));
+ReactDOM.render(React.createElement(RenderLanding, null), document.getElementById('root'));
