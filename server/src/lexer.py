@@ -5,10 +5,10 @@ class Lexer():
     ''' Sentential Logic Lexer '''
     def __init__(self):
         self.un_op = '~'
-        self.log_ops = ['~', '^', 'v', '=>', '<=>']
-        self.half_ops = ['<', '=', '<=', '>']
-        self.poss_ops = ['~', '^', 'v', '=>', '<=>', '=', '<', '>']
-        self.prec = ['[', '(', '~', '^', 'v', '=>', '<=>']
+        self.log_ops = ['~', '^', 'v', '->', '<->']
+        self.half_ops = ['<', '-', '<-', '>']
+        self.poss_ops = ['~', '^', 'v', '->', '<->', '-', '<', '>']
+        self.prec = ['[', '(', '~', '^', 'v', '->', '<->']
         self.braces = ['(', ')', '[', ']', '{', '}']
         self.braces_open = ['(', '[', '{']
         self.braces_closed = [')', ']', '}']
@@ -191,10 +191,26 @@ class Lexer():
         print(output)
         return output
 
+    def normalize(self, fs):
+        formulas = []
+        formula = ''
+        for f in fs:
+            if f == '\n':
+                formulas.append(formula)
+                formula = ''
+            else:
+                formula += f
+        return formulas
+
     def shunting_yard_string(self, formula):
         terms = [chr(i) for i in range(65, 91)]
         print('calling shunting yard')
         output = []
+
+        #FIXME: normalize formulae
+        formulas = self.normalize(formula)
+        print("Normalized:")
+        print(formulas)
         for c in formula:
             f = [formula]
             print(f)

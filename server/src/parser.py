@@ -80,9 +80,9 @@ class Parser:
             return self.and_val(x, y)
         elif rootname == 'v':
             return self.or_val(x, y)
-        elif rootname == '=>':
+        elif rootname == '->':
             return self.cond_val(x, y)
-        elif rootname == '<=>':
+        elif rootname == '<->':
             return self.bicond_val(x, y)
 
     def eval(self, root):
@@ -92,6 +92,7 @@ class Parser:
             # need to write a function to take in the expression
             # and the list of values in order to determine how many truth
             # values need to be inside of the list
+            print(self.tt)
             t = self.tt[0]
             self.tt = self.tt[1:]
             root.eval_stack.append(t)
@@ -156,6 +157,8 @@ class Parser:
             return
 
         for t in newExp:
+            print("t is ")
+            print(t)
             root = self.set[0]
             table = []
             self.tt = list(t)
@@ -166,6 +169,8 @@ class Parser:
         print('\n')
         for tru in truth_table:
             print(tru)
+
+        #self.tt = []
 
     def print_tt(self, root):
         if root is None:
@@ -234,7 +239,7 @@ class Parser:
         #        print('\n')
         for e in stack:
             string += e
-            if e != '=':
+            if e != '-':
                 string += ','
         string = string[:-1]
         string += '}'
@@ -309,7 +314,8 @@ class Parser:
                 self.insert(a)
             self.set.append(self.tree_stack.pop())
         print("printing set:")
-        print(self.set)
+        for s in self.set:
+            print(s)
 
 
     def read_string(self, formula):
@@ -321,6 +327,7 @@ class Parser:
         if (formula == self.lexer.terms[15]):
             print("Formula equals self.lexer.terms")
         props = formula
+        print("Props: ")
         print(props)
         output = self.lexer.shunting_yard_string(formula)
         print(output)
@@ -328,5 +335,7 @@ class Parser:
             for p in postfix:
                 self.insert(p)
             self.set.append(self.tree_stack.pop())
+        print("Printing set: ")
+        for s in self.set:
+            print(s)
         self.get_truth_table()
-

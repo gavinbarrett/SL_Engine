@@ -21,9 +21,26 @@ function validateFormula(formula) {
 
 }
 
+function isValid(formula) {
+	/* Returns true if formula is accepted in SL */
+
+}
+
 function retrieveInput(event) {
 	let formulas = event.target.value;
 	/*FIXME: parse inputs*/
+
+	for (let f = 0; f < formulas.length; f++) {
+		if (formulas[f].slice(-1) == "\n") {
+			console.log(formulas[f]);
+			if (isValid(formulas[f])) {
+				console.log("Formula is acceptable");
+				console.log(formulas[f]);
+			}
+		}	
+	}
+
+
 	if ((formulas.slice(-1) == "\n")) {
 		if (event.keyCode == "13")
 			retrieveTruthTable(formulas);

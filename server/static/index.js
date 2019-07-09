@@ -24,6 +24,11 @@ function validateFormula(formula) {
 function retrieveInput(event) {
 	var formulas = event.target.value;
 	/*FIXME: parse inputs*/
+
+	for (var f = 0; f < formulas.length; f++) {
+		if (formulas[f].slice(-1) == "\n") console.log(f);
+	}
+
 	if (formulas.slice(-1) == "\n") {
 		if (event.keyCode == "13") retrieveTruthTable(formulas);else if (event.keyCode == "8") console.log("deleted a formula");
 	}
