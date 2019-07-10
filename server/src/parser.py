@@ -2,16 +2,11 @@
 #SL_Engine#
 ###########
 import os
-import src.lexer as sl
-import src.ast as ast
-from src.colors import colors
-from src.gen import generate
+import lexer as sl
+import ast as ast
+from gen import generate
 from collections import defaultdict
 import drawtree
-
-def Formula(formula):
-    print("printy formula:")
-    print(formula)
 
 class Parser:
     ''' This parser builds ASTs that contain logical exps '''
@@ -24,27 +19,6 @@ class Parser:
         self.output = []
         self.tt = []
 
-    def get_height(self, root):
-        ''' Return height of the tree '''
-        if root is None:
-            return 0
-        else:
-            lh = self.get_height(root.left)
-            rh = self.get_height(root.right)
-        if lh > rh:
-            return lh + 1
-        else:
-            return rh + 1
-
-    def print_ast_(self, root):
-        ''' Recursively print AST '''
-        if root is None:
-            return
-        else:
-            self.print_ast_(root.right)
-            #print(colors.green + root.name + colors.default, end='')
-            self.print_ast_(root.left)
-    
     def clear_parser(self):
         self.tree_stack.clear()
         self.set.clear()
@@ -74,8 +48,8 @@ class Parser:
             return 1
         return 0
 
-    #FIXME: Refactor code to use polymorphism
     def determine_truth(self, x, y, rootname):
+        ''' Determine the truth value of the formula using binary functions '''
         if rootname == '^':
             return self.and_val(x, y)
         elif rootname == 'v':
@@ -115,26 +89,40 @@ class Parser:
         self.handle_root(root.right)
         self.eval(root)
 
-    def generate_terms(self, t, exp, newExp):
+    def generate_terms(self, t, exp):
+        #print("Generating terms...")
+        #print(t)
+        #print(exp)
         tmpExp = []
         df = defaultdict(lambda: None)
+        #print("printing exp")
+        #print(exp)
+        
+        #FIXME: for exp in expressions...
+        # for e in exp
+        # if expressions[exp][e] == None
         for e in exp:
             if df[e] == None:
                 x = t[0]
+                #print('x')
+                #print(x)
                 t = t[1:]
                 df[e] = x
                 tmpExp.append(x)
             elif df[e] != None:
                 x = df[e]
                 tmpExp.append(x)
-        newExp.append(tmpExp)
+        return tmpExp
 
     def strip_terms(self, exp):
+        seen = []
         newArray = []
         for e in exp:
             if e in self.lexer.terms:
                 newArray.append(e)
-        return newArray
+                if e not in seen:
+                    seen.append(e)
+        return newArray, len(seen)
 
     def in_order(self, root, table):
         if root is None:
@@ -145,23 +133,77 @@ class Parser:
         self.in_order(root.right, table)
 
 
-    def get_truth_table(self):
+    def get_truth_table(self, tree, exp):
         truth_table = []
         newExp = []
-        tt = list(generate(len(self.seen)))
-        s = self.strip_terms(self.lexer.expressions[0])
-        for t in tt:
-            self.generate_terms(t, s, newExp)
+        ts, dist = self.strip_terms(exp)
+        truth_values = list(generate(dist))
+        #print(truth_values)
+        terms = []
+        for t in truth_values:
+            term = self.generate_terms(t,ts)
+            #print(term)
+            terms.append(term)
+        for t in terms:
+            table = []
+            self.tt = t
+            self.print_tt(tree)
+            self.in_order(tree, table)
+            truth_table.append(table)
+        truth_table = truth_table[::1]
+        print(exp)
+        for tru in truth_table:
+            print(tru)
+        print("\n")
+        return truth_table
+
+    '''
+        #truth_table = []
+        #newExp = []
+        #form_terms = []
+        
+        numbers = []
+        for exp in self.lexer.expressions:
+            dist = 0
+            ts, dist = self.strip_terms(exp)
+            numbers.append(dist)
+            form_terms.append(ts)
+
+        for idx, terms in enumerate(form_terms):
+            # num_terms is total number of terms
+            # len(numbers) gives the amount of distinct terms
+            num_terms = len(terms)
+            truth_values = list(generate(numbers[idx]))
+
+            print("Truth values")
+            print(truth_values)
+            print("exp:")
+            print(terms)
+            ne = []
+            for i, t_vals in enumerate(truth_values):
+                self.tt = t_vals
+                if not t_vals:
+                    print("no vals")
+                ne.append(self.generate_terms(t_vals, form_terms[idx]))
+                print("ne")
+                print(ne)
+
+            newExp.append(ne)
+        print("Newexp")
+        print(newExp)
+
         if not self.set:
             print('No sentences loaded..')
             return
 
         for t in newExp:
             print("t is ")
-            print(t)
+            print(newExp)
             root = self.set[0]
+            #print("self.setsize")
+            #print(len(self.set))
             table = []
-            self.tt = list(t)
+            self.tt = [t]
             self.print_tt(root)
             self.in_order(root, table)
             truth_table.append(table)
@@ -169,8 +211,9 @@ class Parser:
         print('\n')
         for tru in truth_table:
             print(tru)
-
+        return truth_table
         #self.tt = []
+    '''
 
     def print_tt(self, root):
         if root is None:
@@ -179,72 +222,11 @@ class Parser:
         self.handle_root(root.right)
         self.eval(root)
     
-    def gen_truth_table(self):
-        self.get_truth_table()
-
     def print_ast(self):
         ''' Print AST out sequentially (In-Order) '''
         if self.tree_stack:
             tree = self.tree_stack.pop()
             self.print_ast_(tree)
-
-    def get_set(self):
-        ''' Print proposition set '''
-        if len(self.lexer.expressions) == 0:
-            print('\nNo sentences loaded\n')
-            return
-        i = 0
-        print('\nProposition set:\n')
-        for exp in self.lexer.expressions:
-            #print('[' + str(i) + ']: ', end='')
-            print(colors.green + exp + colors.white + '\n')
-            i += 1
-
-    def get_space(self, i, h):
-        return int((h - i) * 2)
-
-    def print_hierarchy_(self, root, h, s, stack):
-        ''' Print level order '''
-        if root is None:
-            stack += '#'
-            return
-        if h == 1:
-            #for i in range(1, s+1):
-            #    print(' ', end='')
-            #print(colors.green + root.name + colors.default, end=' ')
-            stack += root.name
-        elif h > 1:
-            self.print_hierarchy_(root.left, h-1, s, stack)
-            self.print_hierarchy_(root.right, h-1, s, stack)
-
-    def draw_tree(self, tree_string):
-        ''' Draw a pretty tree with drawtree '''
-        print('Drawing tree')
-        drawtree.draw_level_order(tree_string)
-
-
-    def print_hierarchy(self):
-        stack = []
-        string = '{'
-        ''' Print AST from root to leaves in level order '''
-        prop = 0
-        while self.set:
-        #    print('\nProposition ' + str(prop+1) + ': \n')
-            prop += 1
-            tree = self.set.pop(0)
-            h = self.get_height(tree)
-            for i in range(1, h + 1):
-                s = self.get_space(i, h)
-                self.print_hierarchy_(tree, i, s, stack)
-        #        print('\n')
-        for e in stack:
-            string += e
-            if e != '-':
-                string += ','
-        string = string[:-1]
-        string += '}'
-        print(string)
-        self.draw_tree(string)
 
     def insert_op(self, op):
         ''' Pop stack and make new operator ast '''
@@ -284,58 +266,30 @@ class Parser:
         elif c in self.lexer.log_ops:
             self.insert_op(c)
 
-    def valid_file(self, f):
-        ''' Check to see if file exists '''
-        if os.path.isfile(f):
-            return True
-        else:
-            return False
-
-
-    def get_file(self):
-        ''' Ask for file within shell '''
-        print('Enter the file you would like to load..')
-        f = input()
-        if self.valid_file(f):
-            self.read(f)
-            print('Loaded file ' + f)
-        else:
-            print(colors.err + 'File does not exist..' + colors.default)
-    
-
-    def read(self, f):
-        ''' Read file f into postfix order '''
-        file_obj = self.lexer.open_file(f)
-        output = self.lexer.shunting_yard(file_obj)
-        #self.lexer.print_t_count()
-        self.output = output
-        for postfix in output:
-            for a in postfix:
-                self.insert(a)
-            self.set.append(self.tree_stack.pop())
-        print("printing set:")
-        for s in self.set:
-            print(s)
-
+    def normalize(self, fs):
+        formulas = []
+        formula = ''
+        for f in fs:
+            if f == '\n':
+                formula += f
+                formulas.append(formula)
+                formula = ''
+            else:
+                formula += f
+        return formulas
 
     def read_string(self, formula):
-        # turn formula into
-        print(self.lexer.terms)
-        # print("Formula: " + formula)
-        if (formula == "P"):
-            print("Formula equals hard string P")
-        if (formula == self.lexer.terms[15]):
-            print("Formula equals self.lexer.terms")
-        props = formula
-        print("Props: ")
-        print(props)
-        output = self.lexer.shunting_yard_string(formula)
-        print(output)
-        for postfix in output:
+        tables = []
+        outtie = []
+        formulas = self.normalize(formula)
+        for f in formulas:
+            output = self.lexer.shunting_yard_string(f)
+            outtie += output
+        for idx, postfix in enumerate(outtie):
             for p in postfix:
                 self.insert(p)
-            self.set.append(self.tree_stack.pop())
-        print("Printing set: ")
-        for s in self.set:
-            print(s)
-        self.get_truth_table()
+            tree = self.tree_stack.pop()
+            #self.set.append(self.tree_stack.pop())
+            table = self.get_truth_table(tree, formulas[idx])
+            tables.append(table)
+        return tables

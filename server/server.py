@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import json
 from flask import Flask, render_template, request, jsonify
 #sys.path.append('./src/')
 #import parser.Formula as Formula
@@ -16,10 +17,9 @@ def ajax_req():
     print(request.data)
     g = request.data
     p = parser.Parser()
-
-    shunt = p.read_string(g);
-    
-    return jsonify(shunt)
+    tables = p.read_string(g);
+    print(tables) 
+    return jsonify(tables)
 
 @app.route("/")
 def server_static():

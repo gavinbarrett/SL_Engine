@@ -5,17 +5,6 @@ function request(url, method) {
 	return xhr
 }
 
-function retrieveTruthTable(formulas) {
-	let xhr = request('POST', '/ajax');
-	xhr.onload = () => {
-		console.log(xhr.responseText);
-	};
-	console.log(formulas);
-	for (let i = 0; i < formulas.length; i++) {
-		xhr.send(formulas);	
-	}
-}
-
 function validateFormula(formula) {
 	/* Return true if formula is valid in SL */
 
@@ -26,45 +15,79 @@ function isValid(formula) {
 
 }
 
-function retrieveInput(event) {
-	let formulas = event.target.value;
-	/*FIXME: parse inputs*/
+class ReplPage extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			table: [],	
+		};
+	}
 
-	for (let f = 0; f < formulas.length; f++) {
-		if (formulas[f].slice(-1) == "\n") {
-			console.log(formulas[f]);
-			if (isValid(formulas[f])) {
-				console.log("Formula is acceptable");
-				console.log(formulas[f]);
-			}
-		}	
+	retrieveTruthTable = (formulas) => {
+		let xhr = request('POST', '/ajax');
+		xhr.onload = () => {
+			console.log(xhr.responseText);
+			let respText = JSON.parse(xhr.responseText);
+			console.log(respText);
+			this.setState({ table: xhr.respTest });
+		};
+		console.log(formulas);
+		for (let i = 0; i < formulas.length; i++) {
+			xhr.send(formulas);	
+		}
+	}
+
+	retrieveInput = (event) => {
+        	let formulas = event.target.value;
+        	/*FIXME: parse inputs*/
+
+        	for (let f = 0; f < formulas.length; f++) {
+                	if (formulas[f].slice(-1) == "\n") {
+                        	console.log(formulas[f]);
+                        	if (isValid(formulas[f])) {
+                                	console.log("Formula is acceptable");
+                                	console.log(formulas[f]);
+                        	}
+                	}
+        	}
+
+
+        	if ((formulas.slice(-1) == "\n")) {
+                	if (event.keyCode == "13")
+                        	this.retrieveTruthTable(formulas);
+                	else if (event.keyCode == "8")
+                        	console.log("deleted a formula");
+        	}
+
+        	/* tokenize by newline */
+        	console.log(formulas.split("\n"));
+
+        	/* if element in list is not null (""), pass it through the lexer */
+        	/* we now have the indices of all of the lines, and can report errors */
+
 	}
 
 
-	if ((formulas.slice(-1) == "\n")) {
-		if (event.keyCode == "13")
-			retrieveTruthTable(formulas);
-		else if (event.keyCode == "8")
-			console.log("deleted a formula");
-	}
 
-	/* tokenize by newline */
-	console.log(formulas.split("\n"));
-
-	/* if element in list is not null (""), pass it through the lexer */
-	/* we now have the indices of all of the lines, and can report errors */
-
-}
-
-function ReplPage(props) {
+	render() {
 	return(<div id="replPage">
-		<ReplContainer />
+		<div id="pageContainer">
+		<ReplContainer input={this.retrieveInput}/>
+		<TruthTableContainer hello={this.state.table} />
+		</div>
 	</div>);
+	}
 }
 
 function ReplContainer(props) {
 	return(<div id="replContainer">
-		<textarea id="replInput" onKeyUp={retrieveInput}></textarea>
+		<textarea id="replInput" onKeyUp={props.input}></textarea>
+	</div>);
+}
+
+function TruthTableContainer(props) {
+	return(<div id="ttContainer">
+		{props.hello}
 	</div>);
 }
 

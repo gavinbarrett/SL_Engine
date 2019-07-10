@@ -148,7 +148,15 @@ class Parser:
         truth_table = []
         newExp = []
         tt = list(generate(len(self.seen)))
-        s = self.strip_terms(self.lexer.expressions[0])
+
+        # FIXME: either make s a long list of all truth values,
+        # or make a two dimensional list containing truth values
+        # for each formula
+        s = ''
+        for exp in self.lexer.expressions:
+            s += self.strip_terms(exp)
+        #s = self.strip_terms(self.lexer.expressions[0])
+
         for t in tt:
             self.generate_terms(t, s, newExp)
         if not self.set:

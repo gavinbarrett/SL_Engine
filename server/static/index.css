@@ -77,8 +77,18 @@ html, body {
 	width: 100vw;
         background-image: linear-gradient(#3adb21, #3db32b);
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: flex-start;
+}
+
+#pageContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	height: 90%;
+	width: 90%;
 }
 
 #replContainer {
@@ -90,6 +100,10 @@ html, body {
 	width: 60%;
 	height: 40%;
 
+}
+
+#ttContainer {
+	background-color: white;
 }
 
 #replInput {

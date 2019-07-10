@@ -1,5 +1,4 @@
 import os
-from src.colors import colors
 class Lexer():
 
     ''' Sentential Logic Lexer '''
@@ -157,7 +156,6 @@ class Lexer():
 
     def read_token(self, token, terms):
         ''' Read in tokens and  '''
-        print(terms)
         if token == '\n':
             self.expressions.append(self.tmp)
             self.tmp = ""
@@ -188,32 +186,17 @@ class Lexer():
                 self.read_token(c)      # read tokens up to \n
             self.pop_remaining(output)  # pop remaining to output
         fileObj.close()
-        print(output)
+        #print(output)
         return output
-
-    def normalize(self, fs):
-        formulas = []
-        formula = ''
-        for f in fs:
-            if f == '\n':
-                formulas.append(formula)
-                formula = ''
-            else:
-                formula += f
-        return formulas
 
     def shunting_yard_string(self, formula):
         terms = [chr(i) for i in range(65, 91)]
-        print('calling shunting yard')
+        #print('calling shunting yard')
         output = []
-
-        #FIXME: normalize formulae
-        formulas = self.normalize(formula)
-        print("Normalized:")
-        print(formulas)
         for c in formula:
+            #FIXME: add 
             f = [formula]
-            print(f)
+            #print(f)
             self.read_token(c, terms)
         self.pop_remaining(output)
         return output
