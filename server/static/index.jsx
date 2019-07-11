@@ -33,6 +33,7 @@ class TruthTableRow extends React.Component {
 		let newRow = [];
 		for (let i = 0; i < this.state.r.length; i++)
 			newRow.push(this.state.r[i]);
+			newRow.push(' ');
 		this.setState({
 			row: newRow,
 		});
@@ -83,7 +84,7 @@ class ReplPage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			table: [1,2,3,4],	
+			tables: [],
 		};
 	}
 
@@ -151,8 +152,14 @@ class ReplPage extends React.Component {
 
 		/*  */
 		this.setState({
-			table: truthArray,
-		}, () => { console.log(this.state.table) });
+			tables: truthArray,
+		}, () => { console.log(this.state.tables) });
+	}
+
+	clearTables = () => {
+		this.setState({
+			tables: [],
+		});
 	}
 
 	render() {
@@ -160,7 +167,7 @@ class ReplPage extends React.Component {
 		<div id="pageContainer">
 		<ReplContainer input={this.retrieveInput}/>
 		<div id="tableContainer">
-		{this.state.table}
+		{this.state.tables}
 		</div>
 		</div>
 	</div>);

@@ -102,13 +102,23 @@ html, body {
 }
 
 #tableContainer {
-	background-color: orange;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: Trebuchet MS;
+	letter-spacing: 2px;
+	background-color: white;
 	height: 40%;
 	width: 60%;
+	text-align: center;
 }
 
 #ttContainer {
 	background-color: white;
+}
+
+#ttRow {
+	text-align: center;
 }
 
 #replInput {

@@ -36,7 +36,8 @@ var TruthTableRow = function (_React$Component) {
 			var newRow = [];
 			for (var i = 0; i < _this.state.r.length; i++) {
 				newRow.push(_this.state.r[i]);
-			}_this.setState({
+			}newRow.push(' ');
+			_this.setState({
 				row: newRow
 			});
 		};
@@ -178,14 +179,20 @@ var ReplPage = function (_React$Component3) {
 
 			/*  */
 			_this3.setState({
-				table: truthArray
+				tables: truthArray
 			}, function () {
-				console.log(_this3.state.table);
+				console.log(_this3.state.tables);
+			});
+		};
+
+		_this3.clearTables = function () {
+			_this3.setState({
+				tables: []
 			});
 		};
 
 		_this3.state = {
-			table: [1, 2, 3, 4]
+			tables: []
 		};
 		return _this3;
 	}
@@ -203,7 +210,7 @@ var ReplPage = function (_React$Component3) {
 					React.createElement(
 						"div",
 						{ id: "tableContainer" },
-						this.state.table
+						this.state.tables
 					)
 				)
 			);

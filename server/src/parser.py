@@ -26,27 +26,27 @@ class Parser:
 
     def neg(self, atom):
         ''' Return the negation of the binary truth value '''
-        return 0 if atom == 1 else 1
+        return 'F' if atom == 'T' else 'T'
 
     def and_val(self, x, y):
         ''' Return logical and '''
-        return x and y
+        return 'T' if x == 'T' and y == 'T' else 'F'
 
     def or_val(self, x, y):
         ''' Return logical or '''
-        return x or y
+        return 'T' if x == 'T' or y == 'T' else 'F'
     
     def cond_val(self, x, y):
         ''' Return logical conditional '''
-        if x and not y:
-            return 0
-        return 1
+        if x == 'T' and y == 'F':
+            return 'F'
+        return 'T'
 
     def bicond_val(self, x, y):
         ''' Return logical biconditional '''
-        if (x and y) or (not x and not y):
-            return 1
-        return 0
+        if (x == 'T' and y == 'T') or (x == 'F' and y == 'F'):
+            return 'T'
+        return 'F'
 
     def determine_truth(self, x, y, rootname):
         ''' Determine the truth value of the formula using binary functions '''
