@@ -222,6 +222,7 @@ function run_test() {
 	let test5 = "S -> R";
 
 	let lex = new Lexer();
+	console.log("Passing tests");
 	console.log(test);
 	lex.shunting_yard(test);
 	console.log(test1);
@@ -235,6 +236,63 @@ function run_test() {
 	console.log(test5);
 	lex.shunting_yard(test5);
 
+	console.log("Non-passing tests");
+	let btest = "(a v B)";
+	let btest1 = "((A -> B)";
+	let btest2 = "(A v (C v v B))";
+	let btest3 = "(F F ^ B)";
+	let btest4 = "A -> ";
+	let btest5 = "B ^ S)";
+	console.log(btest);
+	try {	
+	lex.shunting_yard(btest);
+	}
+	catch (error) {
+		console.log("Error is: ");
+		console.log(error);
+	}
+	/* console.log(btest1);
+	try {
+	lex.shunting_yard(btest1);
+	}
+	catch(error) {
+		console.log("Error is: ");
+		console.log(error);
+	} */
+	console.log(btest2);
+	try {
+	lex.shunting_yard(btest2);
+	}
+	catch(error) {
+		console.log("Error is: ");
+		console.log(error);
+	}
+	console.log(btest3);
+	try {
+	lex.shunting_yard(btest3);
+	}
+	catch(error) {
+		console.log("Error is: ");
+		console.log(error);
+	}
+	console.log(btest4);
+	try {
+	lex.shunting_yard(btest4);
+	}
+	catch(error) {
+		console.log("Error is: ");
+		console.log(error);
+	}
+	/*
+	console.log(btest5);
+	try {
+	lex.shunting_yard(btest5);
+	}
+	catch(error) {
+		console.log("Error is: ");
+		console.log(error);
+	}
+	*/
 }
 
 run_test();

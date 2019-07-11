@@ -79,7 +79,7 @@ html, body {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	align-items: flex-start;
+	align-items: center;
 }
 
 #pageContainer {
@@ -99,7 +99,12 @@ html, body {
 	align-items: center;
 	width: 60%;
 	height: 40%;
+}
 
+#tableContainer {
+	background-color: orange;
+	height: 40%;
+	width: 60%;
 }
 
 #ttContainer {
@@ -113,6 +118,4 @@ html, body {
 	resize: none;
 	width: 90%;
 	height: 80%;
-
 }
-

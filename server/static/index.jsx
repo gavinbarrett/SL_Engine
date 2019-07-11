@@ -15,11 +15,75 @@ function isValid(formula) {
 
 }
 
+class TruthTableRow extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			row: [],
+			r: props.row,
+		};
+	}
+
+	componentDidMount() {
+		this.addValues();
+	}	
+
+	addValues = () => {
+		console.log("calling TTR's addValue function");
+		let newRow = [];
+		for (let i = 0; i < this.state.r.length; i++)
+			newRow.push(this.state.r[i]);
+		this.setState({
+			row: newRow,
+		});
+	}
+
+	render() {
+		return(<div className="ttRow">
+			{this.state.row}
+		</div>);	
+	}
+
+}
+
+class TruthTable extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state =  {
+			table: [],
+			t: props.table,
+		};
+	}
+
+	componentDidMount() {
+		this.addValues();
+	}
+
+	addValues = () => {
+		console.log("Calling TT's addValues function");
+		let newTable = [];
+		for (let i = 0; i < this.state.t.length; i++) {
+			let tr = <TruthTableRow row={this.state.t[i]} key={i}/>
+			newTable.push(tr);
+		}
+		this.setState({
+			table: newTable,
+		});
+	}
+
+	render() {
+		return(<div className="tt">
+			{this.state.table}
+		</div>);
+	}
+
+}
+
 class ReplPage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			table: [],	
+			table: [1,2,3,4],	
 		};
 	}
 
@@ -28,8 +92,10 @@ class ReplPage extends React.Component {
 		xhr.onload = () => {
 			console.log(xhr.responseText);
 			let respText = JSON.parse(xhr.responseText);
-			console.log(respText);
-			this.setState({ table: xhr.respTest });
+			console.log(respText[0][0]);
+			/*this.setState({ table: xhr.respTest });*/
+			let respT = respText[0];
+			this.showTT(respText);
 		};
 		console.log(formulas);
 		for (let i = 0; i < formulas.length; i++) {
@@ -67,13 +133,35 @@ class ReplPage extends React.Component {
 
 	}
 
+	showTT = (respT) => {
+		/* Display the truth tables */
+		console.log("Displaying");
+		console.log(respT);
+		let truthArray = [];
+		for (let i = 0; i < respT.length; i++) {
+			/* Each respT[i] is a truth table */
+			let tt = <TruthTable table={respT[i]} key={i}/>;
+			truthArray.push(tt);
+			/* create truth table object */
+			/* create rows for truth table and pass in vals */
+			/*  */
+		
 
+		}
+
+		/*  */
+		this.setState({
+			table: truthArray,
+		}, () => { console.log(this.state.table) });
+	}
 
 	render() {
 	return(<div id="replPage">
 		<div id="pageContainer">
 		<ReplContainer input={this.retrieveInput}/>
-		<TruthTableContainer hello={this.state.table} />
+		<div id="tableContainer">
+		{this.state.table}
+		</div>
 		</div>
 	</div>);
 	}
@@ -87,7 +175,7 @@ function ReplContainer(props) {
 
 function TruthTableContainer(props) {
 	return(<div id="ttContainer">
-		{props.hello}
+		<TruthTable />
 	</div>);
 }
 

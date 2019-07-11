@@ -66,7 +66,7 @@ class Parser:
             # need to write a function to take in the expression
             # and the list of values in order to determine how many truth
             # values need to be inside of the list
-            print(self.tt)
+            #print(self.tt)
             t = self.tt[0]
             self.tt = self.tt[1:]
             root.eval_stack.append(t)
@@ -151,7 +151,7 @@ class Parser:
             self.in_order(tree, table)
             truth_table.append(table)
         truth_table = truth_table[::1]
-        print(exp)
+        #print(exp)
         for tru in truth_table:
             print(tru)
         print("\n")
