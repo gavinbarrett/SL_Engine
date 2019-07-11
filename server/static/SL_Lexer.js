@@ -77,6 +77,7 @@ class Lexer {
 					a = this.op_stack.pop();
 				} else {
 					console.log('No opening brace detected!');
+					throw brace;
 				}
 			}
 		}
@@ -106,9 +107,8 @@ class Lexer {
 
 	get_op(operator) {
 		let op = '';
-		for (let i = this.l_stack.length; i > 0; i--) {
+		for (let i = this.l_stack.length; i > 0; i--)
 			op = this.l_stack.pop() + operator;
-		}
 		return op;
 	}
 
@@ -169,14 +169,30 @@ class Lexer {
 			this.expressions.push(this.tmp);
 			this.tmp = '';
 		} else if (this.terms.includes(charac)) {
+			try {
 			this.tmp += charac;
 			this.handle_terms(charac);
+			} catch(error) {
+				console.log("Cannot parse: ", error);
+				process.exit();
+			}
+
 		} else if (this.braces.includes(charac)) {
+			try {
 			this.tmp += charac;
 			this.handle_braces(charac);
+			} catch(error) {
+				console.log("Cannot parse: ", error);
+				process.exit();
+			}
 		} else if (this.poss_ops.includes(charac)) {
+			try {
 			this.tmp += charac;
 			this.handle_operators(charac);
+			} catch(error) {
+				console.log("Cannot parse: ", error);
+				process.exit();
+			}
 		} else if (this.space == charac) {
 			//this.tmp += charac;
 		} else if (!charac) {
@@ -193,8 +209,10 @@ class Lexer {
 			if (a == undefined) {
 				continue;
 			}
-			if (this.braces_open.includes(a))
+			if (this.braces_open.includes(a)) {
 				console.log("No matching closing brace");
+				throw a;
+			}
 			this.postfix.push(a);
 		}
 		output.push(this.postfix);
@@ -205,9 +223,13 @@ class Lexer {
 	shunting_yard(formulas) {
 		/* Return the postfix of the formula */
 		let output = [];
+		try {
 		for (let i = 0; i < formulas.length; i++)
 			this.read_charac(formulas[i]);
 		this.pop_remaining(output);
+		} catch(error) {
+			console.log("Error is: ", error);
+		}
 		console.log(output);
 	}
 }
@@ -251,14 +273,14 @@ function run_test() {
 		console.log("Error is: ");
 		console.log(error);
 	}
-	/* console.log(btest1);
+	console.log(btest1);
 	try {
 	lex.shunting_yard(btest1);
 	}
 	catch(error) {
 		console.log("Error is: ");
 		console.log(error);
-	} */
+	}
 	console.log(btest2);
 	try {
 	lex.shunting_yard(btest2);
@@ -283,7 +305,6 @@ function run_test() {
 		console.log("Error is: ");
 		console.log(error);
 	}
-	/*
 	console.log(btest5);
 	try {
 	lex.shunting_yard(btest5);
@@ -292,7 +313,6 @@ function run_test() {
 		console.log("Error is: ");
 		console.log(error);
 	}
-	*/
 }
 
 run_test();
