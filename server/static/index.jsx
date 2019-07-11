@@ -93,8 +93,6 @@ class ReplPage extends React.Component {
 		xhr.onload = () => {
 			console.log(xhr.responseText);
 			let respText = JSON.parse(xhr.responseText);
-			console.log(respText[0][0]);
-			/*this.setState({ table: xhr.respTest });*/
 			let respT = respText[0];
 			this.showTT(respText);
 		};
@@ -143,14 +141,7 @@ class ReplPage extends React.Component {
 			/* Each respT[i] is a truth table */
 			let tt = <TruthTable table={respT[i]} key={i}/>;
 			truthArray.push(tt);
-			/* create truth table object */
-			/* create rows for truth table and pass in vals */
-			/*  */
-		
-
 		}
-
-		/*  */
 		this.setState({
 			tables: truthArray,
 		}, () => { console.log(this.state.tables) });

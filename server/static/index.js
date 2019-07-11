@@ -127,8 +127,6 @@ var ReplPage = function (_React$Component3) {
 			xhr.onload = function () {
 				console.log(xhr.responseText);
 				var respText = JSON.parse(xhr.responseText);
-				console.log(respText[0][0]);
-				/*this.setState({ table: xhr.respTest });*/
 				var respT = respText[0];
 				_this3.showTT(respText);
 			};
@@ -172,12 +170,7 @@ var ReplPage = function (_React$Component3) {
 				/* Each respT[i] is a truth table */
 				var tt = React.createElement(TruthTable, { table: respT[i], key: i });
 				truthArray.push(tt);
-				/* create truth table object */
-				/* create rows for truth table and pass in vals */
-				/*  */
 			}
-
-			/*  */
 			_this3.setState({
 				tables: truthArray
 			}, function () {

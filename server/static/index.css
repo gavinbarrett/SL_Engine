@@ -103,9 +103,10 @@ html, body {
 
 #tableContainer {
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
 	align-items: center;
 	font-family: Trebuchet MS;
+	overflow-y: auto;
 	letter-spacing: 2px;
 	background-color: white;
 	height: 40%;
@@ -117,13 +118,23 @@ html, body {
 	background-color: white;
 }
 
-#ttRow {
+::-webkit-scrollbar {
+	background-color: green;
+}
+
+.tt {
+	padding: 5%;
+}
+
+.ttRow {
+	display: block;
 	text-align: center;
+
 }
 
 #replInput {
 	display: flex;
-	font-size: 3vw;
+	font-size: 2vw;
 	text-align: center;
 	resize: none;
 	width: 90%;
