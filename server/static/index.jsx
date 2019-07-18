@@ -2,7 +2,7 @@ function request(url, method) {
 	/* Open an http request */
 	let xhr = new XMLHttpRequest();
 	xhr.open(url, method, true);
-	return xhr
+	return xhr;
 }
 
 function validateFormula(formula) {
@@ -13,6 +13,53 @@ function validateFormula(formula) {
 function isValid(formula) {
 	/* Returns true if formula is accepted in SL */
 
+}
+
+class Segment extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			symbol: props.sym,
+			english: props.eng,
+		}
+	}
+	render() {
+		return(<div className="segment">
+			<div className="sym">
+			{this.state.symbol}
+			</div>
+			<div className="eng">
+			{this.state.english}
+			</div>
+		</div>);
+	}
+}
+
+class Banner extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			negation: "~",
+			neg: "negation",
+			conjunction: "^",
+			con: "conjunction",
+			disjunction: "v",
+			dis: "disjunction",
+			conditional: "->",
+			cond: "conditional",
+			biconditional: "<->",
+			bicond: "biconditional",
+		}
+	}
+	render() {
+		return(<div id="bannerWrapper">
+		<Segment sym={this.state.negation} eng={this.state.neg} />
+		<Segment sym={this.state.conjunction} eng={this.state.con} />
+		<Segment sym={this.state.disjunction} eng={this.state.dis} />
+		<Segment sym={this.state.conditional} eng={this.state.cond} />
+		<Segment sym={this.state.biconditional} eng={this.state.bicond} />
+		</div>);
+	}
 }
 
 class TruthTableRow extends React.Component {
@@ -44,7 +91,6 @@ class TruthTableRow extends React.Component {
 			{this.state.row}
 		</div>);	
 	}
-
 }
 
 class TruthTable extends React.Component {
@@ -77,7 +123,44 @@ class TruthTable extends React.Component {
 			{this.state.table}
 		</div>);
 	}
+}
 
+class TableOutput extends React.Component {
+        constructor(props) {
+                super(props);
+                this.state = {
+                        tables: props.tables,
+			scroll: props.scroll,
+                };
+		console.log(props.tables);
+        }
+	
+	componentDidMount() {
+		{this.state.scroll}
+	}
+
+        render() {
+                return(<div id="tableContainer" className="scrollUpHidden">
+                        {this.state.tables}
+                </div>);
+        }
+}
+
+
+class Button extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			retrieve: props.retInput,
+			button: 'check',
+		}
+	}
+
+	render() {
+		return(<div id="button" onClick={this.state.retrieve}>
+			{this.state.button}
+		</div>);
+	}
 }
 
 class ReplPage extends React.Component {
@@ -85,6 +168,7 @@ class ReplPage extends React.Component {
 		super(props);
 		this.state = {
 			tables: [],
+			out: undefined,
 		};
 	}
 
@@ -103,7 +187,8 @@ class ReplPage extends React.Component {
 	}
 
 	retrieveInput = (event) => {
-        	let formulas = event.target.value;
+        	let formulas = document.getElementById('replInput').value;
+		//let formulas = event.target.value;
         	/*FIXME: parse inputs*/
 
         	for (let f = 0; f < formulas.length; f++) {
@@ -115,15 +200,19 @@ class ReplPage extends React.Component {
                         	}
                 	}
         	}
-
-
+		if (formulas.slice(-1) != "\n") {
+			console.log("adding newline");
+			formulas += "\n";
+		}
+		this.retrieveTruthTable(formulas);
+		/*
         	if ((formulas.slice(-1) == "\n")) {
                 	if (event.keyCode == "13")
                         	this.retrieveTruthTable(formulas);
                 	else if (event.keyCode == "8")
                         	console.log("deleted a formula");
         	}
-
+		*/
         	/* tokenize by newline */
         	console.log(formulas.split("\n"));
 
@@ -131,6 +220,8 @@ class ReplPage extends React.Component {
         	/* we now have the indices of all of the lines, and can report errors */
 
 	}
+
+	
 
 	showTT = (respT) => {
 		/* Display the truth tables */
@@ -142,9 +233,17 @@ class ReplPage extends React.Component {
 			let tt = <TruthTable table={respT[i]} key={i}/>;
 			truthArray.push(tt);
 		}
+
+		let ttOut = <TableOutput tables={truthArray} scroll={this.scrollUp}/>
+
 		this.setState({
-			tables: truthArray,
+			out: ttOut,
 		}, () => { console.log(this.state.tables) });
+	}
+	
+	retrieve = () => {
+		let e = document.getElementById('replInput').value;
+		console.log(e);
 	}
 
 	clearTables = () => {
@@ -153,21 +252,27 @@ class ReplPage extends React.Component {
 		});
 	}
 
+	scrollUp = () => {
+		let s = document.getElementById('tableContainer');
+		s.classList.toggle('scrollUp');
+		s.classList.toggle('scrollUpHidden');
+	}
+
 	render() {
 	return(<div id="replPage">
+		<Banner />
 		<div id="pageContainer">
-		<ReplContainer input={this.retrieveInput}/>
-		<div id="tableContainer">
-		{this.state.tables}
+		<ReplContainer />
+		<Button retInput={this.retrieveInput}/>
 		</div>
-		</div>
+		{this.state.out}
 	</div>);
 	}
 }
 
 function ReplContainer(props) {
 	return(<div id="replContainer">
-		<textarea id="replInput" onKeyUp={props.input}></textarea>
+		<textarea id="replInput"></textarea>
 	</div>);
 }
 

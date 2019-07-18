@@ -23,30 +23,109 @@ function isValid(formula) {
 
 }
 
-var TruthTableRow = function (_React$Component) {
-	_inherits(TruthTableRow, _React$Component);
+var Segment = function (_React$Component) {
+	_inherits(Segment, _React$Component);
+
+	function Segment(props) {
+		_classCallCheck(this, Segment);
+
+		var _this = _possibleConstructorReturn(this, (Segment.__proto__ || Object.getPrototypeOf(Segment)).call(this, props));
+
+		_this.state = {
+			symbol: props.sym,
+			english: props.eng
+		};
+		return _this;
+	}
+
+	_createClass(Segment, [{
+		key: "render",
+		value: function render() {
+			return React.createElement(
+				"div",
+				{ className: "segment" },
+				React.createElement(
+					"div",
+					{ className: "sym" },
+					this.state.symbol
+				),
+				React.createElement(
+					"div",
+					{ className: "eng" },
+					this.state.english
+				)
+			);
+		}
+	}]);
+
+	return Segment;
+}(React.Component);
+
+var Banner = function (_React$Component2) {
+	_inherits(Banner, _React$Component2);
+
+	function Banner(props) {
+		_classCallCheck(this, Banner);
+
+		var _this2 = _possibleConstructorReturn(this, (Banner.__proto__ || Object.getPrototypeOf(Banner)).call(this, props));
+
+		_this2.state = {
+			negation: "~",
+			neg: "negation",
+			conjunction: "^",
+			con: "conjunction",
+			disjunction: "v",
+			dis: "disjunction",
+			conditional: "->",
+			cond: "conditional",
+			biconditional: "<->",
+			bicond: "biconditional"
+		};
+		return _this2;
+	}
+
+	_createClass(Banner, [{
+		key: "render",
+		value: function render() {
+			return React.createElement(
+				"div",
+				{ id: "bannerWrapper" },
+				React.createElement(Segment, { sym: this.state.negation, eng: this.state.neg }),
+				React.createElement(Segment, { sym: this.state.conjunction, eng: this.state.con }),
+				React.createElement(Segment, { sym: this.state.disjunction, eng: this.state.dis }),
+				React.createElement(Segment, { sym: this.state.conditional, eng: this.state.cond }),
+				React.createElement(Segment, { sym: this.state.biconditional, eng: this.state.bicond })
+			);
+		}
+	}]);
+
+	return Banner;
+}(React.Component);
+
+var TruthTableRow = function (_React$Component3) {
+	_inherits(TruthTableRow, _React$Component3);
 
 	function TruthTableRow(props) {
 		_classCallCheck(this, TruthTableRow);
 
-		var _this = _possibleConstructorReturn(this, (TruthTableRow.__proto__ || Object.getPrototypeOf(TruthTableRow)).call(this, props));
+		var _this3 = _possibleConstructorReturn(this, (TruthTableRow.__proto__ || Object.getPrototypeOf(TruthTableRow)).call(this, props));
 
-		_this.addValues = function () {
+		_this3.addValues = function () {
 			console.log("calling TTR's addValue function");
 			var newRow = [];
-			for (var i = 0; i < _this.state.r.length; i++) {
-				newRow.push(_this.state.r[i]);
+			for (var i = 0; i < _this3.state.r.length; i++) {
+				newRow.push(_this3.state.r[i]);
 			}newRow.push(' ');
-			_this.setState({
+			_this3.setState({
 				row: newRow
 			});
 		};
 
-		_this.state = {
+		_this3.state = {
 			row: [],
 			r: props.row
 		};
-		return _this;
+		return _this3;
 	}
 
 	_createClass(TruthTableRow, [{
@@ -68,31 +147,31 @@ var TruthTableRow = function (_React$Component) {
 	return TruthTableRow;
 }(React.Component);
 
-var TruthTable = function (_React$Component2) {
-	_inherits(TruthTable, _React$Component2);
+var TruthTable = function (_React$Component4) {
+	_inherits(TruthTable, _React$Component4);
 
 	function TruthTable(props) {
 		_classCallCheck(this, TruthTable);
 
-		var _this2 = _possibleConstructorReturn(this, (TruthTable.__proto__ || Object.getPrototypeOf(TruthTable)).call(this, props));
+		var _this4 = _possibleConstructorReturn(this, (TruthTable.__proto__ || Object.getPrototypeOf(TruthTable)).call(this, props));
 
-		_this2.addValues = function () {
+		_this4.addValues = function () {
 			console.log("Calling TT's addValues function");
 			var newTable = [];
-			for (var i = 0; i < _this2.state.t.length; i++) {
-				var tr = React.createElement(TruthTableRow, { row: _this2.state.t[i], key: i });
+			for (var i = 0; i < _this4.state.t.length; i++) {
+				var tr = React.createElement(TruthTableRow, { row: _this4.state.t[i], key: i });
 				newTable.push(tr);
 			}
-			_this2.setState({
+			_this4.setState({
 				table: newTable
 			});
 		};
 
-		_this2.state = {
+		_this4.state = {
 			table: [],
 			t: props.table
 		};
-		return _this2;
+		return _this4;
 	}
 
 	_createClass(TruthTable, [{
@@ -114,21 +193,87 @@ var TruthTable = function (_React$Component2) {
 	return TruthTable;
 }(React.Component);
 
-var ReplPage = function (_React$Component3) {
-	_inherits(ReplPage, _React$Component3);
+var TableOutput = function (_React$Component5) {
+	_inherits(TableOutput, _React$Component5);
+
+	function TableOutput(props) {
+		_classCallCheck(this, TableOutput);
+
+		var _this5 = _possibleConstructorReturn(this, (TableOutput.__proto__ || Object.getPrototypeOf(TableOutput)).call(this, props));
+
+		_this5.state = {
+			tables: props.tables,
+			scroll: props.scroll
+		};
+		console.log(props.tables);
+		return _this5;
+	}
+
+	_createClass(TableOutput, [{
+		key: "componentDidMount",
+		value: function componentDidMount() {
+			{
+				this.state.scroll;
+			}
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			return React.createElement(
+				"div",
+				{ id: "tableContainer", className: "scrollUpHidden" },
+				this.state.tables
+			);
+		}
+	}]);
+
+	return TableOutput;
+}(React.Component);
+
+var Button = function (_React$Component6) {
+	_inherits(Button, _React$Component6);
+
+	function Button(props) {
+		_classCallCheck(this, Button);
+
+		var _this6 = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this, props));
+
+		_this6.state = {
+			retrieve: props.retInput,
+			button: 'check'
+		};
+		return _this6;
+	}
+
+	_createClass(Button, [{
+		key: "render",
+		value: function render() {
+			return React.createElement(
+				"div",
+				{ id: "button", onClick: this.state.retrieve },
+				this.state.button
+			);
+		}
+	}]);
+
+	return Button;
+}(React.Component);
+
+var ReplPage = function (_React$Component7) {
+	_inherits(ReplPage, _React$Component7);
 
 	function ReplPage(props) {
 		_classCallCheck(this, ReplPage);
 
-		var _this3 = _possibleConstructorReturn(this, (ReplPage.__proto__ || Object.getPrototypeOf(ReplPage)).call(this, props));
+		var _this7 = _possibleConstructorReturn(this, (ReplPage.__proto__ || Object.getPrototypeOf(ReplPage)).call(this, props));
 
-		_this3.retrieveTruthTable = function (formulas) {
+		_this7.retrieveTruthTable = function (formulas) {
 			var xhr = request('POST', '/ajax');
 			xhr.onload = function () {
 				console.log(xhr.responseText);
 				var respText = JSON.parse(xhr.responseText);
 				var respT = respText[0];
-				_this3.showTT(respText);
+				_this7.showTT(respText);
 			};
 			console.log(formulas);
 			for (var i = 0; i < formulas.length; i++) {
@@ -136,8 +281,9 @@ var ReplPage = function (_React$Component3) {
 			}
 		};
 
-		_this3.retrieveInput = function (event) {
-			var formulas = event.target.value;
+		_this7.retrieveInput = function (event) {
+			var formulas = document.getElementById('replInput').value;
+			//let formulas = event.target.value;
 			/*FIXME: parse inputs*/
 
 			for (var f = 0; f < formulas.length; f++) {
@@ -149,11 +295,19 @@ var ReplPage = function (_React$Component3) {
 					}
 				}
 			}
-
-			if (formulas.slice(-1) == "\n") {
-				if (event.keyCode == "13") _this3.retrieveTruthTable(formulas);else if (event.keyCode == "8") console.log("deleted a formula");
+			if (formulas.slice(-1) != "\n") {
+				console.log("adding newline");
+				formulas += "\n";
 			}
-
+			_this7.retrieveTruthTable(formulas);
+			/*
+         	if ((formulas.slice(-1) == "\n")) {
+                 	if (event.keyCode == "13")
+                         	this.retrieveTruthTable(formulas);
+                 	else if (event.keyCode == "8")
+                         	console.log("deleted a formula");
+         	}
+   */
 			/* tokenize by newline */
 			console.log(formulas.split("\n"));
 
@@ -161,7 +315,7 @@ var ReplPage = function (_React$Component3) {
 			/* we now have the indices of all of the lines, and can report errors */
 		};
 
-		_this3.showTT = function (respT) {
+		_this7.showTT = function (respT) {
 			/* Display the truth tables */
 			console.log("Displaying");
 			console.log(respT);
@@ -171,23 +325,38 @@ var ReplPage = function (_React$Component3) {
 				var tt = React.createElement(TruthTable, { table: respT[i], key: i });
 				truthArray.push(tt);
 			}
-			_this3.setState({
-				tables: truthArray
+
+			var ttOut = React.createElement(TableOutput, { tables: truthArray, scroll: _this7.scrollUp });
+
+			_this7.setState({
+				out: ttOut
 			}, function () {
-				console.log(_this3.state.tables);
+				console.log(_this7.state.tables);
 			});
 		};
 
-		_this3.clearTables = function () {
-			_this3.setState({
+		_this7.retrieve = function () {
+			var e = document.getElementById('replInput').value;
+			console.log(e);
+		};
+
+		_this7.clearTables = function () {
+			_this7.setState({
 				tables: []
 			});
 		};
 
-		_this3.state = {
-			tables: []
+		_this7.scrollUp = function () {
+			var s = document.getElementById('tableContainer');
+			s.classList.toggle('scrollUp');
+			s.classList.toggle('scrollUpHidden');
 		};
-		return _this3;
+
+		_this7.state = {
+			tables: [],
+			out: undefined
+		};
+		return _this7;
 	}
 
 	_createClass(ReplPage, [{
@@ -196,16 +365,14 @@ var ReplPage = function (_React$Component3) {
 			return React.createElement(
 				"div",
 				{ id: "replPage" },
+				React.createElement(Banner, null),
 				React.createElement(
 					"div",
 					{ id: "pageContainer" },
-					React.createElement(ReplContainer, { input: this.retrieveInput }),
-					React.createElement(
-						"div",
-						{ id: "tableContainer" },
-						this.state.tables
-					)
-				)
+					React.createElement(ReplContainer, null),
+					React.createElement(Button, { retInput: this.retrieveInput })
+				),
+				this.state.out
 			);
 		}
 	}]);
@@ -217,7 +384,7 @@ function ReplContainer(props) {
 	return React.createElement(
 		"div",
 		{ id: "replContainer" },
-		React.createElement("textarea", { id: "replInput", onKeyUp: props.input })
+		React.createElement("textarea", { id: "replInput" })
 	);
 }
 
