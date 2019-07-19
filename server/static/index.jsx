@@ -76,7 +76,6 @@ class TruthTableRow extends React.Component {
 	}	
 
 	addValues = () => {
-		console.log("calling TTR's addValue function");
 		let newRow = [];
 		for (let i = 0; i < this.state.r.length; i++)
 			newRow.push(this.state.r[i]);
@@ -99,15 +98,13 @@ class TruthTable extends React.Component {
 		this.state =  {
 			table: [],
 			t: props.table,
+			exp: props.exp,
 		};
 	}
-
 	componentDidMount() {
 		this.addValues();
 	}
-
 	addValues = () => {
-		console.log("Calling TT's addValues function");
 		let newTable = [];
 		for (let i = 0; i < this.state.t.length; i++) {
 			let tr = <TruthTableRow row={this.state.t[i]} key={i}/>
@@ -117,9 +114,10 @@ class TruthTable extends React.Component {
 			table: newTable,
 		});
 	}
-
 	render() {
 		return(<div className="tt">
+			{this.state.exp}
+			<hr></hr>
 			{this.state.table}
 		</div>);
 	}
@@ -130,18 +128,20 @@ class TableOutput extends React.Component {
                 super(props);
                 this.state = {
                         tables: props.tables,
-			scroll: props.scroll,
+			scrollUp: props.scrollUp,
+			scrollDown: props.scrollDown,
                 };
 		console.log(props.tables);
         }
 	
 	componentDidMount() {
-		{this.state.scroll}
+		this.state.scrollUp();
 	}
 
         render() {
                 return(<div id="tableContainer" className="scrollUpHidden">
-                        {this.state.tables}
+                        <div className="close" onClick={this.state.scrollDown}></div>
+			{this.state.tables}
                 </div>);
         }
 }
@@ -152,13 +152,31 @@ class Button extends React.Component {
 		super(props);
 		this.state = {
 			retrieve: props.retInput,
-			button: 'check',
+			button: 'calculate',
 		}
 	}
 
 	render() {
 		return(<div id="button" onClick={this.state.retrieve}>
 			{this.state.button}
+		</div>);
+	}
+}
+
+class Truth extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			a: "T",
+			b: "F",
+		}
+	}
+
+	render() {
+		return(<div>
+			{this.state.a}
+			<hr></hr>
+			{this.state.b}
 		</div>);
 	}
 }
@@ -177,13 +195,15 @@ class ReplPage extends React.Component {
 		xhr.onload = () => {
 			console.log(xhr.responseText);
 			let respText = JSON.parse(xhr.responseText);
-			let respT = respText[0];
-			this.showTT(respText);
+			let respT = respText;
+			console.log(respText[1]);
+			console.log(respText[2]);
+			this.showTT(respT, formulas);
 		};
 		console.log(formulas);
-		for (let i = 0; i < formulas.length; i++) {
-			xhr.send(formulas);	
-		}
+		/*for (let i = 0; i < formulas.length; i++) {*/
+		xhr.send(formulas);	
+		/*}*/
 	}
 
 	retrieveInput = (event) => {
@@ -205,36 +225,47 @@ class ReplPage extends React.Component {
 			formulas += "\n";
 		}
 		this.retrieveTruthTable(formulas);
-		/*
-        	if ((formulas.slice(-1) == "\n")) {
-                	if (event.keyCode == "13")
-                        	this.retrieveTruthTable(formulas);
-                	else if (event.keyCode == "8")
-                        	console.log("deleted a formula");
-        	}
-		*/
-        	/* tokenize by newline */
-        	console.log(formulas.split("\n"));
-
+		
+		/* tokenize by newline *
+		 */
+        	
+		console.log(formulas.split("\n"));
         	/* if element in list is not null (""), pass it through the lexer */
         	/* we now have the indices of all of the lines, and can report errors */
-
 	}
 
-	
+	normalize = (formulas) => {
+		let forms = [];
+		let form = ''
+		for (let i = 0; i < formulas.length; i++) {
+			if (formulas[i] == '\n') {
+				form += formulas[i];
+				forms.push(form);
+				form = '';
+			} else {
+				form += formulas[i];
+			}
+		}
+		return forms;
+	}
 
-	showTT = (respT) => {
+	showTT = (respT, formulas) => {
 		/* Display the truth tables */
-		console.log("Displaying");
+		formulas = this.normalize(formulas);
+		let respT1 = respT[0];
+		let re = respT[1];
+		let respT2 = respT[2];
 		console.log(respT);
 		let truthArray = [];
-		for (let i = 0; i < respT.length; i++) {
+		for (let i = 0; i < respT1.length; i++) {
 			/* Each respT[i] is a truth table */
-			let tt = <TruthTable table={respT[i]} key={i}/>;
-			truthArray.push(tt);
+
+			let table = <div className="tableWrap"><TruthTable table={respT2[i]} exp={re[i]} key={i}/><TruthTable table={respT1[i]} exp={formulas[i]} key={i}/></div>;
+
+			truthArray.push(table);
 		}
 
-		let ttOut = <TableOutput tables={truthArray} scroll={this.scrollUp}/>
+		let ttOut = <TableOutput tables={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>
 
 		this.setState({
 			out: ttOut,
@@ -254,8 +285,16 @@ class ReplPage extends React.Component {
 
 	scrollUp = () => {
 		let s = document.getElementById('tableContainer');
-		s.classList.toggle('scrollUp');
 		s.classList.toggle('scrollUpHidden');
+		s.classList.toggle('scrollUp');
+	}
+
+	scrollDown = () => {
+		let s = document.getElementById('tableContainer');
+		s.classList.toggle('scrollDown');
+		setTimeout(() => {
+			this.setState({ out: undefined })
+		}, 1000);
 	}
 
 	render() {
@@ -288,20 +327,23 @@ function RenderRepl() {
 
 function Page(props) {
 	return(<div id="message">
-		<Heading heading="Organon" />
+		<Heading heading="Organon" sub="propositional logic analyzer"/>
 	</div>);
 }
 
 function Bottom(props) {
 	return(<div id="bottom">
-		<InputRedirect click="click here to enter the repl" />
+		<InputRedirect click="check my logic" />
 	</div>);
 }
 
 function Heading(props) {
 	return(<div id="heading">
 		{props.heading}
-	</div>);
+		<div id="subHead">
+		{props.sub}
+		</div>
+		</div>);
 }
 
 function InputRedirect(props) {

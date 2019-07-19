@@ -111,7 +111,6 @@ var TruthTableRow = function (_React$Component3) {
 		var _this3 = _possibleConstructorReturn(this, (TruthTableRow.__proto__ || Object.getPrototypeOf(TruthTableRow)).call(this, props));
 
 		_this3.addValues = function () {
-			console.log("calling TTR's addValue function");
 			var newRow = [];
 			for (var i = 0; i < _this3.state.r.length; i++) {
 				newRow.push(_this3.state.r[i]);
@@ -156,7 +155,6 @@ var TruthTable = function (_React$Component4) {
 		var _this4 = _possibleConstructorReturn(this, (TruthTable.__proto__ || Object.getPrototypeOf(TruthTable)).call(this, props));
 
 		_this4.addValues = function () {
-			console.log("Calling TT's addValues function");
 			var newTable = [];
 			for (var i = 0; i < _this4.state.t.length; i++) {
 				var tr = React.createElement(TruthTableRow, { row: _this4.state.t[i], key: i });
@@ -169,7 +167,8 @@ var TruthTable = function (_React$Component4) {
 
 		_this4.state = {
 			table: [],
-			t: props.table
+			t: props.table,
+			exp: props.exp
 		};
 		return _this4;
 	}
@@ -185,6 +184,8 @@ var TruthTable = function (_React$Component4) {
 			return React.createElement(
 				"div",
 				{ className: "tt" },
+				this.state.exp,
+				React.createElement("hr", null),
 				this.state.table
 			);
 		}
@@ -203,7 +204,8 @@ var TableOutput = function (_React$Component5) {
 
 		_this5.state = {
 			tables: props.tables,
-			scroll: props.scroll
+			scrollUp: props.scrollUp,
+			scrollDown: props.scrollDown
 		};
 		console.log(props.tables);
 		return _this5;
@@ -212,9 +214,7 @@ var TableOutput = function (_React$Component5) {
 	_createClass(TableOutput, [{
 		key: "componentDidMount",
 		value: function componentDidMount() {
-			{
-				this.state.scroll;
-			}
+			this.state.scrollUp();
 		}
 	}, {
 		key: "render",
@@ -222,6 +222,7 @@ var TableOutput = function (_React$Component5) {
 			return React.createElement(
 				"div",
 				{ id: "tableContainer", className: "scrollUpHidden" },
+				React.createElement("div", { className: "close", onClick: this.state.scrollDown }),
 				this.state.tables
 			);
 		}
@@ -240,7 +241,7 @@ var Button = function (_React$Component6) {
 
 		_this6.state = {
 			retrieve: props.retInput,
-			button: 'check'
+			button: 'calculate'
 		};
 		return _this6;
 	}
@@ -259,29 +260,62 @@ var Button = function (_React$Component6) {
 	return Button;
 }(React.Component);
 
-var ReplPage = function (_React$Component7) {
-	_inherits(ReplPage, _React$Component7);
+var Truth = function (_React$Component7) {
+	_inherits(Truth, _React$Component7);
+
+	function Truth(props) {
+		_classCallCheck(this, Truth);
+
+		var _this7 = _possibleConstructorReturn(this, (Truth.__proto__ || Object.getPrototypeOf(Truth)).call(this, props));
+
+		_this7.state = {
+			a: "T",
+			b: "F"
+		};
+		return _this7;
+	}
+
+	_createClass(Truth, [{
+		key: "render",
+		value: function render() {
+			return React.createElement(
+				"div",
+				null,
+				this.state.a,
+				React.createElement("hr", null),
+				this.state.b
+			);
+		}
+	}]);
+
+	return Truth;
+}(React.Component);
+
+var ReplPage = function (_React$Component8) {
+	_inherits(ReplPage, _React$Component8);
 
 	function ReplPage(props) {
 		_classCallCheck(this, ReplPage);
 
-		var _this7 = _possibleConstructorReturn(this, (ReplPage.__proto__ || Object.getPrototypeOf(ReplPage)).call(this, props));
+		var _this8 = _possibleConstructorReturn(this, (ReplPage.__proto__ || Object.getPrototypeOf(ReplPage)).call(this, props));
 
-		_this7.retrieveTruthTable = function (formulas) {
+		_this8.retrieveTruthTable = function (formulas) {
 			var xhr = request('POST', '/ajax');
 			xhr.onload = function () {
 				console.log(xhr.responseText);
 				var respText = JSON.parse(xhr.responseText);
-				var respT = respText[0];
-				_this7.showTT(respText);
+				var respT = respText;
+				console.log(respText[1]);
+				console.log(respText[2]);
+				_this8.showTT(respT, formulas);
 			};
 			console.log(formulas);
-			for (var i = 0; i < formulas.length; i++) {
-				xhr.send(formulas);
-			}
+			/*for (let i = 0; i < formulas.length; i++) {*/
+			xhr.send(formulas);
+			/*}*/
 		};
 
-		_this7.retrieveInput = function (event) {
+		_this8.retrieveInput = function (event) {
 			var formulas = document.getElementById('replInput').value;
 			//let formulas = event.target.value;
 			/*FIXME: parse inputs*/
@@ -299,64 +333,91 @@ var ReplPage = function (_React$Component7) {
 				console.log("adding newline");
 				formulas += "\n";
 			}
-			_this7.retrieveTruthTable(formulas);
-			/*
-         	if ((formulas.slice(-1) == "\n")) {
-                 	if (event.keyCode == "13")
-                         	this.retrieveTruthTable(formulas);
-                 	else if (event.keyCode == "8")
-                         	console.log("deleted a formula");
-         	}
-   */
-			/* tokenize by newline */
-			console.log(formulas.split("\n"));
+			_this8.retrieveTruthTable(formulas);
 
+			/* tokenize by newline *
+    */
+
+			console.log(formulas.split("\n"));
 			/* if element in list is not null (""), pass it through the lexer */
 			/* we now have the indices of all of the lines, and can report errors */
 		};
 
-		_this7.showTT = function (respT) {
+		_this8.normalize = function (formulas) {
+			var forms = [];
+			var form = '';
+			for (var i = 0; i < formulas.length; i++) {
+				if (formulas[i] == '\n') {
+					form += formulas[i];
+					forms.push(form);
+					form = '';
+				} else {
+					form += formulas[i];
+				}
+			}
+			return forms;
+		};
+
+		_this8.showTT = function (respT, formulas) {
 			/* Display the truth tables */
-			console.log("Displaying");
+			formulas = _this8.normalize(formulas);
+			var respT1 = respT[0];
+			var re = respT[1];
+			var respT2 = respT[2];
 			console.log(respT);
 			var truthArray = [];
-			for (var i = 0; i < respT.length; i++) {
+			for (var i = 0; i < respT1.length; i++) {
 				/* Each respT[i] is a truth table */
-				var tt = React.createElement(TruthTable, { table: respT[i], key: i });
-				truthArray.push(tt);
+
+				var table = React.createElement(
+					"div",
+					{ className: "tableWrap" },
+					React.createElement(TruthTable, { table: respT2[i], exp: re[i], key: i }),
+					React.createElement(TruthTable, { table: respT1[i], exp: formulas[i], key: i })
+				);
+
+				truthArray.push(table);
 			}
 
-			var ttOut = React.createElement(TableOutput, { tables: truthArray, scroll: _this7.scrollUp });
+			var ttOut = React.createElement(TableOutput, { tables: truthArray, scrollUp: _this8.scrollUp, scrollDown: _this8.scrollDown });
 
-			_this7.setState({
+			_this8.setState({
 				out: ttOut
 			}, function () {
-				console.log(_this7.state.tables);
+				console.log(_this8.state.tables);
 			});
 		};
 
-		_this7.retrieve = function () {
+		_this8.retrieve = function () {
 			var e = document.getElementById('replInput').value;
 			console.log(e);
 		};
 
-		_this7.clearTables = function () {
-			_this7.setState({
+		_this8.clearTables = function () {
+			_this8.setState({
 				tables: []
 			});
 		};
 
-		_this7.scrollUp = function () {
+		_this8.scrollUp = function () {
 			var s = document.getElementById('tableContainer');
-			s.classList.toggle('scrollUp');
 			s.classList.toggle('scrollUpHidden');
+			s.classList.toggle('scrollUp');
 		};
 
-		_this7.state = {
+		_this8.scrollDown = function () {
+			var s = document.getElementById('tableContainer');
+			s.classList.toggle('scrollDown');
+			setTimeout(function () {
+				_this8.setState({ out: undefined });
+			}, 1000);
+		};
+
+		_this8.state = {
 			tables: [],
 			out: undefined
 		};
-		return _this7;
+		return _this8;
 	}
 
 	_createClass(ReplPage, [{
@@ -404,7 +465,7 @@ function Page(props) {
 	return React.createElement(
 		"div",
 		{ id: "message" },
-		React.createElement(Heading, { heading: "Organon" })
+		React.createElement(Heading, { heading: "Organon", sub: "propositional logic analyzer" })
 	);
 }
 
@@ -412,7 +473,7 @@ function Bottom(props) {
 	return React.createElement(
 		"div",
 		{ id: "bottom" },
-		React.createElement(InputRedirect, { click: "click here to enter the repl" })
+		React.createElement(InputRedirect, { click: "check my logic" })
 	);
 }
 
@@ -420,7 +481,12 @@ function Heading(props) {
 	return React.createElement(
 		"div",
 		{ id: "heading" },
-		props.heading
+		props.heading,
+		React.createElement(
+			"div",
+			{ id: "subHead" },
+			props.sub
+		)
 	);
 }
 

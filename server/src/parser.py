@@ -122,7 +122,7 @@ class Parser:
                 newArray.append(e)
                 if e not in seen:
                     seen.append(e)
-        return newArray, len(seen)
+        return newArray, seen
 
     def in_order(self, root, table):
         if root is None:
@@ -137,12 +137,13 @@ class Parser:
         truth_table = []
         newExp = []
         ts, dist = self.strip_terms(exp)
-        truth_values = list(generate(dist))
-        #print(truth_values)
+        truth_values = list(generate(len(dist)))
+        print("truth values")
+        print(truth_values)
+        print(dist)
         terms = []
         for t in truth_values:
             term = self.generate_terms(t,ts)
-            #print(term)
             terms.append(term)
         for t in terms:
             table = []
@@ -155,65 +156,7 @@ class Parser:
         for tru in truth_table:
             print(tru)
         print("\n")
-        return truth_table
-
-    '''
-        #truth_table = []
-        #newExp = []
-        #form_terms = []
-        
-        numbers = []
-        for exp in self.lexer.expressions:
-            dist = 0
-            ts, dist = self.strip_terms(exp)
-            numbers.append(dist)
-            form_terms.append(ts)
-
-        for idx, terms in enumerate(form_terms):
-            # num_terms is total number of terms
-            # len(numbers) gives the amount of distinct terms
-            num_terms = len(terms)
-            truth_values = list(generate(numbers[idx]))
-
-            print("Truth values")
-            print(truth_values)
-            print("exp:")
-            print(terms)
-            ne = []
-            for i, t_vals in enumerate(truth_values):
-                self.tt = t_vals
-                if not t_vals:
-                    print("no vals")
-                ne.append(self.generate_terms(t_vals, form_terms[idx]))
-                print("ne")
-                print(ne)
-
-            newExp.append(ne)
-        print("Newexp")
-        print(newExp)
-
-        if not self.set:
-            print('No sentences loaded..')
-            return
-
-        for t in newExp:
-            print("t is ")
-            print(newExp)
-            root = self.set[0]
-            #print("self.setsize")
-            #print(len(self.set))
-            table = []
-            self.tt = [t]
-            self.print_tt(root)
-            self.in_order(root, table)
-            truth_table.append(table)
-        truth_table = truth_table[::-1]
-        print('\n')
-        for tru in truth_table:
-            print(tru)
-        return truth_table
-        #self.tt = []
-    '''
+        return truth_table, dist, truth_values
 
     def print_tt(self, root):
         if root is None:
@@ -280,6 +223,8 @@ class Parser:
 
     def read_string(self, formula):
         tables = []
+        dists = []
+        truths = []
         outtie = []
         formulas = self.normalize(formula)
         for f in formulas:
@@ -289,7 +234,11 @@ class Parser:
             for p in postfix:
                 self.insert(p)
             tree = self.tree_stack.pop()
-            #self.set.append(self.tree_stack.pop())
-            table = self.get_truth_table(tree, formulas[idx])
+            table, dist, truth = self.get_truth_table(tree, formulas[idx])
             tables.append(table)
-        return tables
+            dists.append([dist])
+            print('dists')
+            print(dists)
+            print(dist)
+            truths.append(truth)
+        return tables, dists, truths

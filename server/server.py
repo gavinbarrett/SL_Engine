@@ -13,13 +13,19 @@ app = Flask(__name__)
 
 @app.route('/ajax', methods=['POST'])
 def ajax_req():
+    package = []
     print("request data:")
     print(request.data)
     g = request.data
     p = parser.Parser()
-    tables = p.read_string(g);
-    print(tables) 
-    return jsonify(tables)
+    tables, dist, truth = p.read_string(g);
+    print(tables)
+    print(dist)
+    print(truth)
+    package.append(tables)
+    package.append(dist)
+    package.append(truth)
+    return jsonify(package)
 
 @app.route("/")
 def server_static():
