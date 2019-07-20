@@ -6,7 +6,6 @@ import src.lexer as sl
 import src.ast as ast
 from src.gen import generate
 from collections import defaultdict
-import drawtree
 
 class Parser:
     ''' This parser builds ASTs that contain logical exps '''
