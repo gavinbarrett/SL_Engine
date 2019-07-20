@@ -217,7 +217,7 @@ class Parser:
                 formulas.append(formula)
                 formula = ''
             else:
-                formula += f
+                formula += str(f)
         return formulas
 
     def read_string(self, formula):
