@@ -213,7 +213,7 @@ class Parser:
         formula = ''
         for f in fs:
             if f == '\n':
-                formula += f
+                formula += str(f)
                 formulas.append(formula)
                 formula = ''
             else:
