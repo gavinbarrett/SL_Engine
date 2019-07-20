@@ -2,9 +2,9 @@
 #SL_Engine#
 ###########
 import os
-import lexer as sl
-import ast as ast
-from gen import generate
+import src.lexer as sl
+import src.ast as ast
+from src.gen import generate
 from collections import defaultdict
 import drawtree
 
