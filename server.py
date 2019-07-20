@@ -7,7 +7,6 @@ from flask import Flask, render_template, request, jsonify
 from src import parser
 from src import lexer
 from src import colors
-import drawtree
 
 app = Flask(__name__)
 
