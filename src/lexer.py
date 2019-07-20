@@ -1,14 +1,13 @@
 import os
-from src.colors import colors
 class Lexer():
 
     ''' Sentential Logic Lexer '''
     def __init__(self):
         self.un_op = '~'
-        self.log_ops = ['~', '^', 'v', '=>', '<=>']
-        self.half_ops = ['<', '=', '<=', '>']
-        self.poss_ops = ['~', '^', 'v', '=>', '<=>', '=', '<', '>']
-        self.prec = ['[', '(', '~', '^', 'v', '=>', '<=>']
+        self.log_ops = ['~', '^', 'v', '->', '<->']
+        self.half_ops = ['<', '-', '<-', '>']
+        self.poss_ops = ['~', '^', 'v', '->', '<->', '-', '<', '>']
+        self.prec = ['[', '(', '~', '^', 'v', '->', '<->']
         self.braces = ['(', ')', '[', ']', '{', '}']
         self.braces_open = ['(', '[', '{']
         self.braces_closed = [')', ']', '}']
@@ -155,9 +154,12 @@ class Lexer():
     def print_t_count(self):
         print('t_count is: ' + str(self.t_count))
 
-    def read_token(self, token):
+    def read_token(self, token, terms):
         ''' Read in tokens and  '''
-        if token in self.terms:             # handle terms
+        if token == '\n':
+            self.expressions.append(self.tmp)
+            self.tmp = ""
+        elif token in self.terms:             # handle terms
             self.tmp += token
             self.handle_terms(token)
         elif token in self.braces:          # handle braces
@@ -171,6 +173,8 @@ class Lexer():
         elif token is self.newline:
             self.expressions.append(self.tmp)
             self.tmp = ''
+        elif not token:
+            print('no token!')
         else:
             raise Exception('invalid token: ' + token)
 
@@ -182,5 +186,17 @@ class Lexer():
                 self.read_token(c)      # read tokens up to \n
             self.pop_remaining(output)  # pop remaining to output
         fileObj.close()
-        print(output)
+        #print(output)
+        return output
+
+    def shunting_yard_string(self, formula):
+        terms = [chr(i) for i in range(65, 91)]
+        #print('calling shunting yard')
+        output = []
+        for c in formula:
+            #FIXME: add 
+            f = [formula]
+            #print(f)
+            self.read_token(c, terms)
+        self.pop_remaining(output)
         return output

@@ -1,4 +1,4 @@
 from itertools import product
 
 def generate(n):
-    return product(['T','F'], repeat=n)
+    return product([0,1], repeat=n)
