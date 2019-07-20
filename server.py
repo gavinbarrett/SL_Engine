@@ -14,7 +14,7 @@ app = Flask(__name__)
 def ajax_req():
     package = []
     print("request data:")
-    g = str(request.data)
+    g = request.data.decode('UTF-8') 
     print(g)
     p = parser.Parser()
     tables, dist, truth = p.read_string(g);
