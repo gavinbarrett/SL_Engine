@@ -31,6 +31,7 @@ class Lexer {
 		this.tmp = [];
 		this.expressions = [];
 		this.t_count = 0;
+		this.prev = undefined;
 	}
 
 	handle_terms(term) {
@@ -164,41 +165,26 @@ class Lexer {
 	}
 
 	read_charac(charac) {
+		if (this.prev == undefined) {
+
+		}	
 		/* Try to read the next character */
 		if (charac == '\n') {
 			this.expressions.push(this.tmp);
 			this.tmp = '';
 		} else if (this.terms.includes(charac)) {
-			try {
 			this.tmp += charac;
 			this.handle_terms(charac);
-			} catch(error) {
-				console.log("Cannot parse: ", error);
-				process.exit();
-			}
-
 		} else if (this.braces.includes(charac)) {
-			try {
 			this.tmp += charac;
 			this.handle_braces(charac);
-			} catch(error) {
-				console.log("Cannot parse: ", error);
-				process.exit();
-			}
 		} else if (this.poss_ops.includes(charac)) {
-			try {
 			this.tmp += charac;
 			this.handle_operators(charac);
-			} catch(error) {
-				console.log("Cannot parse: ", error);
-				process.exit();
-			}
-		} else if (this.space == charac) {
-			//this.tmp += charac;
-		} else if (!charac) {
-			console.log('No character');
+		} else if (charac == this.space) {
+			return;
 		} else
-			console.log('invalid character ' + charac);
+			throw "Invalid character " + charac;
 	}
 
 	pop_remaining(output) {
@@ -210,6 +196,7 @@ class Lexer {
 				continue;
 			}
 			if (this.braces_open.includes(a)) {
+				console.log("braczorrs");
 				console.log("No matching closing brace");
 				throw a;
 			}
@@ -228,7 +215,7 @@ class Lexer {
 			this.read_charac(formulas[i]);
 		this.pop_remaining(output);
 		} catch(error) {
-			console.log("Error is: ", error);
+			console.log(error);
 		}
 		console.log(output);
 	}
@@ -236,12 +223,12 @@ class Lexer {
 
 function run_test() {
 
-	let test = "(P -> Q) ^ R";
-	let test1 = "(P <-> F) v (D -> C)";
-	let test2 = "H v ~(P -> Q)";
-	let test3 = "P v ~W";
-	let test4 = "~(Z ^ B)";
-	let test5 = "S -> R";
+	let test = "(P -> Q) ^ R\n";
+	let test1 = "(P <-> F) v (D -> C)\n";
+	let test2 = "H v ~(P -> Q)\n";
+	let test3 = "P v ~W\n";
+	let test4 = "~(Z ^ B)\n";
+	let test5 = "S -> R\n";
 
 	let lex = new Lexer();
 	console.log("Passing tests");
@@ -259,12 +246,12 @@ function run_test() {
 	lex.shunting_yard(test5);
 
 	console.log("Non-passing tests");
-	let btest = "(a v B)";
-	let btest1 = "((A -> B)";
-	let btest2 = "(A v (C v v B))";
-	let btest3 = "(F F ^ B)";
-	let btest4 = "A -> ";
-	let btest5 = "B ^ S)";
+	let btest = "(a v B)\n";
+	let btest1 = "((A -> B)\n";
+	let btest2 = "(A v (C v v B))\n";
+	let btest3 = "(F F ^ B)\n";
+	let btest4 = "A -> \n";
+	let btest5 = "B ^ S)\n";
 	console.log(btest);
 	try {	
 	lex.shunting_yard(btest);

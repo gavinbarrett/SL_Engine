@@ -6,6 +6,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+import run_parse from './lexer.js';
+
 function request(url, method) {
 	/* Open an http request */
 	var xhr = new XMLHttpRequest();
@@ -301,6 +303,7 @@ var ReplPage = function (_React$Component8) {
 
 		_this8.retrieveTruthTable = function (formulas) {
 			var xhr = request('POST', '/ajax');
+
 			xhr.onload = function () {
 				console.log(xhr.responseText);
 				var respText = JSON.parse(xhr.responseText);
@@ -333,12 +336,30 @@ var ReplPage = function (_React$Component8) {
 				console.log("adding newline");
 				formulas += "\n";
 			}
+
+			console.log("formulas:");
+
+			console.log(formulas);
+			var fs = formulas.split('\n');
+			console.log(fs);
+			var fs2 = fs.filter(function (val) {
+				return val != "";
+			});
+			console.log(fs2);
+			for (var _f = 0; _f < fs2.length; _f++) {
+				var a = fs2[_f] + '\n';
+				var t = run_parse(a);
+				if (t) console.log('successful parse');else {
+					console.log('unsuccessful parse');
+					return;
+				}
+			}
 			_this8.retrieveTruthTable(formulas);
 
 			/* tokenize by newline *
     */
 
-			console.log(formulas.split("\n"));
+			//console.log(formulas.split("\n"));
 			/* if element in list is not null (""), pass it through the lexer */
 			/* we now have the indices of all of the lines, and can report errors */
 		};

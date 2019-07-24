@@ -1,3 +1,5 @@
+import run_parse from './lexer.js';
+
 function request(url, method) {
 	/* Open an http request */
 	let xhr = new XMLHttpRequest();
@@ -63,6 +65,7 @@ class Banner extends React.Component {
 }
 
 class TruthTableRow extends React.Component {
+	
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -93,6 +96,7 @@ class TruthTableRow extends React.Component {
 }
 
 class TruthTable extends React.Component {
+	
 	constructor(props) {
 		super(props);
 		this.state =  {
@@ -124,7 +128,8 @@ class TruthTable extends React.Component {
 }
 
 class TableOutput extends React.Component {
-        constructor(props) {
+        
+	constructor(props) {
                 super(props);
                 this.state = {
                         tables: props.tables,
@@ -192,6 +197,7 @@ class ReplPage extends React.Component {
 
 	retrieveTruthTable = (formulas) => {
 		let xhr = request('POST', '/ajax');
+
 		xhr.onload = () => {
 			console.log(xhr.responseText);
 			let respText = JSON.parse(xhr.responseText);
@@ -205,7 +211,7 @@ class ReplPage extends React.Component {
 		xhr.send(formulas);	
 		/*}*/
 	}
-
+	
 	retrieveInput = (event) => {
         	let formulas = document.getElementById('replInput').value;
 		//let formulas = event.target.value;
@@ -224,12 +230,30 @@ class ReplPage extends React.Component {
 			console.log("adding newline");
 			formulas += "\n";
 		}
+	
+		console.log("formulas:");
+		
+		console.log(formulas);
+		let fs = formulas.split('\n');	
+		console.log(fs);
+		let fs2 = fs.filter(val => { return val != "" });
+		console.log(fs2);
+		for (let f = 0; f < fs2.length; f++) {
+			let a = fs2[f] + '\n'
+			let t = run_parse(a);
+			if (t)
+				console.log('successful parse');
+			else {
+				console.log('unsuccessful parse');
+				return;
+			}
+		}
 		this.retrieveTruthTable(formulas);
 		
 		/* tokenize by newline *
 		 */
         	
-		console.log(formulas.split("\n"));
+		//console.log(formulas.split("\n"));
         	/* if element in list is not null (""), pass it through the lexer */
         	/* we now have the indices of all of the lines, and can report errors */
 	}

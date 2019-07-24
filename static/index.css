@@ -214,6 +214,10 @@ html, body {
 	height: 80%;
 }
 
+textarea:focus {
+	outline: none;
+}
+
 /* Below are the scrolling functions for the ouput */
 
 .scrollUpHidden {
