@@ -1,11 +1,12 @@
 let triangles = [];
 
 function windowResized() {
-	resizeCanvas(windowWidth, windowHeight);
+	resizeCanvas(window.innerWidth, window.innerHeight);
+	redraw();
 }
 
 function setup() {
-	let canvas = createCanvas(windowWidth, windowHeight);
+	createCanvas(windowWidth, windowHeight);
 	stroke(255);
 	noFill();
 }
