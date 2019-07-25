@@ -7,7 +7,7 @@ function windowResized() {
 function setup() {
 	let canvas = createCanvas(windowWidth, windowHeight);
 	stroke(255);
-	fill(0, 0, 0, 50);
+	noFill();
 }
 
 function draw() {
@@ -22,7 +22,7 @@ function draw() {
 
 function t() {
 	this.x = random(0, windowWidth);
-	this.y = random(windowHeight*0.7, windowHeight*0.8);
+	this.y = random(windowHeight*0.8, windowHeight*0.85);
 	this.size = random(2,10);
 	this.x1 = this.x + this.size;
 	this.x2 = this.x + (this.size / 2);
