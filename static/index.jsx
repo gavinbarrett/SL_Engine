@@ -1,5 +1,4 @@
 import lexical_analysis from './lexer.js';
-import P5Wrapper from './react-p5-wrapper';
 function request(url, method) {
 	/* Open an http request */
 	let xhr = new XMLHttpRequest();
@@ -187,6 +186,9 @@ class Truth extends React.Component {
 }
 
 class ReplPage extends React.Component {
+	/* This page takes input and sends logical formulae to the server
+	 * for processing; The page will display the truth tables if the input was
+	 * accepted by the lexer */
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -196,46 +198,32 @@ class ReplPage extends React.Component {
 	}
 
 	retrieveTruthTable = (formulas) => {
+		/*  takes in valid formulas and sends them to the server; displays
+		 * their truth tables upon return */
 		let xhr = request('POST', '/ajax');
 
 		xhr.onload = () => {
-			console.log(xhr.responseText);
 			let respText = JSON.parse(xhr.responseText);
-			let respT = respText;
-			console.log(respText[1]);
-			console.log(respText[2]);
-			this.showTT(respT, formulas);
+			
+			/* output the truth values */
+			this.showTT(respText, formulas);
 		};
-		console.log(formulas);
-		/*for (let i = 0; i < formulas.length; i++) {*/
+		
+		/* send ajax request of the formulas */
 		xhr.send(formulas);	
-		/*}*/
 	}
 	
 	retrieveInput = (event) => {
         	let formulas = document.getElementById('replInput').value;
 
-        	for (let f = 0; f < formulas.length; f++) {
-                	if (formulas[f].slice(-1) == "\n") {
-                        	console.log(formulas[f]);
-                        	if (isValid(formulas[f])) {
-                                	console.log("Formula is acceptable");
-                                	console.log(formulas[f]);
-                        	}
-                	}
-        	}
-		if (formulas.slice(-1) != "\n") {
-			console.log("adding newline");
+		if (formulas.slice(-1) != "\n")
 			formulas += "\n";
-		}
 	
-		console.log("formulas:");
-		
-		console.log(formulas);
 		let fs = formulas.split('\n');	
-		console.log(fs);
+		
+		// strip formulas of unnecessary inputs caused by newlines
 		let fs2 = fs.filter(val => { return val != "" });
-		console.log(fs2);
+		
 		for (let f = 0; f < fs2.length; f++) {
 			let a = fs2[f] + '\n'
 
@@ -372,9 +360,8 @@ function InputRedirect(props) {
 function RenderLanding(props) {
 	return(<div id="initialFBox">
 	<Page />
-	<P5Wrapper/>
 	<Bottom />
 	</div>);
 }
 
-ReactDOM.render(<RenderLanding />, document.getElementById('root'));
+ReactDOM.render(<RenderLanding/>, document.getElementById('root'));

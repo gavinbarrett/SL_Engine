@@ -2,8 +2,6 @@
 import sys
 import json
 from flask import Flask, render_template, request, jsonify
-#sys.path.append('./src/')
-#import parser.Formula as Formula
 from src import parser
 from src import lexer
 from src import colors
@@ -18,8 +16,6 @@ def ajax_req():
     print(g)
     p = parser.Parser()
     tables, dist, truth = p.read_string(g);
-    print(tables)
-    print(dist)
     print(truth)
     package.append(tables)
     package.append(dist)

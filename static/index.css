@@ -1,3 +1,10 @@
+::selection {
+  background: #008000; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+  background: #008000; /* Gecko Browsers */
+}
+
 html, body {
 	height: 100%;
 	width: 100%;
