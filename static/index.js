@@ -6,8 +6,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-import run_parse from './lexer.js';
-
+import lexical_analysis from './lexer.js';
+import P5Wrapper from './react-p5-wrapper';
 function request(url, method) {
 	/* Open an http request */
 	var xhr = new XMLHttpRequest();
@@ -41,19 +41,19 @@ var Segment = function (_React$Component) {
 	}
 
 	_createClass(Segment, [{
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return React.createElement(
-				"div",
-				{ className: "segment" },
+				'div',
+				{ className: 'segment' },
 				React.createElement(
-					"div",
-					{ className: "sym" },
+					'div',
+					{ className: 'sym' },
 					this.state.symbol
 				),
 				React.createElement(
-					"div",
-					{ className: "eng" },
+					'div',
+					{ className: 'eng' },
 					this.state.english
 				)
 			);
@@ -87,11 +87,11 @@ var Banner = function (_React$Component2) {
 	}
 
 	_createClass(Banner, [{
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return React.createElement(
-				"div",
-				{ id: "bannerWrapper" },
+				'div',
+				{ id: 'bannerWrapper' },
 				React.createElement(Segment, { sym: this.state.negation, eng: this.state.neg }),
 				React.createElement(Segment, { sym: this.state.conjunction, eng: this.state.con }),
 				React.createElement(Segment, { sym: this.state.disjunction, eng: this.state.dis }),
@@ -130,16 +130,16 @@ var TruthTableRow = function (_React$Component3) {
 	}
 
 	_createClass(TruthTableRow, [{
-		key: "componentDidMount",
+		key: 'componentDidMount',
 		value: function componentDidMount() {
 			this.addValues();
 		}
 	}, {
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return React.createElement(
-				"div",
-				{ className: "ttRow" },
+				'div',
+				{ className: 'ttRow' },
 				this.state.row
 			);
 		}
@@ -176,18 +176,18 @@ var TruthTable = function (_React$Component4) {
 	}
 
 	_createClass(TruthTable, [{
-		key: "componentDidMount",
+		key: 'componentDidMount',
 		value: function componentDidMount() {
 			this.addValues();
 		}
 	}, {
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return React.createElement(
-				"div",
-				{ className: "tt" },
+				'div',
+				{ className: 'tt' },
 				this.state.exp,
-				React.createElement("hr", null),
+				React.createElement('hr', null),
 				this.state.table
 			);
 		}
@@ -214,17 +214,17 @@ var TableOutput = function (_React$Component5) {
 	}
 
 	_createClass(TableOutput, [{
-		key: "componentDidMount",
+		key: 'componentDidMount',
 		value: function componentDidMount() {
 			this.state.scrollUp();
 		}
 	}, {
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return React.createElement(
-				"div",
-				{ id: "tableContainer", className: "scrollUpHidden" },
-				React.createElement("div", { className: "close", onClick: this.state.scrollDown }),
+				'div',
+				{ id: 'tableContainer', className: 'scrollUpHidden' },
+				React.createElement('div', { className: 'close', onClick: this.state.scrollDown }),
 				this.state.tables
 			);
 		}
@@ -249,11 +249,11 @@ var Button = function (_React$Component6) {
 	}
 
 	_createClass(Button, [{
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return React.createElement(
-				"div",
-				{ id: "button", onClick: this.state.retrieve },
+				'div',
+				{ id: 'button', onClick: this.state.retrieve },
 				this.state.button
 			);
 		}
@@ -278,13 +278,13 @@ var Truth = function (_React$Component7) {
 	}
 
 	_createClass(Truth, [{
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return React.createElement(
-				"div",
+				'div',
 				null,
 				this.state.a,
-				React.createElement("hr", null),
+				React.createElement('hr', null),
 				this.state.b
 			);
 		}
@@ -348,20 +348,16 @@ var ReplPage = function (_React$Component8) {
 			console.log(fs2);
 			for (var _f = 0; _f < fs2.length; _f++) {
 				var a = fs2[_f] + '\n';
-				var t = run_parse(a);
-				if (t) console.log('successful parse');else {
-					console.log('unsuccessful parse');
+
+				/* call lexical_analysis() to check grammar */
+				var t = lexical_analysis(a);
+				if (t) console.log('1');else {
+					console.log('0');
 					return;
 				}
 			}
+			/* send data to be analyzed on the server */
 			_this8.retrieveTruthTable(formulas);
-
-			/* tokenize by newline *
-    */
-
-			//console.log(formulas.split("\n"));
-			/* if element in list is not null (""), pass it through the lexer */
-			/* we now have the indices of all of the lines, and can report errors */
 		};
 
 		_this8.normalize = function (formulas) {
@@ -391,8 +387,8 @@ var ReplPage = function (_React$Component8) {
 				/* Each respT[i] is a truth table */
 
 				var table = React.createElement(
-					"div",
-					{ className: "tableWrap" },
+					'div',
+					{ className: 'tableWrap' },
 					React.createElement(TruthTable, { table: respT2[i], exp: re[i], key: i }),
 					React.createElement(TruthTable, { table: respT1[i], exp: formulas[i], key: i })
 				);
@@ -411,7 +407,6 @@ var ReplPage = function (_React$Component8) {
 
 		_this8.retrieve = function () {
 			var e = document.getElementById('replInput').value;
-			console.log(e);
 		};
 
 		_this8.clearTables = function () {
@@ -442,15 +437,15 @@ var ReplPage = function (_React$Component8) {
 	}
 
 	_createClass(ReplPage, [{
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return React.createElement(
-				"div",
-				{ id: "replPage" },
+				'div',
+				{ id: 'replPage' },
 				React.createElement(Banner, null),
 				React.createElement(
-					"div",
-					{ id: "pageContainer" },
+					'div',
+					{ id: 'pageContainer' },
 					React.createElement(ReplContainer, null),
 					React.createElement(Button, { retInput: this.retrieveInput })
 				),
@@ -464,16 +459,16 @@ var ReplPage = function (_React$Component8) {
 
 function ReplContainer(props) {
 	return React.createElement(
-		"div",
-		{ id: "replContainer" },
-		React.createElement("textarea", { id: "replInput" })
+		'div',
+		{ id: 'replContainer' },
+		React.createElement('textarea', { id: 'replInput' })
 	);
 }
 
 function TruthTableContainer(props) {
 	return React.createElement(
-		"div",
-		{ id: "ttContainer" },
+		'div',
+		{ id: 'ttContainer' },
 		React.createElement(TruthTable, null)
 	);
 }
@@ -484,28 +479,28 @@ function RenderRepl() {
 
 function Page(props) {
 	return React.createElement(
-		"div",
-		{ id: "message" },
-		React.createElement(Heading, { heading: "Organon", sub: "propositional logic analyzer" })
+		'div',
+		{ id: 'message' },
+		React.createElement(Heading, { heading: 'Organon', sub: 'propositional logic analyzer' })
 	);
 }
 
 function Bottom(props) {
 	return React.createElement(
-		"div",
-		{ id: "bottom" },
-		React.createElement(InputRedirect, { click: "check my logic" })
+		'div',
+		{ id: 'bottom' },
+		React.createElement(InputRedirect, { click: 'check my logic' })
 	);
 }
 
 function Heading(props) {
 	return React.createElement(
-		"div",
-		{ id: "heading" },
+		'div',
+		{ id: 'heading' },
 		props.heading,
 		React.createElement(
-			"div",
-			{ id: "subHead" },
+			'div',
+			{ id: 'subHead' },
 			props.sub
 		)
 	);
@@ -513,17 +508,18 @@ function Heading(props) {
 
 function InputRedirect(props) {
 	return React.createElement(
-		"div",
-		{ id: "inputWrapper", onClick: RenderRepl },
+		'div',
+		{ id: 'inputWrapper', onClick: RenderRepl },
 		props.click
 	);
 }
 
 function RenderLanding(props) {
 	return React.createElement(
-		"div",
-		{ id: "initialFBox" },
+		'div',
+		{ id: 'initialFBox' },
 		React.createElement(Page, null),
+		React.createElement(P5Wrapper, null),
 		React.createElement(Bottom, null)
 	);
 }

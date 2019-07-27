@@ -2,7 +2,6 @@ let triangles = [];
 
 function windowResized() {
 	resizeCanvas(window.innerWidth, window.innerHeight);
-	redraw();
 }
 
 function setup() {
@@ -12,7 +11,6 @@ function setup() {
 }
 
 function draw() {
-	console.log('drawing');
 	background('green');
 	triangles.push(new t());
 	for (let tri of triangles) {

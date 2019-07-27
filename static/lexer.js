@@ -1,4 +1,10 @@
-class Parser {
+/* 
+ * This is a lexer for analyzing the structure of well formed sentential logic formulas;
+ * the analysis techniques have been greatly inspired by the following: http://www.cs.utsa.edu/~wagner/CS3723/rdparse/rdparser6.html
+ * 
+ * */
+
+class Lexer {
 
 	constructor(feed) {
 		this.next = null;
@@ -57,7 +63,6 @@ class Parser {
 		} else
 			throw 'Error parsing: invalid char: ', this.next;
 	}
-	
 
 	bicond() {
 		/* Try to match a biconditional */
@@ -94,9 +99,7 @@ class Parser {
 		if (this.feed.length === 0)
 			return null;
 		let c = this.feed.slice(0, 1);
-		console.log('c: ', c);
 		this.feed = this.feed.slice(1);
-		console.log('feed: ', this.feed);
 		return c;
 	}
 
@@ -109,17 +112,16 @@ class Parser {
 	}
 }
 
-export default function run_parser(arg) {
-	let parser = new Parser(arg);
-	console.log('\nSource: ', arg);
+export default function lexical_analysis(arg) {
+	let lexer = new Lexer(arg);
 	try {
-		if (parser.p()) {
-			console.log('Parsing successful\n');
+		if (lexer.p()) {
+			console.log('Analysis successful\n');
 			return 1
 		} else
-			throw 'Error: parsing unsuccessful;\n no end symbol $';
+			throw 'Error: analysis unsuccessful;\n no end symbol \\n';
 	} catch(error) {
-		console.log("Parsing failed\n");
+		console.log("Analysis failed\n");
 		return 0;
 	}
 }

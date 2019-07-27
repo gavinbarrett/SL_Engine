@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-preset-react-app": "^3.1.2",
     "braces": "^3.0.2",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "react-p5-wrapper": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0"

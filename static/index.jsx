@@ -1,5 +1,5 @@
-import run_parse from './lexer.js';
-
+import lexical_analysis from './lexer.js';
+import P5Wrapper from './react-p5-wrapper';
 function request(url, method) {
 	/* Open an http request */
 	let xhr = new XMLHttpRequest();
@@ -214,8 +214,6 @@ class ReplPage extends React.Component {
 	
 	retrieveInput = (event) => {
         	let formulas = document.getElementById('replInput').value;
-		//let formulas = event.target.value;
-        	/*FIXME: parse inputs*/
 
         	for (let f = 0; f < formulas.length; f++) {
                 	if (formulas[f].slice(-1) == "\n") {
@@ -240,22 +238,18 @@ class ReplPage extends React.Component {
 		console.log(fs2);
 		for (let f = 0; f < fs2.length; f++) {
 			let a = fs2[f] + '\n'
-			let t = run_parse(a);
+
+			/* call lexical_analysis() to check grammar */
+			let t = lexical_analysis(a);
 			if (t)
-				console.log('successful parse');
+				console.log('1');
 			else {
-				console.log('unsuccessful parse');
+				console.log('0');
 				return;
 			}
 		}
+		/* send data to be analyzed on the server */
 		this.retrieveTruthTable(formulas);
-		
-		/* tokenize by newline *
-		 */
-        	
-		//console.log(formulas.split("\n"));
-        	/* if element in list is not null (""), pass it through the lexer */
-        	/* we now have the indices of all of the lines, and can report errors */
 	}
 
 	normalize = (formulas) => {
@@ -298,7 +292,6 @@ class ReplPage extends React.Component {
 	
 	retrieve = () => {
 		let e = document.getElementById('replInput').value;
-		console.log(e);
 	}
 
 	clearTables = () => {
@@ -379,6 +372,7 @@ function InputRedirect(props) {
 function RenderLanding(props) {
 	return(<div id="initialFBox">
 	<Page />
+	<P5Wrapper/>
 	<Bottom />
 	</div>);
 }
