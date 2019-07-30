@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import json
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, make_response
 from src import parser
 from src import lexer
 from src import colors
@@ -27,4 +27,4 @@ def server_static():
     return render_template('./index.html')
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(threaded=True)

@@ -3,7 +3,8 @@ const symbols = ['~', '^', 'v', '->'];
 let count = 0;
 
 function windowResized() {
-	resizeCanvas(windowWidth, windowHeight);
+	/* make sure canvas stays congruent with the body tag */
+	resizeCanvas(document.body.offsetWidth, document.body.offsetHeight);
 }
 
 function setup() {
@@ -15,13 +16,12 @@ function setup() {
 function draw() {
 	// draw background
 	background('green');
-
-	// every 10 loops, make a new connective
+	fill(255);
+	// every 15 loops, make a new connective
 	if (count % 15 === 0) {
 		count = 0;
 		activeConnectives.push(new connective());
 	}
-	
 	for (let connect of activeConnectives) {
 		connect.update();
 		connect.display();
