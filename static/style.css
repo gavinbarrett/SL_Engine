@@ -170,10 +170,32 @@ html, body {
 	margin: 1%;
 	background-color: white;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	width: 80%;
 	height: 90%;
+}
+
+
+#selector {
+	width: 90%;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	font-family: Trebuchet MS;
+}
+
+.selectorLink {
+	width: 50%;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	font-family: Trebuchet MS;
+}
+
+.selectorLink:hover {
+	background: green;
 }
 
 #button {
@@ -193,7 +215,7 @@ html, body {
 
 #tableContainer {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	align-items: center;
 	font-family: Trebuchet MS;
 	overflow-y: auto;

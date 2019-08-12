@@ -89,13 +89,8 @@ class Parser:
         self.eval(root)
 
     def generate_terms(self, t, exp):
-        #print("Generating terms...")
-        #print(t)
-        #print(exp)
         tmpExp = []
         df = defaultdict(lambda: None)
-        #print("printing exp")
-        #print(exp)
         
         #FIXME: for exp in expressions...
         # for e in exp
@@ -103,8 +98,6 @@ class Parser:
         for e in exp:
             if df[e] == None:
                 x = t[0]
-                #print('x')
-                #print(x)
                 t = t[1:]
                 df[e] = x
                 tmpExp.append(x)
@@ -131,16 +124,14 @@ class Parser:
         root.eval_stack.pop()
         self.in_order(root.right, table)
 
-
     def get_truth_table(self, tree, exp):
         truth_table = []
         newExp = []
         ts, dist = self.strip_terms(exp)
         truth_values = list(generate(len(dist)))
-        print("truth values")
-        print(truth_values)
-        print(dist)
         terms = []
+        print('truth-values')
+        print(truth_values)
         for t in truth_values:
             term = self.generate_terms(t,ts)
             terms.append(term)
@@ -151,11 +142,42 @@ class Parser:
             self.in_order(tree, table)
             truth_table.append(table)
         truth_table = truth_table[::1]
-        #print(exp)
-        for tru in truth_table:
-            print(tru)
-        print("\n")
         return truth_table, dist, truth_values
+
+    def get_set_truth_table(self, tree, exp, total, master):
+        # save total amount of distinct terms
+        trus, total_distinct = self.strip_terms(exp)
+        #TODO: get indices of each element of trus from their place in total_distinct
+        truth_table = []
+        indices = []
+        for tn in trus:
+            indices.append(total.index(tn))
+        print('Master List:')
+        print(master)
+        # for each truth value state(row) in the list, strip out relevant truth values
+        # TODO: refactor with map and lambda
+        troos = []
+        for tv in master:
+            troo = []
+            for i in indices:
+                troo.append(tv[i])
+            troos.append(troo)
+        terms = []
+        for tr in troos:
+            term = self.generate_terms(tr, trus)
+            terms.append(term)
+        for t in terms:
+            table = []
+            self.tt = t
+            self.print_tt(tree)
+            self.in_order(tree, table)
+            truth_table.append(table)
+        print('\nTRUTH TABLE\n')
+        for ttt in truth_table:
+            print(ttt)
+        print(total)    
+        return truth_table #, total_distinct, troos
+
 
     def print_tt(self, root):
         if root is None:
@@ -220,24 +242,47 @@ class Parser:
                 formula += str(f)
         return formulas
 
-    def read_string(self, formula):
-        tables = []
-        dists = []
-        truths = []
+    def read_string(self, formula, b):
+        
+        # save a list of terms (tz) as well as their set (total)
+        tz, total = self.strip_terms(formula)
+        # generate the master list of truth values from which we will pull values
+        master_list = list(generate(len(total)))
+        
         outtie = []
+        
+        # normalize expressions by newlines
         formulas = self.normalize(formula)
+        
         for f in formulas:
             output = self.lexer.shunting_yard_string(f)
-            outtie += output
-        for idx, postfix in enumerate(outtie):
-            for p in postfix:
-                self.insert(p)
-            tree = self.tree_stack.pop()
-            table, dist, truth = self.get_truth_table(tree, formulas[idx])
-            tables.append(table)
-            dists.append([dist])
-            print('dists')
-            print(dists)
-            print(dist)
-            truths.append(truth)
-        return tables, dists, truths
+            outtie += output 
+        set_trus = []
+       
+       # if we are checking validity, call self.get_set_truth_table()
+        if b:
+            for idx, postfix in enumerate(outtie):
+                for p in postfix:
+                    self.insert(p)
+                tree = self.tree_stack.pop()
+                #TODO: set truth table code; PLZ refactor
+                set_truth = list(self.get_set_truth_table(tree, formulas[idx], total, master_list))
+                set_trus.append(set_truth)
+
+            # return the master list appended to the output values
+            print("Master list:")
+            print(master_list)
+            print("set_trus")
+            print(set_trus)
+            return [total] + [master_list] + set_trus
+        
+        # otherwise, get the individual truth tables
+        else:
+            tables = []
+            for idx, postfix in enumerate(outtie):
+                for p in postfix:
+                    self.insert(p)
+                tree = self.tree_stack.pop()
+
+                tables.append(list(self.get_truth_table(tree, formulas[idx])))
+            return tables

@@ -1,29 +1,33 @@
 #!/usr/bin/env python
 import sys
 import json
-from flask import Flask, render_template, request, jsonify, make_response
+import requests
+from flask import Flask, render_template, request, jsonify
 from src import parser
 from src import lexer
-from src import colors
 
 app = Flask(__name__)
 
 @app.route('/ajax', methods=['POST'])
 def ajax_req():
-    package = []
-    print("request data:")
-    g = request.data.decode('UTF-8') 
-    print(g)
+    ''' Evaluate formulae and return their truth values '''
+    
+    # decode formulae
+    formulae = request.data.decode('UTF-8') 
+    
+    # construct a logic parser
     p = parser.Parser()
-    tables, dist, truth = p.read_string(g);
-    print(truth)
-    package.append(tables)
-    package.append(dist)
-    package.append(truth)
+
+    # return a list of truth values
+    package = p.read_string(formulae, True)
+    
+    print(package)
+    
     return jsonify(package)
 
 @app.route("/")
 def server_static():
+    ''' Return Organon's landing page '''
     return render_template('./index.html')
 
 if __name__ == "__main__":

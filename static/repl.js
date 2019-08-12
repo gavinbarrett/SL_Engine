@@ -222,13 +222,13 @@ var TableOutput = function (_React$Component6) {
 			scrollUp: props.scrollUp,
 			scrollDown: props.scrollDown
 		};
-		console.log(props.tables);
 		return _this6;
 	}
 
 	_createClass(TableOutput, [{
 		key: "componentDidMount",
 		value: function componentDidMount() {
+			/* run scroll animation after object is created */
 			this.state.scrollUp();
 		}
 	}, {
@@ -306,8 +306,66 @@ var Truth = function (_React$Component8) {
 	return Truth;
 }(React.Component);
 
-var ReplContainer = function (_React$Component9) {
-	_inherits(ReplContainer, _React$Component9);
+var SelectorLink = function (_React$Component9) {
+	_inherits(SelectorLink, _React$Component9);
+
+	function SelectorLink(props) {
+		_classCallCheck(this, SelectorLink);
+
+		var _this9 = _possibleConstructorReturn(this, (SelectorLink.__proto__ || Object.getPrototypeOf(SelectorLink)).call(this, props));
+
+		_this9.state = {
+			link: props.link
+		};
+		return _this9;
+	}
+
+	_createClass(SelectorLink, [{
+		key: "render",
+		value: function render() {
+			return React.createElement(
+				"div",
+				{ className: "selectorLink" },
+				this.state.link
+			);
+		}
+	}]);
+
+	return SelectorLink;
+}(React.Component);
+
+var Selector = function (_React$Component10) {
+	_inherits(Selector, _React$Component10);
+
+	function Selector(props) {
+		_classCallCheck(this, Selector);
+
+		var _this10 = _possibleConstructorReturn(this, (Selector.__proto__ || Object.getPrototypeOf(Selector)).call(this, props));
+
+		_this10.state = {
+			tables: "truth tables",
+			validity: "validity check"
+		};
+		return _this10;
+	}
+
+	_createClass(Selector, [{
+		key: "render",
+		value: function render() {
+			return React.createElement(
+				"div",
+				{ id: "selector" },
+				React.createElement(SelectorLink, { link: this.state.tables }),
+				React.createElement(SelectorLink, { link: this.state.validity })
+			);
+		}
+	}]);
+
+	return Selector;
+}(React.Component);
+
+var ReplContainer = function (_React$Component11) {
+	_inherits(ReplContainer, _React$Component11);
 
 	function ReplContainer(props) {
 		_classCallCheck(this, ReplContainer);
@@ -321,6 +379,7 @@ var ReplContainer = function (_React$Component9) {
 			return React.createElement(
 				"div",
 				{ id: "replContainer" },
+				React.createElement(Selector, null),
 				React.createElement("textarea", { id: "replInput" })
 			);
 		}
@@ -329,8 +388,8 @@ var ReplContainer = function (_React$Component9) {
 	return ReplContainer;
 }(React.Component);
 
-var ReplPage = function (_React$Component10) {
-	_inherits(ReplPage, _React$Component10);
+var ReplPage = function (_React$Component12) {
+	_inherits(ReplPage, _React$Component12);
 
 	/* This page takes input and sends logical formulae to the server
   * for processing; The page will display the truth tables if the input was
@@ -338,25 +397,26 @@ var ReplPage = function (_React$Component10) {
 	function ReplPage(props) {
 		_classCallCheck(this, ReplPage);
 
-		var _this10 = _possibleConstructorReturn(this, (ReplPage.__proto__ || Object.getPrototypeOf(ReplPage)).call(this, props));
+		var _this12 = _possibleConstructorReturn(this, (ReplPage.__proto__ || Object.getPrototypeOf(ReplPage)).call(this, props));
 
-		_this10.retrieveTruthTable = function (formulas) {
+		_this12.retrieveTruthTable = function (formulas, bool) {
 			/*  takes in valid formulas and sends them to the server; displays
     * their truth tables upon return */
 			var xhr = request('POST', '/ajax');
 
 			xhr.onload = function () {
 				var respText = JSON.parse(xhr.responseText);
-
+				console.log('respText');
+				console.log(respText);
 				/* output the truth values */
-				_this10.showTT(respText, formulas);
+				if (bool == true) _this12.showValidity(respText, formulas);else _this12.showTT(respText, formulas);
 			};
 
 			/* send ajax request of the formulas */
 			xhr.send(formulas);
 		};
 
-		_this10.retrieveInput = function (event) {
+		_this12.retrieveInput = function (event) {
 			var formulas = document.getElementById('replInput').value;
 
 			if (formulas.slice(-1) != "\n") formulas += "\n";
@@ -379,10 +439,13 @@ var ReplPage = function (_React$Component10) {
 				}
 			}
 			/* send data to be analyzed on the server */
-			_this10.retrieveTruthTable(formulas);
+			console.log('AJAX package:\n');
+			// setting bool to true will check validity of the arg
+			var bool = true;
+			_this12.retrieveTruthTable(formulas, bool);
 		};
 
-		_this10.normalize = function (formulas) {
+		_this12.normalize = function (formulas) {
 			var forms = [];
 			var form = '';
 			for (var i = 0; i < formulas.length; i++) {
@@ -397,65 +460,104 @@ var ReplPage = function (_React$Component10) {
 			return forms;
 		};
 
-		_this10.showTT = function (respT, formulas) {
-			/* Display the truth tables */
-			formulas = _this10.normalize(formulas);
-			var respT1 = respT[0];
-			var re = respT[1];
-			var respT2 = respT[2];
+		_this12.showTT = function (respT, formulas) {
+			/* Display the individual truth tables */
+			formulas = _this12.normalize(formulas);
 			console.log(respT);
 			var truthArray = [];
-			for (var i = 0; i < respT1.length; i++) {
+
+			for (var i = 0; i < respT.length; i++) {
 				/* Each respT[i] is a truth table */
 
 				var table = React.createElement(
 					"div",
 					{ className: "tableWrap" },
-					React.createElement(TruthTable, { table: respT2[i], exp: re[i], key: i }),
-					React.createElement(TruthTable, { table: respT1[i], exp: formulas[i], key: i })
+					React.createElement(TruthTable, { table: respT[i][2], exp: respT[i][1], key: i }),
+					React.createElement(TruthTable, { table: respT[i][0], exp: formulas[i], key: i })
 				);
 
 				truthArray.push(table);
 			}
 
-			var ttOut = React.createElement(TableOutput, { tables: truthArray, scrollUp: _this10.scrollUp, scrollDown: _this10.scrollDown });
+			var ttOut = React.createElement(TableOutput, { tables: truthArray, scrollUp: _this12.scrollUp, scrollDown: _this12.scrollDown });
 
-			_this10.setState({
+			_this12.setState({
 				out: ttOut
 			}, function () {
-				console.log(_this10.state.tables);
+				console.log(_this12.state.tables);
 			});
 		};
 
-		_this10.retrieve = function () {
+		_this12.showValidity = function (respT, formulas) {
+			/* test validity */
+			formulas = _this12.normalize(formulas);
+			var truthArray = [];
+
+			/*
+    * respT[0] = truth assignments
+    * respT[1] = truth_matrices
+    * respT[2] = truth values of each exp (?)
+    * */
+
+			var terms = respT[0];
+			console.log('terms: ', terms);
+
+			var init_vals = respT[1];
+			var init_table = React.createElement(
+				"div",
+				{ className: "tableWrap" },
+				React.createElement(TruthTable, { table: init_vals, exp: terms, key: 0 })
+			);
+
+			/* add initial truth assignments */
+			truthArray.push(init_table);
+			var nextTable = void 0;
+			/* add  */
+			for (var i = 2; i < respT.length; i++) {
+				nextTable = React.createElement(
+					"div",
+					{ className: "tableWrap" },
+					React.createElement(TruthTable, { table: respT[i], exp: formulas[i - 2], key: i })
+				);
+				truthArray.push(nextTable);
+			}
+
+			var ttOut = React.createElement(TableOutput, { tables: truthArray, scrollUp: _this12.scrollUp, scrollDown: _this12.scrollDown });
+
+			_this12.setState({
+				out: ttOut
+			});
+		};
+
+		_this12.retrieve = function () {
 			var e = document.getElementById('replInput').value;
 		};
 
-		_this10.clearTables = function () {
-			_this10.setState({
+		_this12.clearTables = function () {
+			_this12.setState({
 				tables: []
 			});
 		};
 
-		_this10.scrollUp = function () {
+		_this12.scrollUp = function () {
 			var s = document.getElementById('tableContainer');
 			s.classList.toggle('scrollUpHidden');
 			s.classList.toggle('scrollUp');
 		};
 
-		_this10.scrollDown = function () {
+		_this12.scrollDown = function () {
 			var s = document.getElementById('tableContainer');
 			s.classList.toggle('scrollDown');
 			setTimeout(function () {
-				_this10.setState({ out: undefined });
+				_this12.setState({ out: undefined });
 			}, 1000);
 		};
 
-		_this10.state = {
+		_this12.state = {
 			tables: [],
 			out: undefined
 		};
-		return _this10;
+		return _this12;
 	}
 
 	_createClass(ReplPage, [{

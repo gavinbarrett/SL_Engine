@@ -131,9 +131,9 @@ class TableOutput extends React.Component {
 			scrollUp: props.scrollUp,
 			scrollDown: props.scrollDown,
                 };
-		console.log(props.tables);
         }
 	componentDidMount() {
+		/* run scroll animation after object is created */
 		this.state.scrollUp();
 	}
         render() {
@@ -176,13 +176,43 @@ class Truth extends React.Component {
 	}
 }
 
+class SelectorLink extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			link: props.link,
+		};
+	}
+	render() {
+		return(<div className="selectorLink">
+			{this.state.link}
+		</div>);
+	}
+}
+
+class Selector extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			tables: "truth tables",
+			validity: "validity check",
+		};
+	}
+	render() {
+		return(<div id="selector">
+			<SelectorLink link={this.state.tables} /><SelectorLink link={this.state.validity} />
+		</div>);
+	}
+}
+
 class ReplContainer extends React.Component {
 	constructor(props) {
 		super(props);
 	}
 	render() {
         	return(<div id="replContainer">
-               		<textarea id="replInput"></textarea>
+               		<Selector />
+			<textarea id="replInput"></textarea>
         	</div>);
 	}
 }
@@ -198,16 +228,20 @@ class ReplPage extends React.Component {
 			out: undefined,
 		};
 	}
-	retrieveTruthTable = (formulas) => {
+	retrieveTruthTable = (formulas, bool) => {
 		/*  takes in valid formulas and sends them to the server; displays
 		 * their truth tables upon return */
 		let xhr = request('POST', '/ajax');
 
 		xhr.onload = () => {
 			let respText = JSON.parse(xhr.responseText);
-			
+			console.log('respText');
+			console.log(respText);			
 			/* output the truth values */
-			this.showTT(respText, formulas);
+			if (bool == true)
+				this.showValidity(respText, formulas);
+			else
+				this.showTT(respText, formulas);
 		};
 		
 		/* send ajax request of the formulas */
@@ -237,7 +271,10 @@ class ReplPage extends React.Component {
 			}
 		}
 		/* send data to be analyzed on the server */
-		this.retrieveTruthTable(formulas);
+		console.log('AJAX package:\n');
+		// setting bool to true will check validity of the arg
+		let bool = true;
+		this.retrieveTruthTable(formulas, bool);
 	}
 	normalize = (formulas) => {
 		let forms = [];
@@ -254,26 +291,58 @@ class ReplPage extends React.Component {
 		return forms;
 	}
 	showTT = (respT, formulas) => {
-		/* Display the truth tables */
+		/* Display the individual truth tables */
 		formulas = this.normalize(formulas);
-		let respT1 = respT[0];
-		let re = respT[1];
-		let respT2 = respT[2];
 		console.log(respT);
 		let truthArray = [];
-		for (let i = 0; i < respT1.length; i++) {
+
+
+
+		for (let i = 0; i < respT.length; i++) {
 			/* Each respT[i] is a truth table */
 
-			let table = <div className="tableWrap"><TruthTable table={respT2[i]} exp={re[i]} key={i}/><TruthTable table={respT1[i]} exp={formulas[i]} key={i}/></div>;
+			let table = <div className="tableWrap"><TruthTable table={respT[i][2]} exp={respT[i][1]} key={i}/><TruthTable table={respT[i][0]} exp={formulas[i]} key={i}/></div>;
 
 			truthArray.push(table);
 		}
 
-		let ttOut = <TableOutput tables={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>
+		let ttOut = <TableOutput tables={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
 
 		this.setState({
 			out: ttOut,
 		}, () => { console.log(this.state.tables) });
+	}
+	showValidity = (respT, formulas) => {
+		/* test validity */
+		formulas = this.normalize(formulas);
+		let truthArray = [];
+		
+		/*
+		 * respT[0] = truth assignments
+		 * respT[1] = truth_matrices
+		 * respT[2] = truth values of each exp (?)
+		 * */
+
+		let terms = respT[0];
+		console.log('terms: ', terms);
+
+		let init_vals = respT[1];
+		let init_table = <div className="tableWrap"><TruthTable table={init_vals} exp={terms} key={0}/></div>;
+
+		/* add initial truth assignments */
+		truthArray.push(init_table);
+		let nextTable;
+		/* add  */
+		for (let i = 2; i < respT.length; i++) {
+			nextTable = <div className="tableWrap"><TruthTable table={respT[i]} exp={formulas[(i-2)]} key={i}/></div>;
+			truthArray.push(nextTable);
+		}
+
+		let ttOut = <TableOutput tables={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
+
+		this.setState({
+			out: ttOut,
+		});
 	}
 	retrieve = () => {
 		let e = document.getElementById('replInput').value;
