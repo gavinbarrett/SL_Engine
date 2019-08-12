@@ -144,6 +144,15 @@ class TableOutput extends React.Component {
         }
 }
 
+class Partition extends React.Component {
+	constructor(props) {
+		super(props);
+	}
+	render() {
+		return(<hr className="partition"></hr>);
+	}
+}
+
 class Button extends React.Component {
 	constructor(props) {
 		super(props);
@@ -181,10 +190,12 @@ class SelectorLink extends React.Component {
 		super(props);
 		this.state = {
 			link: props.link,
+			i: props.i,
+			l: props.l,
 		};
 	}
 	render() {
-		return(<div className="selectorLink">
+		return(<div id={this.state.i} className="selectorLink" onClick={this.state.l}>
 			{this.state.link}
 		</div>);
 	}
@@ -196,11 +207,12 @@ class Selector extends React.Component {
 		this.state = {
 			tables: "truth tables",
 			validity: "validity check",
+			link: props.link,
 		};
 	}
 	render() {
 		return(<div id="selector">
-			<SelectorLink link={this.state.tables} /><SelectorLink link={this.state.validity} />
+			<SelectorLink i={"true"} link={this.state.tables} l={this.state.link}/><SelectorLink i={"false"} link={this.state.validity} l={this.state.link}/>
 		</div>);
 	}
 }
@@ -208,10 +220,14 @@ class Selector extends React.Component {
 class ReplContainer extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			b: props.b,
+			link: props.link,
+		};
 	}
 	render() {
         	return(<div id="replContainer">
-               		<Selector />
+               		<Selector link={this.state.link}/>
 			<textarea id="replInput"></textarea>
         	</div>);
 	}
@@ -226,6 +242,7 @@ class ReplPage extends React.Component {
 		this.state = {
 			tables: [],
 			out: undefined,
+			b: true,
 		};
 	}
 	retrieveTruthTable = (formulas, bool) => {
@@ -316,13 +333,6 @@ class ReplPage extends React.Component {
 		/* test validity */
 		formulas = this.normalize(formulas);
 		let truthArray = [];
-		
-		/*
-		 * respT[0] = truth assignments
-		 * respT[1] = truth_matrices
-		 * respT[2] = truth values of each exp (?)
-		 * */
-
 		let terms = respT[0];
 		console.log('terms: ', terms);
 
@@ -332,18 +342,34 @@ class ReplPage extends React.Component {
 		/* add initial truth assignments */
 		truthArray.push(init_table);
 		let nextTable;
-		/* add  */
+		let p = <Partition />;
+		truthArray.push(p);
+
+		/* add calculated tables*/
 		for (let i = 2; i < respT.length; i++) {
 			nextTable = <div className="tableWrap"><TruthTable table={respT[i]} exp={formulas[(i-2)]} key={i}/></div>;
 			truthArray.push(nextTable);
+			p = <Partition />;
+			truthArray.push(p);
 		}
-
+		
+		/* package up all tables */
 		let ttOut = <TableOutput tables={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
-
+		
+		/* change output state */
 		this.setState({
 			out: ttOut,
 		});
 	}
+
+
+	updateLink = (event) => {
+		alert(event.target.id);
+		this.setState({
+			b: event.target.id,
+		});
+	};
+
 	retrieve = () => {
 		let e = document.getElementById('replInput').value;
 	}
@@ -368,7 +394,7 @@ class ReplPage extends React.Component {
 	return(<div id="replPage">
 		<Banner />
 		<div id="pageContainer">
-		<ReplContainer />
+		<ReplContainer b={this.state.b} link={this.updateLink}/>
 		<Button retInput={this.retrieveInput}/>
 		</div>
 		{this.state.out}
