@@ -8,6 +8,9 @@ from src import lexer
 
 app = Flask(__name__)
 
+# TODO: Set up a second request handler for validity queries
+#@app.route('/valid', methods=['POST'])
+
 @app.route('/ajax', methods=['POST'])
 def ajax_req():
     ''' Evaluate formulae and return their truth values '''
