@@ -437,7 +437,13 @@ var ReplPage = function (_React$Component13) {
 				console.log('respText');
 				console.log(respText);
 				/* output the truth values */
-				if (bool == true) _this13.showValidity(respText, formulas);else _this13.showTT(respText, formulas);
+				if (bool == true) {
+					_this13.showTT(respText, formulas);
+					console.log("showing truth tables");
+				} else {
+					_this13.showValidity(respText, formulas);
+					console.log("showing validity");
+				}
 			};
 
 			/* send ajax request of the formulas */
@@ -469,8 +475,7 @@ var ReplPage = function (_React$Component13) {
 			/* send data to be analyzed on the server */
 			console.log('AJAX package:\n');
 			// setting bool to true will check validity of the arg
-			var bool = true;
-			_this13.retrieveTruthTable(formulas, bool);
+			_this13.retrieveTruthTable(formulas, _this13.state.b);
 		};
 
 		_this13.normalize = function (formulas) {
@@ -558,14 +563,26 @@ var ReplPage = function (_React$Component13) {
 		};
 
 		_this13.updateLink = function (event) {
-			alert(event.target.id);
+
+			// update state property
 			_this13.setState({
 				b: event.target.id
 			});
-		};
 
-		_this13.retrieve = function () {
-			var e = document.getElementById('replInput').value;
+			// access dom element
+			var sel = document.getElementById(event.target.id);
+
+			// save the other selector to contrast selection highlighting
+			var unsel = void 0;
+			if (event.target.id == "true") unsel = document.getElementById("false");else unsel = document.getElementById("true");
+
+			// change class membership if necessary
+			if (sel.classList.contains("selectorSelected")) return;else {
+				unsel.classList.remove("selectorSelected");
+				unsel.classList.add("selectorUnselected");
+				sel.classList.remove("selectorUnselected");
+				sel.classList.add("selectorSelected");
+			}
 		};
 
 		_this13.clearTables = function () {
@@ -597,6 +614,12 @@ var ReplPage = function (_React$Component13) {
 	}
 
 	_createClass(ReplPage, [{
+		key: "componentDidMount",
+		value: function componentDidMount() {
+			var tab = document.getElementById("true");
+			tab.classList.toggle("selectorSelected");
+		}
+	}, {
 		key: "render",
 		value: function render() {
 			return React.createElement(

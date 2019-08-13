@@ -201,6 +201,16 @@ html, body {
 
 .selectorLink:hover {
 	background: green;
+	color: white;
+}
+
+.selectorSelected {
+	background: green;
+	color: white;
+}
+
+.selectorUnselected {
+	background: white;
 }
 
 #button {

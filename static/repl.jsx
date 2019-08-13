@@ -245,6 +245,10 @@ class ReplPage extends React.Component {
 			b: true,
 		};
 	}
+	componentDidMount() {
+		let tab = document.getElementById("true");
+		tab.classList.toggle("selectorSelected");
+	}
 	retrieveTruthTable = (formulas, bool) => {
 		/*  takes in valid formulas and sends them to the server; displays
 		 * their truth tables upon return */
@@ -255,10 +259,14 @@ class ReplPage extends React.Component {
 			console.log('respText');
 			console.log(respText);			
 			/* output the truth values */
-			if (bool == true)
-				this.showValidity(respText, formulas);
-			else
+			if (bool == true) {
 				this.showTT(respText, formulas);
+				console.log("showing truth tables")
+			}
+			else {
+				this.showValidity(respText, formulas);
+				console.log("showing validity");
+			}
 		};
 		
 		/* send ajax request of the formulas */
@@ -290,8 +298,7 @@ class ReplPage extends React.Component {
 		/* send data to be analyzed on the server */
 		console.log('AJAX package:\n');
 		// setting bool to true will check validity of the arg
-		let bool = true;
-		this.retrieveTruthTable(formulas, bool);
+		this.retrieveTruthTable(formulas, this.state.b);
 	}
 	normalize = (formulas) => {
 		let forms = [];
@@ -364,15 +371,32 @@ class ReplPage extends React.Component {
 
 
 	updateLink = (event) => {
-		alert(event.target.id);
+		
+		// update state property
 		this.setState({
 			b: event.target.id,
 		});
-	};
 
-	retrieve = () => {
-		let e = document.getElementById('replInput').value;
-	}
+		// access dom element
+		let sel = document.getElementById(event.target.id);
+		
+		// save the other selector to contrast selection highlighting
+		let unsel;
+		if (event.target.id == "true")
+			unsel = document.getElementById("false");
+		else
+			unsel = document.getElementById("true");
+		
+		// change class membership if necessary
+		if (sel.classList.contains("selectorSelected"))
+			return;
+		else {
+			unsel.classList.remove("selectorSelected");
+			unsel.classList.add("selectorUnselected");
+			sel.classList.remove("selectorUnselected");
+			sel.classList.add("selectorSelected");
+		}
+	};
 	clearTables = () => {
 		this.setState({
 			tables: [],
