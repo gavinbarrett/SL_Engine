@@ -17,6 +17,10 @@ class Parser:
         self.seen = []
         self.output = []
         self.tt = []
+        self.dist = []
+        self.valid = None
+        self.validStack = []
+        self.vStack = []
 
     def clear_parser(self):
         self.tree_stack.clear()
@@ -58,26 +62,31 @@ class Parser:
         elif rootname == '<->':
             return self.bicond_val(x, y)
 
+    def addValue(self, z):
+        self.validStack += z
+        l = len(self.dist)
+        if len(self.validStack) == (2**l):
+            self.vStack.append(self.validStack)
+            self.validStack = []
+
     def eval(self, root):
+        z = None
         if root.name in self.lexer.terms:
-            #FIXME: truth should be whatever value from tt
-            #FIXME: tt is just the truth values of the terms
-            # need to write a function to take in the expression
-            # and the list of values in order to determine how many truth
-            # values need to be inside of the list
-            #print(self.tt)
-            t = self.tt[0]
+            z = self.tt[0]
             self.tt = self.tt[1:]
-            root.eval_stack.append(t)
+            root.eval_stack.append(z)
         elif root.name in self.lexer.un_op:
             l = root.right.eval_stack[0]
-            m = self.neg(l)
-            root.eval_stack.append(m)
+            z = self.neg(l)
+            root.eval_stack.append(z)
         elif root.name in self.lexer.log_ops:
             x = root.left.eval_stack[0]
             y = root.right.eval_stack[0]
             z = self.determine_truth(x,y,root.name)
             root.eval_stack.append(z)
+        # if token is the root of the tree, save truth value
+        if root.root == True:
+            self.addValue(z)
 
     def handle_root(self, root):
         ''' Recursively return true values '''
@@ -130,19 +139,30 @@ class Parser:
         ts, dist = self.strip_terms(exp)
         truth_values = list(generate(len(dist)))
         terms = []
-        print('truth-values')
-        print(truth_values)
         for t in truth_values:
             term = self.generate_terms(t,ts)
             terms.append(term)
         for t in terms:
             table = []
             self.tt = t
+            # calculate
             self.print_tt(tree)
+            # save
             self.in_order(tree, table)
             truth_table.append(table)
         truth_table = truth_table[::1]
         return truth_table, dist, truth_values
+
+    def check_if_valid(self, vTable):
+        for vT in vTable:
+            for idx, v in enumerate(vT):
+                if v == 'T':
+                    continue
+                elif v == 'F' and idx == (len(vT)-1):
+                    return False
+                else:
+                    break
+        return True
 
     def get_set_truth_table(self, tree, exp, total, master):
         # save total amount of distinct terms
@@ -152,8 +172,7 @@ class Parser:
         indices = []
         for tn in trus:
             indices.append(total.index(tn))
-        print('Master List:')
-        print(master)
+        self.dist = total
         # for each truth value state(row) in the list, strip out relevant truth values
         # TODO: refactor with map and lambda
         troos = []
@@ -172,11 +191,7 @@ class Parser:
             self.print_tt(tree)
             self.in_order(tree, table)
             truth_table.append(table)
-        print('\nTRUTH TABLE\n')
-        for ttt in truth_table:
-            print(ttt)
-        print(total)    
-        return truth_table #, total_distinct, troos
+        return truth_table
 
 
     def print_tt(self, root):
@@ -194,11 +209,14 @@ class Parser:
 
     def insert_op(self, op):
         ''' Pop stack and make new operator ast '''
+        #TODO: designate t as the root of the tree;
+        # overwrite child nodes if they are specified as the root
         t = ast.AST(op)
         if op in self.lexer.un_op:
             if self.tree_stack:
                 # if it is a negation, put as right child
                 tree = self.tree_stack.pop()
+                tree.root = False
                 t.right = tree
                 self.tree_stack.append(t)
             else:
@@ -207,8 +225,10 @@ class Parser:
         elif op in self.lexer.log_ops:
             if self.tree_stack:
                 tree = self.tree_stack.pop()
+                tree.root = False
                 t.right = tree
                 tree = self.tree_stack.pop()
+                tree.root = False
                 t.left = tree
                 self.tree_stack.append(t)
             else:
@@ -244,27 +264,27 @@ class Parser:
 
     def get_tables(self, data):
         ''' return the truth tables for a set of sentences '''
+        # return a list of terms and a list of distinct terms
         tz, total = self.strip_terms(data)
+        
+        # generate a master truth value matrix with 2**total rows
         master_list = list(generate(len(total)))
     
-        outtie = []
-        
         # normalize expressions by newlines
         formulas = self.normalize(data)
         
-        print('\nFORMULAS:\n')
-        print(formulas)
-
+        output = []
+        # turn each expression into its postfix representation
+        #output = list(map(lambda x: self.lexer.shunting_yard_string(x), formulas))
         for f in formulas:
-            output = self.lexer.shunting_yard_string(f)
-            outtie += output 
+            output += self.lexer.shunting_yard_string(f)
+
         set_trus = []
         tables = []
-        for idx, postfix in enumerate(outtie):
+        for idx, postfix in enumerate(output):
             for p in postfix:
                 self.insert(p)
             tree = self.tree_stack.pop()
-
             tables.append(list(self.get_truth_table(tree, formulas[idx])))
         return tables
     
@@ -275,32 +295,25 @@ class Parser:
         tz, total = self.strip_terms(data)
         master_list = list(generate(len(total)))
     
-        outtie = []
+        output = []
         
         # normalize expressions by newlines
         formulas = self.normalize(data)
         
-        print('\nFORMULAS:\n')
-        print(formulas)
-
         # perform the shunting yard operation on each formula
         #outtie = list(map(lambda x: self.lexer.shunting_yard_string(x), formulas))
         for f in formulas:
-            output = self.lexer.shunting_yard_string(f)
-            outtie += output 
-        
+            output += self.lexer.shunting_yard_string(f)
+            
         set_trus = []
-        for idx, postfix in enumerate(outtie):
+        for idx, postfix in enumerate(output):
             for p in postfix:
                 self.insert(p)
             tree = self.tree_stack.pop()
-            #TODO: set truth table code; PLZ refactor
             set_truth = list(self.get_set_truth_table(tree, formulas[idx], total, master_list))
             set_trus.append(set_truth)
 
-            # return the master list appended to the output values
-            print("Master list:")
-            print(master_list)
-            print("set_trus")
-            print(set_trus)
-        return [total] + [master_list] + set_trus
+        vTable = zip(*self.vStack)
+        self.valid = self.check_if_valid(vTable)
+        
+        return [total] + [master_list] + set_trus + [self.valid]

@@ -8,6 +8,7 @@ class AST:
         self.t_value = False
         self.name = c
         self.eval_stack = []
+        self.root = True
 
     def init_t(self):
         self.t_value = True

@@ -129,6 +129,7 @@ class ValidOutput extends React.Component {
                 super(props);
                 this.state = {
                         valid: props.valid,
+			validity: props.validity,
 			scrollUp: props.scrollUp,
 			scrollDown: props.scrollDown,
                 };
@@ -140,8 +141,9 @@ class ValidOutput extends React.Component {
         render() {
                 return(<div id="validContainer" className="scrollUpHidden">
                         <div className="close" onClick={this.state.scrollDown}></div>
+			{this.state.validity}
 			{this.state.valid}
-                </div>);
+		</div>);
         }
 }
 
@@ -330,6 +332,7 @@ class ReplPage extends React.Component {
 	}
 	
 	normalize = (formulas) => {
+		/* normalize expressions by newline */
 		let forms = [];
 		let form = ''
 		for (let i = 0; i < formulas.length; i++) {
@@ -343,6 +346,7 @@ class ReplPage extends React.Component {
 		}
 		return forms;
 	}
+	
 	showTT = (respT, formulas) => {
 		/* Display the individual truth tables */
 		formulas = this.normalize(formulas);
@@ -365,7 +369,7 @@ class ReplPage extends React.Component {
 		formulas = this.normalize(formulas);
 		let truthArray = [];
 		let terms = respT[0];
-		
+		let validity = respT.pop();
 		let init_vals = respT[1];
 		let init_table = <div className="tableWrap"><TruthTable table={init_vals} exp={terms} key={0}/></div>;
 
@@ -384,7 +388,7 @@ class ReplPage extends React.Component {
 		}
 		
 		/* package up all tables */
-		let ttOut = <ValidOutput valid={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
+		let ttOut = <ValidOutput valid={truthArray} validity={validity.toString()} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
 		
 		/* change output state */
 		this.setState({

@@ -219,6 +219,7 @@ var ValidOutput = function (_React$Component6) {
 
 		_this6.state = {
 			valid: props.valid,
+			validity: props.validity,
 			scrollUp: props.scrollUp,
 			scrollDown: props.scrollDown
 		};
@@ -238,6 +239,7 @@ var ValidOutput = function (_React$Component6) {
 				"div",
 				{ id: "validContainer", className: "scrollUpHidden" },
 				React.createElement("div", { className: "close", onClick: this.state.scrollDown }),
+				this.state.validity,
 				this.state.valid
 			);
 		}
@@ -518,6 +520,7 @@ var ReplPage = function (_React$Component14) {
 		};
 
 		_this14.normalize = function (formulas) {
+			/* normalize expressions by newline */
 			var forms = [];
 			var form = '';
 			for (var i = 0; i < formulas.length; i++) {
@@ -562,7 +565,7 @@ var ReplPage = function (_React$Component14) {
 			formulas = _this14.normalize(formulas);
 			var truthArray = [];
 			var terms = respT[0];
-
+			var validity = respT.pop();
 			var init_vals = respT[1];
 			var init_table = React.createElement(
 				"div",
@@ -589,7 +592,7 @@ var ReplPage = function (_React$Component14) {
 			}
 
 			/* package up all tables */
-			var ttOut = React.createElement(ValidOutput, { valid: truthArray, scrollUp: _this14.scrollUp, scrollDown: _this14.scrollDown });
+			var ttOut = React.createElement(ValidOutput, { valid: truthArray, validity: validity.toString(), scrollUp: _this14.scrollUp, scrollDown: _this14.scrollDown });
 
 			/* change output state */
 			_this14.setState({

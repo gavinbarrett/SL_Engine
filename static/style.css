@@ -273,6 +273,16 @@ html, body {
         text-align: center;
 }
 
+#centerOut {
+	display: flex;
+	flex-direction: column;
+}
+
+#tableForm {
+	display: flex;
+	flex-direction: row;
+}
+
 .tableWrap {
 	width: 100%;
 	display: flex;
