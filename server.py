@@ -8,11 +8,26 @@ from src import lexer
 
 app = Flask(__name__)
 
-# TODO: Set up a second request handler for validity queries
-#@app.route('/valid', methods=['POST'])
+def respond(data, p, switch):
+    ''' select correct function from parser interface '''
+    return p.get_tables(data) if switch else p.get_validity(data)
 
-@app.route('/ajax', methods=['POST'])
-def ajax_req():
+@app.route('/valid', methods=['POST'])
+def valid_req():
+
+    formulae = request.data.decode('UTF-8')
+
+    p = parser.Parser()
+    
+    package = respond(formulae, p, False)
+    
+    print('\nVALID PACKAGE\n')
+    print(package)
+    
+    return jsonify(package)
+
+@app.route('/table', methods=['POST'])
+def table_req():
     ''' Evaluate formulae and return their truth values '''
     
     # decode formulae
@@ -22,8 +37,8 @@ def ajax_req():
     p = parser.Parser()
 
     # return a list of truth values
-    package = p.read_string(formulae, True)
-    
+    package = respond(formulae, p, True)
+    print('\nTABLE PACKAGE\n')
     print(package)
     
     return jsonify(package)

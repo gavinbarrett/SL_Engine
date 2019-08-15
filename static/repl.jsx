@@ -123,6 +123,29 @@ class TruthTableContainer extends React.Component {
 	}
 }
 
+
+class ValidOutput extends React.Component {
+	constructor(props) {
+                super(props);
+                this.state = {
+                        valid: props.valid,
+			scrollUp: props.scrollUp,
+			scrollDown: props.scrollDown,
+                };
+        }
+	componentDidMount() {
+		/* run scroll animation after object is created */
+		this.state.scrollUp('validContainer');
+	}
+        render() {
+                return(<div id="validContainer" className="scrollUpHidden">
+                        <div className="close" onClick={this.state.scrollDown}></div>
+			{this.state.valid}
+                </div>);
+        }
+}
+
+
 class TableOutput extends React.Component {
 	constructor(props) {
                 super(props);
@@ -134,7 +157,7 @@ class TableOutput extends React.Component {
         }
 	componentDidMount() {
 		/* run scroll animation after object is created */
-		this.state.scrollUp();
+		this.state.scrollUp('tableContainer');
 	}
         render() {
                 return(<div id="tableContainer" className="scrollUpHidden">
@@ -212,7 +235,7 @@ class Selector extends React.Component {
 	}
 	render() {
 		return(<div id="selector">
-			<SelectorLink i={"true"} link={this.state.tables} l={this.state.link}/><SelectorLink i={"false"} link={this.state.validity} l={this.state.link}/>
+			<SelectorLink i={"t"} link={this.state.tables} l={this.state.link}/><SelectorLink i={"v"} link={this.state.validity} l={this.state.link}/>
 		</div>);
 	}
 }
@@ -240,26 +263,40 @@ class ReplPage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			table: undefined,
+			valid: undefined,
 			tables: [],
 			out: undefined,
-			b: true,
+			b: "t",
 		};
 	}
 	componentDidMount() {
-		let tab = document.getElementById("true");
-		tab.classList.toggle("selectorSelected");
+		let tab = document.getElementById("t");
+		tab.classList.add("selectorSelected");
+	}
+	selectSwitch = (bool) => {
+		/* return correct api function based on state */
+		//return (bool == true) ? '/table':'/valid';
+		if (bool == "t")
+			return "/table";
+		else
+			return "/valid";
 	}
 	retrieveTruthTable = (formulas, bool) => {
 		/*  takes in valid formulas and sends them to the server; displays
 		 * their truth tables upon return */
-		let xhr = request('POST', '/ajax');
+
+		let api = this.selectSwitch(bool);
+		console.log('bool is ', bool)
+		console.log('using ', api, ' api');
+		let xhr = request('POST', api);
 
 		xhr.onload = () => {
 			let respText = JSON.parse(xhr.responseText);
 			console.log('respText');
 			console.log(respText);			
 			/* output the truth values */
-			if (bool == true) {
+			if (bool == "t") {
 				this.showTT(respText, formulas);
 				console.log("showing truth tables")
 			}
@@ -320,16 +357,15 @@ class ReplPage extends React.Component {
 		console.log(respT);
 		let truthArray = [];
 
-
-
 		for (let i = 0; i < respT.length; i++) {
 			/* Each respT[i] is a truth table */
-
+			console.log("respT[1]");	
+			console.log(respT[i]);
 			let table = <div className="tableWrap"><TruthTable table={respT[i][2]} exp={respT[i][1]} key={i}/><TruthTable table={respT[i][0]} exp={formulas[i]} key={i}/></div>;
 
 			truthArray.push(table);
 		}
-
+		console.log('breaking...');
 		let ttOut = <TableOutput tables={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
 
 		this.setState({
@@ -342,7 +378,7 @@ class ReplPage extends React.Component {
 		let truthArray = [];
 		let terms = respT[0];
 		console.log('terms: ', terms);
-
+		
 		let init_vals = respT[1];
 		let init_table = <div className="tableWrap"><TruthTable table={init_vals} exp={terms} key={0}/></div>;
 
@@ -361,7 +397,7 @@ class ReplPage extends React.Component {
 		}
 		
 		/* package up all tables */
-		let ttOut = <TableOutput tables={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
+		let ttOut = <ValidOutput valid={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
 		
 		/* change output state */
 		this.setState({
@@ -369,33 +405,39 @@ class ReplPage extends React.Component {
 		});
 	}
 
-
 	updateLink = (event) => {
+		
+		// access dom element
+		let sel = document.getElementById(event.target.id);
+		// save the other selector to contrast selection highlighting
+		let unsel;
+		let ttOut;
+		let truthArray = [];
+		
+		
+		if (event.target.id == "t") {
+			console.log('about to break');
+			unsel = document.getElementById("v");
+		} else if (event.target.id == "v"){
+			unsel = document.getElementById("t");
+		}
+		// change class membership if necessary
+		if (event.target.id == this.state.b) {
+			//pass
+		} else {
+			unsel.classList.remove("selectorSelected");
+			sel.classList.remove("selectorUnselected");
+			unsel.classList.add("selectorUnselected");
+			sel.classList.add("selectorSelected");
+		}
 		
 		// update state property
 		this.setState({
 			b: event.target.id,
+			tables: [],
 		});
-
-		// access dom element
-		let sel = document.getElementById(event.target.id);
 		
-		// save the other selector to contrast selection highlighting
-		let unsel;
-		if (event.target.id == "true")
-			unsel = document.getElementById("false");
-		else
-			unsel = document.getElementById("true");
-		
-		// change class membership if necessary
-		if (sel.classList.contains("selectorSelected"))
-			return;
-		else {
-			unsel.classList.remove("selectorSelected");
-			unsel.classList.add("selectorUnselected");
-			sel.classList.remove("selectorUnselected");
-			sel.classList.add("selectorSelected");
-		}
+		//TODO: identify target and render output component with appropriate type
 	};
 	clearTables = () => {
 		this.setState({
@@ -403,15 +445,26 @@ class ReplPage extends React.Component {
 		});
 	}
 	scrollUp = () => {
-		let s = document.getElementById('tableContainer');
+		let s;
+		if (this.state.b == "t")
+			s = document.getElementById('tableContainer');
+		else
+			s = document.getElementById('validContainer');
 		s.classList.toggle('scrollUpHidden');
 		s.classList.toggle('scrollUp');
 	}
 	scrollDown = () => {
-		let s = document.getElementById('tableContainer');
+		let s;
+		if (this.state.b == "t")
+			s = document.getElementById("tableContainer");
+		else
+			s = document.getElementById("validContainer");
 		s.classList.toggle('scrollDown');
 		setTimeout(() => {
-			this.setState({ out: undefined })
+			this.setState({ 
+				out: undefined,
+				tables: [],
+			})
 		}, 1000);
 	}
 	render() {

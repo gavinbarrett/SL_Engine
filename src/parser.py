@@ -242,47 +242,65 @@ class Parser:
                 formula += str(f)
         return formulas
 
-    def read_string(self, formula, b):
-        
-        # save a list of terms (tz) as well as their set (total)
-        tz, total = self.strip_terms(formula)
-        # generate the master list of truth values from which we will pull values
+    def get_tables(self, data):
+        ''' return the truth tables for a set of sentences '''
+        tz, total = self.strip_terms(data)
         master_list = list(generate(len(total)))
-        
+    
         outtie = []
         
         # normalize expressions by newlines
-        formulas = self.normalize(formula)
+        formulas = self.normalize(data)
         
+        print('\nFORMULAS:\n')
+        print(formulas)
+
         for f in formulas:
             output = self.lexer.shunting_yard_string(f)
             outtie += output 
         set_trus = []
-       
-       # if we are checking validity, call self.get_set_truth_table()
-        if b:
-            for idx, postfix in enumerate(outtie):
-                for p in postfix:
-                    self.insert(p)
-                tree = self.tree_stack.pop()
-                #TODO: set truth table code; PLZ refactor
-                set_truth = list(self.get_set_truth_table(tree, formulas[idx], total, master_list))
-                set_trus.append(set_truth)
+        tables = []
+        for idx, postfix in enumerate(outtie):
+            for p in postfix:
+                self.insert(p)
+            tree = self.tree_stack.pop()
+
+            tables.append(list(self.get_truth_table(tree, formulas[idx])))
+        return tables
+    
+
+
+    def get_validity(self, data):
+        ''' check whether or not a set of sentences is valid '''
+        tz, total = self.strip_terms(data)
+        master_list = list(generate(len(total)))
+    
+        outtie = []
+        
+        # normalize expressions by newlines
+        formulas = self.normalize(data)
+        
+        print('\nFORMULAS:\n')
+        print(formulas)
+
+        # perform the shunting yard operation on each formula
+        #outtie = list(map(lambda x: self.lexer.shunting_yard_string(x), formulas))
+        for f in formulas:
+            output = self.lexer.shunting_yard_string(f)
+            outtie += output 
+        
+        set_trus = []
+        for idx, postfix in enumerate(outtie):
+            for p in postfix:
+                self.insert(p)
+            tree = self.tree_stack.pop()
+            #TODO: set truth table code; PLZ refactor
+            set_truth = list(self.get_set_truth_table(tree, formulas[idx], total, master_list))
+            set_trus.append(set_truth)
 
             # return the master list appended to the output values
             print("Master list:")
             print(master_list)
             print("set_trus")
             print(set_trus)
-            return [total] + [master_list] + set_trus
-        
-        # otherwise, get the individual truth tables
-        else:
-            tables = []
-            for idx, postfix in enumerate(outtie):
-                for p in postfix:
-                    self.insert(p)
-                tree = self.tree_stack.pop()
-
-                tables.append(list(self.get_truth_table(tree, formulas[idx])))
-            return tables
+        return [total] + [master_list] + set_trus
