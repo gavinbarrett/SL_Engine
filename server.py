@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import sys
 import json
-import requests
 from flask import Flask, render_template, request, jsonify
 from src import parser
 from src import lexer
