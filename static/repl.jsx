@@ -285,30 +285,24 @@ class ReplPage extends React.Component {
 	retrieveTruthTable = (formulas, bool) => {
 		/*  takes in valid formulas and sends them to the server; displays
 		 * their truth tables upon return */
-
+		
+		// select appropriate api function
 		let api = this.selectSwitch(bool);
-		console.log('bool is ', bool)
-		console.log('using ', api, ' api');
+		
+		// initialize http request
 		let xhr = request('POST', api);
 
 		xhr.onload = () => {
+			// parse retrieved JSON
 			let respText = JSON.parse(xhr.responseText);
-			console.log('respText');
-			console.log(respText);			
 			/* output the truth values */
-			if (bool == "t") {
-				this.showTT(respText, formulas);
-				console.log("showing truth tables")
-			}
-			else {
-				this.showValidity(respText, formulas);
-				console.log("showing validity");
-			}
+			(bool == "t") ? this.showTT(respText, formulas) : this.showValidity(respText, formulas);
 		};
 		
 		/* send ajax request of the formulas */
 		xhr.send(formulas);	
 	}
+	
 	retrieveInput = (event) => {
         	let formulas = document.getElementById('replInput').value;
 
@@ -327,22 +321,17 @@ class ReplPage extends React.Component {
 			newForms += a;
 			/* call lexical_analysis() to check grammar */
 			let t = lexical_analysis(a);
-			if (t)
-				console.log('1');
-			else {
-				console.log('0');
+			if (!t)
 				return;
-			}
 		}
+		
 		/* send data to be analyzed on the server */
-		console.log('AJAX package:\n');
-		// setting bool to true will check validity of the arg
 		this.retrieveTruthTable(newForms, this.state.b);
 	}
+	
 	normalize = (formulas) => {
 		let forms = [];
 		let form = ''
-		console.log("Forms: ", formulas);
 		for (let i = 0; i < formulas.length; i++) {
 			if (formulas[i] == "\n") {
 				form += formulas[i];
@@ -357,18 +346,14 @@ class ReplPage extends React.Component {
 	showTT = (respT, formulas) => {
 		/* Display the individual truth tables */
 		formulas = this.normalize(formulas);
-		console.log(respT);
 		let truthArray = [];
 
 		for (let i = 0; i < respT.length; i++) {
 			/* Each respT[i] is a truth table */
-			console.log("respT[1]");	
-			console.log(respT[i]);
 			let table = <div className="tableWrap"><TruthTable table={respT[i][2]} exp={respT[i][1]} key={i}/><TruthTable table={respT[i][0]} exp={formulas[i]} key={i}/></div>;
 
 			truthArray.push(table);
 		}
-		console.log('breaking...');
 		let ttOut = <TableOutput tables={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
 
 		this.setState({
@@ -380,7 +365,6 @@ class ReplPage extends React.Component {
 		formulas = this.normalize(formulas);
 		let truthArray = [];
 		let terms = respT[0];
-		console.log('terms: ', terms);
 		
 		let init_vals = respT[1];
 		let init_table = <div className="tableWrap"><TruthTable table={init_vals} exp={terms} key={0}/></div>;
@@ -409,7 +393,9 @@ class ReplPage extends React.Component {
 	}
 
 	updateLink = (event) => {
-		
+		/* update boolean to determine which api function to call 
+		 * this method is called anytime the selector buttons are clicked */
+
 		// access dom element
 		let sel = document.getElementById(event.target.id);
 		// save the other selector to contrast selection highlighting
@@ -417,9 +403,7 @@ class ReplPage extends React.Component {
 		let ttOut;
 		let truthArray = [];
 		
-		
 		if (event.target.id == "t") {
-			console.log('about to break');
 			unsel = document.getElementById("v");
 		} else if (event.target.id == "v"){
 			unsel = document.getElementById("t");
@@ -439,14 +423,14 @@ class ReplPage extends React.Component {
 			b: event.target.id,
 			tables: [],
 		});
-		
-		//TODO: identify target and render output component with appropriate type
 	};
+	
 	clearTables = () => {
 		this.setState({
 			tables: [],
 		});
 	}
+	
 	scrollUp = () => {
 		let s;
 		if (this.state.b == "t")
@@ -456,6 +440,7 @@ class ReplPage extends React.Component {
 		s.classList.toggle('scrollUpHidden');
 		s.classList.toggle('scrollUp');
 	}
+	
 	scrollDown = () => {
 		let s;
 		if (this.state.b == "t")
@@ -470,6 +455,7 @@ class ReplPage extends React.Component {
 			})
 		}, 1000);
 	}
+	
 	render() {
 	return(<div id="replPage">
 		<Banner />

@@ -474,23 +474,17 @@ var ReplPage = function (_React$Component14) {
 			/*  takes in valid formulas and sends them to the server; displays
     * their truth tables upon return */
 
+			// select appropriate api function
 			var api = _this14.selectSwitch(bool);
-			console.log('bool is ', bool);
-			console.log('using ', api, ' api');
+
+			// initialize http request
 			var xhr = request('POST', api);
 
 			xhr.onload = function () {
+				// parse retrieved JSON
 				var respText = JSON.parse(xhr.responseText);
-				console.log('respText');
-				console.log(respText);
 				/* output the truth values */
-				if (bool == "t") {
-					_this14.showTT(respText, formulas);
-					console.log("showing truth tables");
-				} else {
-					_this14.showValidity(respText, formulas);
-					console.log("showing validity");
-				}
+				bool == "t" ? _this14.showTT(respText, formulas) : _this14.showValidity(respText, formulas);
 			};
 
 			/* send ajax request of the formulas */
@@ -516,21 +510,16 @@ var ReplPage = function (_React$Component14) {
 				newForms += a;
 				/* call lexical_analysis() to check grammar */
 				var t = lexical_analysis(a);
-				if (t) console.log('1');else {
-					console.log('0');
-					return;
-				}
+				if (!t) return;
 			}
+
 			/* send data to be analyzed on the server */
-			console.log('AJAX package:\n');
-			// setting bool to true will check validity of the arg
 			_this14.retrieveTruthTable(newForms, _this14.state.b);
 		};
 
 		_this14.normalize = function (formulas) {
 			var forms = [];
 			var form = '';
-			console.log("Forms: ", formulas);
 			for (var i = 0; i < formulas.length; i++) {
 				if (formulas[i] == "\n") {
 					form += formulas[i];
@@ -546,13 +535,10 @@ var ReplPage = function (_React$Component14) {
 		_this14.showTT = function (respT, formulas) {
 			/* Display the individual truth tables */
 			formulas = _this14.normalize(formulas);
-			console.log(respT);
 			var truthArray = [];
 
 			for (var i = 0; i < respT.length; i++) {
 				/* Each respT[i] is a truth table */
-				console.log("respT[1]");
-				console.log(respT[i]);
 				var table = React.createElement(
 					"div",
 					{ className: "tableWrap" },
@@ -562,7 +548,6 @@ var ReplPage = function (_React$Component14) {
 
 				truthArray.push(table);
 			}
-			console.log('breaking...');
 			var ttOut = React.createElement(TableOutput, { tables: truthArray, scrollUp: _this14.scrollUp, scrollDown: _this14.scrollDown });
 
 			_this14.setState({
@@ -577,7 +562,6 @@ var ReplPage = function (_React$Component14) {
 			formulas = _this14.normalize(formulas);
 			var truthArray = [];
 			var terms = respT[0];
-			console.log('terms: ', terms);
 
 			var init_vals = respT[1];
 			var init_table = React.createElement(
@@ -614,6 +598,8 @@ var ReplPage = function (_React$Component14) {
 		};
 
 		_this14.updateLink = function (event) {
+			/* update boolean to determine which api function to call 
+    * this method is called anytime the selector buttons are clicked */
 
 			// access dom element
 			var sel = document.getElementById(event.target.id);
@@ -623,7 +609,6 @@ var ReplPage = function (_React$Component14) {
 			var truthArray = [];
 
 			if (event.target.id == "t") {
-				console.log('about to break');
 				unsel = document.getElementById("v");
 			} else if (event.target.id == "v") {
 				unsel = document.getElementById("t");
@@ -643,8 +628,6 @@ var ReplPage = function (_React$Component14) {
 				b: event.target.id,
 				tables: []
 			});
-
-			//TODO: identify target and render output component with appropriate type
 		};
 
 		_this14.clearTables = function () {
