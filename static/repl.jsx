@@ -317,12 +317,14 @@ class ReplPage extends React.Component {
 	
 		let fs = formulas.split('\n');	
 		
+		let newForms = "";
+
 		// strip formulas of unnecessary inputs caused by newlines
 		let fs2 = fs.filter(val => { return val != "" });
-		
+		console.log('filtered: ', fs2);	
 		for (let f = 0; f < fs2.length; f++) {
 			let a = fs2[f] + '\n'
-
+			newForms += a;
 			/* call lexical_analysis() to check grammar */
 			let t = lexical_analysis(a);
 			if (t)
@@ -335,13 +337,14 @@ class ReplPage extends React.Component {
 		/* send data to be analyzed on the server */
 		console.log('AJAX package:\n');
 		// setting bool to true will check validity of the arg
-		this.retrieveTruthTable(formulas, this.state.b);
+		this.retrieveTruthTable(newForms, this.state.b);
 	}
 	normalize = (formulas) => {
 		let forms = [];
 		let form = ''
+		console.log("Forms: ", formulas);
 		for (let i = 0; i < formulas.length; i++) {
-			if (formulas[i] == '\n') {
+			if (formulas[i] == "\n") {
 				form += formulas[i];
 				forms.push(form);
 				form = '';

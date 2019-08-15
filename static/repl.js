@@ -504,14 +504,16 @@ var ReplPage = function (_React$Component14) {
 
 			var fs = formulas.split('\n');
 
+			var newForms = "";
+
 			// strip formulas of unnecessary inputs caused by newlines
 			var fs2 = fs.filter(function (val) {
 				return val != "";
 			});
-
+			console.log('filtered: ', fs2);
 			for (var f = 0; f < fs2.length; f++) {
 				var a = fs2[f] + '\n';
-
+				newForms += a;
 				/* call lexical_analysis() to check grammar */
 				var t = lexical_analysis(a);
 				if (t) console.log('1');else {
@@ -522,14 +524,15 @@ var ReplPage = function (_React$Component14) {
 			/* send data to be analyzed on the server */
 			console.log('AJAX package:\n');
 			// setting bool to true will check validity of the arg
-			_this14.retrieveTruthTable(formulas, _this14.state.b);
+			_this14.retrieveTruthTable(newForms, _this14.state.b);
 		};
 
 		_this14.normalize = function (formulas) {
 			var forms = [];
 			var form = '';
+			console.log("Forms: ", formulas);
 			for (var i = 0; i < formulas.length; i++) {
-				if (formulas[i] == '\n') {
+				if (formulas[i] == "\n") {
 					form += formulas[i];
 					forms.push(form);
 					form = '';
