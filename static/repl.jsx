@@ -398,12 +398,19 @@ class ReplPage extends React.Component {
 	}
 	showValidity = (respT, formulas) => {
 		/* test validity */
+		
 		formulas = this.normalize(formulas);
+		
 		let truthArray = [];
+
 		let terms = respT[0];
+
 		let validity = respT.pop();
-		let message = (validity) ? <Valid valid={"Valid"} /> : <Invalid invalid={"Invalid"} />;
+		
+		// save the correct message
+		let message = (validity) ? <Valid valid={"Valid!"} /> : <Invalid invalid={"Invalid!"} />;
 		let init_vals = respT[1];
+		
 		let init_table = <div className="tableWrap"><TruthTable table={init_vals} exp={terms} key={0}/></div>;
 
 		/* add initial truth assignments */

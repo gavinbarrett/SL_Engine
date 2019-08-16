@@ -37,9 +37,8 @@ function random_conn() {
 function connective() {
 	/* constructs a connective */
 	this.x = random(0, document.body.offsetWidth);
-	//this.y = random(document.body.offsetWidth*0.95, document.body.offsetHeight);
 	this.y = document.body.offsetHeight*0.90;
-	//FIXME: modify probability distribution of symbols
+	
 	this.size = random(20, 35);
 	this.sym = random_conn();
 

@@ -629,12 +629,19 @@ var ReplPage = function (_React$Component16) {
 
 		_this16.showValidity = function (respT, formulas) {
 			/* test validity */
+
 			formulas = _this16.normalize(formulas);
+
 			var truthArray = [];
+
 			var terms = respT[0];
+
 			var validity = respT.pop();
-			var message = validity ? React.createElement(Valid, { valid: "Valid" }) : React.createElement(Invalid, { invalid: "Invalid" });
+
+			// save the correct message
+			var message = validity ? React.createElement(Valid, { valid: "Valid!" }) : React.createElement(Invalid, { invalid: "Invalid!" });
 			var init_vals = respT[1];
+
 			var init_table = React.createElement(
 				"div",
 				{ className: "tableWrap" },
