@@ -187,7 +187,7 @@ html, body {
 }
 
 .partition {
-	height: 35%;
+	height: 20vh;
 	color: black;
 }
 
@@ -295,13 +295,14 @@ html, body {
 #outputTables {
 	display: flex;
 	flex-direction: row;
+	height: 100%;
 }
 
 .tableWrap {
 	width: 100%;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-evenly;
+	justify-content: center;
 }
 
 .tableWrap1 {
