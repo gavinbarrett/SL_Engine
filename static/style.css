@@ -273,6 +273,14 @@ html, body {
         text-align: center;
 }
 
+#valid {
+	color: green;
+}
+
+#invalid {
+	color: red;
+}
+
 #outputWrapper {
 	display: flex;
 	flex-direction: column;

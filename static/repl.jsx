@@ -113,7 +113,7 @@ class TruthTable extends React.Component {
 }
 
 class TruthTableContainer extends React.Component {
-	constructor(props) {
+		constructor(props) {
 		super(props);
 	}
 	render() {
@@ -123,6 +123,33 @@ class TruthTableContainer extends React.Component {
 	}
 }
 
+class Valid extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			valid: props.valid,
+		};
+	}
+	render() {
+		return(<div id="valid">
+			{this.state.valid}
+		</div>);
+	}
+}
+
+class Invalid extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			notValid: props.invalid,
+		};
+	}
+	render() {
+		return(<div id="invalid">
+			{this.state.notValid}
+		</div>);
+	}
+}
 
 class ValidOutput extends React.Component {
 	constructor(props) {
@@ -375,7 +402,7 @@ class ReplPage extends React.Component {
 		let truthArray = [];
 		let terms = respT[0];
 		let validity = respT.pop();
-		let message = (validity) ? 'Valid!' : 'Invalid!';
+		let message = (validity) ? <Valid valid={"Valid"} /> : <Invalid invalid={"Invalid"} />;
 		let init_vals = respT[1];
 		let init_table = <div className="tableWrap"><TruthTable table={init_vals} exp={terms} key={0}/></div>;
 

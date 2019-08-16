@@ -209,21 +209,77 @@ var TruthTableContainer = function (_React$Component5) {
 	return TruthTableContainer;
 }(React.Component);
 
-var ValidOutput = function (_React$Component6) {
-	_inherits(ValidOutput, _React$Component6);
+var Valid = function (_React$Component6) {
+	_inherits(Valid, _React$Component6);
+
+	function Valid(props) {
+		_classCallCheck(this, Valid);
+
+		var _this6 = _possibleConstructorReturn(this, (Valid.__proto__ || Object.getPrototypeOf(Valid)).call(this, props));
+
+		_this6.state = {
+			valid: props.valid
+		};
+		return _this6;
+	}
+
+	_createClass(Valid, [{
+		key: "render",
+		value: function render() {
+			return React.createElement(
+				"div",
+				{ id: "valid" },
+				this.state.valid
+			);
+		}
+	}]);
+
+	return Valid;
+}(React.Component);
+
+var Invalid = function (_React$Component7) {
+	_inherits(Invalid, _React$Component7);
+
+	function Invalid(props) {
+		_classCallCheck(this, Invalid);
+
+		var _this7 = _possibleConstructorReturn(this, (Invalid.__proto__ || Object.getPrototypeOf(Invalid)).call(this, props));
+
+		_this7.state = {
+			notValid: props.invalid
+		};
+		return _this7;
+	}
+
+	_createClass(Invalid, [{
+		key: "render",
+		value: function render() {
+			return React.createElement(
+				"div",
+				{ id: "invalid" },
+				this.state.notValid
+			);
+		}
+	}]);
+
+	return Invalid;
+}(React.Component);
+
+var ValidOutput = function (_React$Component8) {
+	_inherits(ValidOutput, _React$Component8);
 
 	function ValidOutput(props) {
 		_classCallCheck(this, ValidOutput);
 
-		var _this6 = _possibleConstructorReturn(this, (ValidOutput.__proto__ || Object.getPrototypeOf(ValidOutput)).call(this, props));
+		var _this8 = _possibleConstructorReturn(this, (ValidOutput.__proto__ || Object.getPrototypeOf(ValidOutput)).call(this, props));
 
-		_this6.state = {
+		_this8.state = {
 			valid: props.valid,
 			validity: props.validity,
 			scrollUp: props.scrollUp,
 			scrollDown: props.scrollDown
 		};
-		return _this6;
+		return _this8;
 	}
 
 	_createClass(ValidOutput, [{
@@ -260,20 +316,20 @@ var ValidOutput = function (_React$Component6) {
 	return ValidOutput;
 }(React.Component);
 
-var TableOutput = function (_React$Component7) {
-	_inherits(TableOutput, _React$Component7);
+var TableOutput = function (_React$Component9) {
+	_inherits(TableOutput, _React$Component9);
 
 	function TableOutput(props) {
 		_classCallCheck(this, TableOutput);
 
-		var _this7 = _possibleConstructorReturn(this, (TableOutput.__proto__ || Object.getPrototypeOf(TableOutput)).call(this, props));
+		var _this9 = _possibleConstructorReturn(this, (TableOutput.__proto__ || Object.getPrototypeOf(TableOutput)).call(this, props));
 
-		_this7.state = {
+		_this9.state = {
 			tables: props.tables,
 			scrollUp: props.scrollUp,
 			scrollDown: props.scrollDown
 		};
-		return _this7;
+		return _this9;
 	}
 
 	_createClass(TableOutput, [{
@@ -297,8 +353,8 @@ var TableOutput = function (_React$Component7) {
 	return TableOutput;
 }(React.Component);
 
-var Partition = function (_React$Component8) {
-	_inherits(Partition, _React$Component8);
+var Partition = function (_React$Component10) {
+	_inherits(Partition, _React$Component10);
 
 	function Partition(props) {
 		_classCallCheck(this, Partition);
@@ -316,19 +372,19 @@ var Partition = function (_React$Component8) {
 	return Partition;
 }(React.Component);
 
-var Button = function (_React$Component9) {
-	_inherits(Button, _React$Component9);
+var Button = function (_React$Component11) {
+	_inherits(Button, _React$Component11);
 
 	function Button(props) {
 		_classCallCheck(this, Button);
 
-		var _this9 = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this, props));
+		var _this11 = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this, props));
 
-		_this9.state = {
+		_this11.state = {
 			retrieve: props.retInput,
 			button: 'calculate'
 		};
-		return _this9;
+		return _this11;
 	}
 
 	_createClass(Button, [{
@@ -345,19 +401,19 @@ var Button = function (_React$Component9) {
 	return Button;
 }(React.Component);
 
-var Truth = function (_React$Component10) {
-	_inherits(Truth, _React$Component10);
+var Truth = function (_React$Component12) {
+	_inherits(Truth, _React$Component12);
 
 	function Truth(props) {
 		_classCallCheck(this, Truth);
 
-		var _this10 = _possibleConstructorReturn(this, (Truth.__proto__ || Object.getPrototypeOf(Truth)).call(this, props));
+		var _this12 = _possibleConstructorReturn(this, (Truth.__proto__ || Object.getPrototypeOf(Truth)).call(this, props));
 
-		_this10.state = {
+		_this12.state = {
 			a: "T",
 			b: "F"
 		};
-		return _this10;
+		return _this12;
 	}
 
 	_createClass(Truth, [{
@@ -376,20 +432,20 @@ var Truth = function (_React$Component10) {
 	return Truth;
 }(React.Component);
 
-var SelectorLink = function (_React$Component11) {
-	_inherits(SelectorLink, _React$Component11);
+var SelectorLink = function (_React$Component13) {
+	_inherits(SelectorLink, _React$Component13);
 
 	function SelectorLink(props) {
 		_classCallCheck(this, SelectorLink);
 
-		var _this11 = _possibleConstructorReturn(this, (SelectorLink.__proto__ || Object.getPrototypeOf(SelectorLink)).call(this, props));
+		var _this13 = _possibleConstructorReturn(this, (SelectorLink.__proto__ || Object.getPrototypeOf(SelectorLink)).call(this, props));
 
-		_this11.state = {
+		_this13.state = {
 			link: props.link,
 			i: props.i,
 			l: props.l
 		};
-		return _this11;
+		return _this13;
 	}
 
 	_createClass(SelectorLink, [{
@@ -406,20 +462,20 @@ var SelectorLink = function (_React$Component11) {
 	return SelectorLink;
 }(React.Component);
 
-var Selector = function (_React$Component12) {
-	_inherits(Selector, _React$Component12);
+var Selector = function (_React$Component14) {
+	_inherits(Selector, _React$Component14);
 
 	function Selector(props) {
 		_classCallCheck(this, Selector);
 
-		var _this12 = _possibleConstructorReturn(this, (Selector.__proto__ || Object.getPrototypeOf(Selector)).call(this, props));
+		var _this14 = _possibleConstructorReturn(this, (Selector.__proto__ || Object.getPrototypeOf(Selector)).call(this, props));
 
-		_this12.state = {
+		_this14.state = {
 			tables: "truth tables",
 			validity: "validity check",
 			link: props.link
 		};
-		return _this12;
+		return _this14;
 	}
 
 	_createClass(Selector, [{
@@ -437,19 +493,19 @@ var Selector = function (_React$Component12) {
 	return Selector;
 }(React.Component);
 
-var ReplContainer = function (_React$Component13) {
-	_inherits(ReplContainer, _React$Component13);
+var ReplContainer = function (_React$Component15) {
+	_inherits(ReplContainer, _React$Component15);
 
 	function ReplContainer(props) {
 		_classCallCheck(this, ReplContainer);
 
-		var _this13 = _possibleConstructorReturn(this, (ReplContainer.__proto__ || Object.getPrototypeOf(ReplContainer)).call(this, props));
+		var _this15 = _possibleConstructorReturn(this, (ReplContainer.__proto__ || Object.getPrototypeOf(ReplContainer)).call(this, props));
 
-		_this13.state = {
+		_this15.state = {
 			b: props.b,
 			link: props.link
 		};
-		return _this13;
+		return _this15;
 	}
 
 	_createClass(ReplContainer, [{
@@ -467,8 +523,8 @@ var ReplContainer = function (_React$Component13) {
 	return ReplContainer;
 }(React.Component);
 
-var ReplPage = function (_React$Component14) {
-	_inherits(ReplPage, _React$Component14);
+var ReplPage = function (_React$Component16) {
+	_inherits(ReplPage, _React$Component16);
 
 	/* This page takes input and sends logical formulae to the server
   * for processing; The page will display the truth tables if the input was
@@ -476,20 +532,20 @@ var ReplPage = function (_React$Component14) {
 	function ReplPage(props) {
 		_classCallCheck(this, ReplPage);
 
-		var _this14 = _possibleConstructorReturn(this, (ReplPage.__proto__ || Object.getPrototypeOf(ReplPage)).call(this, props));
+		var _this16 = _possibleConstructorReturn(this, (ReplPage.__proto__ || Object.getPrototypeOf(ReplPage)).call(this, props));
 
-		_this14.selectSwitch = function (bool) {
+		_this16.selectSwitch = function (bool) {
 			/* return correct api function based on state */
 			//return (bool == true) ? '/table':'/valid';
 			if (bool == "t") return "/table";else return "/valid";
 		};
 
-		_this14.retrieveTruthTable = function (formulas, bool) {
+		_this16.retrieveTruthTable = function (formulas, bool) {
 			/*  takes in valid formulas and sends them to the server; displays
     * their truth tables upon return */
 
 			// select appropriate api function
-			var api = _this14.selectSwitch(bool);
+			var api = _this16.selectSwitch(bool);
 
 			// initialize http request
 			var xhr = request('POST', api);
@@ -498,14 +554,14 @@ var ReplPage = function (_React$Component14) {
 				// parse retrieved JSON
 				var respText = JSON.parse(xhr.responseText);
 				/* output the truth values */
-				bool == "t" ? _this14.showTT(respText, formulas) : _this14.showValidity(respText, formulas);
+				bool == "t" ? _this16.showTT(respText, formulas) : _this16.showValidity(respText, formulas);
 			};
 
 			/* send ajax request of the formulas */
 			xhr.send(formulas);
 		};
 
-		_this14.retrieveInput = function (event) {
+		_this16.retrieveInput = function (event) {
 			var formulas = document.getElementById('replInput').value;
 
 			if (formulas.slice(-1) != "\n") formulas += "\n";
@@ -527,10 +583,10 @@ var ReplPage = function (_React$Component14) {
 			}
 
 			/* send data to be analyzed on the server */
-			_this14.retrieveTruthTable(newForms, _this14.state.b);
+			_this16.retrieveTruthTable(newForms, _this16.state.b);
 		};
 
-		_this14.normalize = function (formulas) {
+		_this16.normalize = function (formulas) {
 			/* normalize expressions by newline */
 			var forms = [];
 			var form = '';
@@ -546,9 +602,9 @@ var ReplPage = function (_React$Component14) {
 			return forms;
 		};
 
-		_this14.showTT = function (respT, formulas) {
+		_this16.showTT = function (respT, formulas) {
 			/* Display the individual truth tables */
-			formulas = _this14.normalize(formulas);
+			formulas = _this16.normalize(formulas);
 			var truthArray = [];
 
 			for (var i = 0; i < respT.length; i++) {
@@ -562,22 +618,22 @@ var ReplPage = function (_React$Component14) {
 
 				truthArray.push(table);
 			}
-			var ttOut = React.createElement(TableOutput, { tables: truthArray, scrollUp: _this14.scrollUp, scrollDown: _this14.scrollDown });
+			var ttOut = React.createElement(TableOutput, { tables: truthArray, scrollUp: _this16.scrollUp, scrollDown: _this16.scrollDown });
 
-			_this14.setState({
+			_this16.setState({
 				out: ttOut
 			}, function () {
-				console.log(_this14.state.tables);
+				console.log(_this16.state.tables);
 			});
 		};
 
-		_this14.showValidity = function (respT, formulas) {
+		_this16.showValidity = function (respT, formulas) {
 			/* test validity */
-			formulas = _this14.normalize(formulas);
+			formulas = _this16.normalize(formulas);
 			var truthArray = [];
 			var terms = respT[0];
 			var validity = respT.pop();
-			var message = validity ? 'Valid!' : 'Invalid!';
+			var message = validity ? React.createElement(Valid, { valid: "Valid" }) : React.createElement(Invalid, { invalid: "Invalid" });
 			var init_vals = respT[1];
 			var init_table = React.createElement(
 				"div",
@@ -604,15 +660,15 @@ var ReplPage = function (_React$Component14) {
 			}
 
 			/* package up all tables */
-			var ttOut = React.createElement(ValidOutput, { valid: truthArray, validity: message, scrollUp: _this14.scrollUp, scrollDown: _this14.scrollDown });
+			var ttOut = React.createElement(ValidOutput, { valid: truthArray, validity: message, scrollUp: _this16.scrollUp, scrollDown: _this16.scrollDown });
 
 			/* change output state */
-			_this14.setState({
+			_this16.setState({
 				out: ttOut
 			});
 		};
 
-		_this14.updateLink = function (event) {
+		_this16.updateLink = function (event) {
 			/* update boolean to determine which api function to call 
     * this method is called anytime the selector buttons are clicked */
 
@@ -629,7 +685,7 @@ var ReplPage = function (_React$Component14) {
 				unsel = document.getElementById("t");
 			}
 			// change class membership if necessary
-			if (event.target.id == _this14.state.b) {
+			if (event.target.id == _this16.state.b) {
 				//pass
 			} else {
 				unsel.classList.remove("selectorSelected");
@@ -639,45 +695,45 @@ var ReplPage = function (_React$Component14) {
 			}
 
 			// update state property
-			_this14.setState({
+			_this16.setState({
 				b: event.target.id,
 				tables: []
 			});
 		};
 
-		_this14.clearTables = function () {
-			_this14.setState({
+		_this16.clearTables = function () {
+			_this16.setState({
 				tables: []
 			});
 		};
 
-		_this14.scrollUp = function () {
+		_this16.scrollUp = function () {
 			var s = void 0;
-			if (_this14.state.b == "t") s = document.getElementById('tableContainer');else s = document.getElementById('validContainer');
+			if (_this16.state.b == "t") s = document.getElementById('tableContainer');else s = document.getElementById('validContainer');
 			s.classList.toggle('scrollUpHidden');
 			s.classList.toggle('scrollUp');
 		};
 
-		_this14.scrollDown = function () {
+		_this16.scrollDown = function () {
 			var s = void 0;
-			if (_this14.state.b == "t") s = document.getElementById("tableContainer");else s = document.getElementById("validContainer");
+			if (_this16.state.b == "t") s = document.getElementById("tableContainer");else s = document.getElementById("validContainer");
 			s.classList.toggle('scrollDown');
 			setTimeout(function () {
-				_this14.setState({
+				_this16.setState({
 					out: undefined,
 					tables: []
 				});
 			}, 1000);
 		};
 
-		_this14.state = {
+		_this16.state = {
 			table: undefined,
 			valid: undefined,
 			tables: [],
 			out: undefined,
 			b: "t"
 		};
-		return _this14;
+		return _this16;
 	}
 
 	_createClass(ReplPage, [{
