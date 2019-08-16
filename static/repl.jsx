@@ -141,8 +141,14 @@ class ValidOutput extends React.Component {
         render() {
                 return(<div id="validContainer" className="scrollUpHidden">
                         <div className="close" onClick={this.state.scrollDown}></div>
+			<div id="outputWrapper">
+			<div id="outputHeader">
 			{this.state.validity}
+			</div>
+			<div id="outputTables">
 			{this.state.valid}
+			</div>
+			</div>
 		</div>);
         }
 }
@@ -317,7 +323,6 @@ class ReplPage extends React.Component {
 
 		// strip formulas of unnecessary inputs caused by newlines
 		let fs2 = fs.filter(val => { return val != "" });
-		console.log('filtered: ', fs2);	
 		for (let f = 0; f < fs2.length; f++) {
 			let a = fs2[f] + '\n'
 			newForms += a;
@@ -370,6 +375,7 @@ class ReplPage extends React.Component {
 		let truthArray = [];
 		let terms = respT[0];
 		let validity = respT.pop();
+		let message = (validity) ? 'Valid!' : 'Invalid!';
 		let init_vals = respT[1];
 		let init_table = <div className="tableWrap"><TruthTable table={init_vals} exp={terms} key={0}/></div>;
 
@@ -388,7 +394,7 @@ class ReplPage extends React.Component {
 		}
 		
 		/* package up all tables */
-		let ttOut = <ValidOutput valid={truthArray} validity={validity.toString()} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
+		let ttOut = <ValidOutput valid={truthArray} validity={message} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
 		
 		/* change output state */
 		this.setState({

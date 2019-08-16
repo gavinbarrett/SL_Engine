@@ -239,8 +239,20 @@ var ValidOutput = function (_React$Component6) {
 				"div",
 				{ id: "validContainer", className: "scrollUpHidden" },
 				React.createElement("div", { className: "close", onClick: this.state.scrollDown }),
-				this.state.validity,
-				this.state.valid
+				React.createElement(
+					"div",
+					{ id: "outputWrapper" },
+					React.createElement(
+						"div",
+						{ id: "outputHeader" },
+						this.state.validity
+					),
+					React.createElement(
+						"div",
+						{ id: "outputTables" },
+						this.state.valid
+					)
+				)
 			);
 		}
 	}]);
@@ -506,7 +518,6 @@ var ReplPage = function (_React$Component14) {
 			var fs2 = fs.filter(function (val) {
 				return val != "";
 			});
-			console.log('filtered: ', fs2);
 			for (var f = 0; f < fs2.length; f++) {
 				var a = fs2[f] + '\n';
 				newForms += a;
@@ -566,6 +577,7 @@ var ReplPage = function (_React$Component14) {
 			var truthArray = [];
 			var terms = respT[0];
 			var validity = respT.pop();
+			var message = validity ? 'Valid!' : 'Invalid!';
 			var init_vals = respT[1];
 			var init_table = React.createElement(
 				"div",
@@ -592,7 +604,7 @@ var ReplPage = function (_React$Component14) {
 			}
 
 			/* package up all tables */
-			var ttOut = React.createElement(ValidOutput, { valid: truthArray, validity: validity.toString(), scrollUp: _this14.scrollUp, scrollDown: _this14.scrollDown });
+			var ttOut = React.createElement(ValidOutput, { valid: truthArray, validity: message, scrollUp: _this14.scrollUp, scrollDown: _this14.scrollDown });
 
 			/* change output state */
 			_this14.setState({
