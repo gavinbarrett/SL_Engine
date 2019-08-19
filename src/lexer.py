@@ -60,7 +60,9 @@ class Lexer():
 
     def handle_operators(self, c):
         ''' Add valid operators; build ops from sub-op tokens '''
-        if c in self.log_ops:
+        if c in self.un_op:
+            self.op_stack.append(c)
+        elif c in self.log_ops:
             if self.op_stack:
                 a = self.op_stack.pop()
                 if self.get_prec(a) <= self.get_prec(c):
@@ -128,17 +130,6 @@ class Lexer():
             self.t_count += 1
         self.postfix.append(t)
 
-    def open_file(self, filename):
-        ''' Try to open the file '''
-        if os.path.isfile(filename):
-            try:
-                fileObj = open(filename, 'r')
-                return fileObj
-            except FileNotFoundError as fnf:
-                print(colors.err + '\nFile cannot be opened\n' + colors.default, fnf)
-        else:
-            print(colors.err + 'File could not be opened' + colors.default)
-        
     def pop_remaining(self, output):
         ''' Moves remaining tokens from op_stack to output '''
         while self.op_stack:
@@ -191,12 +182,8 @@ class Lexer():
 
     def shunting_yard_string(self, formula):
         terms = [chr(i) for i in range(65, 91)]
-        #print('calling shunting yard')
         output = []
         for c in formula:
-            #FIXME: add 
-            f = [formula]
-            #print(f)
             self.read_token(c, terms)
         self.pop_remaining(output)
         return output

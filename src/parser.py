@@ -307,9 +307,13 @@ class Parser:
             
         set_trus = []
         for idx, postfix in enumerate(output):
+            print("postfix:")
+            print(postfix)
             for p in postfix:
                 self.insert(p)
+            print("tree:")
             tree = self.tree_stack.pop()
+            print(tree)
             set_truth = list(self.get_set_truth_table(tree, formulas[idx], total, master_list))
             set_trus.append(set_truth)
 
