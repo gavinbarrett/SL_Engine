@@ -11,17 +11,19 @@ def respond(data, p, switch):
     ''' select correct function from parser interface '''
     return p.get_tables(data) if switch else p.get_validity(data)
 
+#TODO: refactor the two functions below into one function
+
 @app.route('/valid', methods=['POST'])
 def valid_req():
-
+    ''' return the validity of deriving a conclusion from a set of formulae '''
+    # decode formulae
     formulae = request.data.decode('UTF-8')
-
+    
+    # construct a new parser
     p = parser.Parser()
-    
+
+    # parse the formulae and return the truth matrices
     package = respond(formulae, p, False)
-    
-    print('\nVALID PACKAGE\n')
-    print(package)
     
     return jsonify(package)
 
@@ -32,14 +34,12 @@ def table_req():
     # decode formulae
     formulae = request.data.decode('UTF-8') 
     
-    # construct a logic parser
+    # construct a new parser
     p = parser.Parser()
 
-    # return a list of truth values
+    # parse the formulae and determine validity
     package = respond(formulae, p, True)
-    print('\nTABLE PACKAGE\n')
-    print(package)
-    
+
     return jsonify(package)
 
 @app.route("/")

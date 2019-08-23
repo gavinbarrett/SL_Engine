@@ -1,4 +1,4 @@
-import os
+import string
 class Lexer():
 
     ''' Sentential Logic Lexer '''
@@ -12,7 +12,6 @@ class Lexer():
         self.braces_open = ['(', '[', '{']
         self.braces_closed = [')', ']', '}']
         self.w_space = ['\n', '\t', ' ']
-        self.space = ' '
         self.newline = '\n'
         self.terms = [chr(i) for i in range(65, 91)]
         self.op_stack = []
@@ -130,36 +129,34 @@ class Lexer():
             self.t_count += 1
         self.postfix.append(t)
 
-    def pop_remaining(self, output):
+    def pop_remaining(self):
         ''' Moves remaining tokens from op_stack to output '''
+        output = []
         while self.op_stack:
-            a = self.op_stack.pop()
-            if a in self.braces_open:
+            op = self.op_stack.pop()
+            if op in self.braces_open:
                 raise Exception('no matching closing brace\n')
-            self.postfix.append(a)
-        output.append(self.postfix)
-        #FIXME: trial of reversing the list
-        output.reverse()
+            self.postfix.append(op)
+        output += self.postfix
         self.postfix = []
+        return output
 
-    def print_t_count(self):
-        print('t_count is: ' + str(self.t_count))
 
-    def read_token(self, token, terms):
-        ''' Read in tokens and  '''
+    def read_token(self, token):
+        ''' Read in tokens and operators '''
         if token == '\n':
             self.expressions.append(self.tmp)
             self.tmp = ""
-        elif token in self.terms:             # handle terms
+        elif token in self.terms:
             self.tmp += token
             self.handle_terms(token)
-        elif token in self.braces:          # handle braces
+        elif token in self.braces:
             self.tmp += token
             self.handle_braces(token)
-        elif token in self.poss_ops:        # handle operators
+        elif token in self.poss_ops:
             self.tmp += token
             self.handle_operators(token)
-        elif token is self.space:
+        elif token.isspace():
             self.tmp += token
         elif token is self.newline:
             self.expressions.append(self.tmp)
@@ -167,23 +164,12 @@ class Lexer():
         elif not token:
             print('no token!')
         else:
-            raise Exception('invalid token: ' + token)
+            raise Exception('invalid token: ' + str(ord(token)))
 
-    def shunting_yard(self, fileObj):
-        ''' Return expressions in postfix notation '''
-        output = []
-        for line in fileObj:            # for each expression
-            for c in line:              # for each token in exp
-                self.read_token(c)      # read tokens up to \n
-            self.pop_remaining(output)  # pop remaining to output
-        fileObj.close()
-        #print(output)
-        return output
+    def shunting_yard(self, formula):
+        ''' Perform the shunting yard algorithm on the expression, returning its postfix '''
+        # put each character in its appropriate structure
+        list(map(lambda c: self.read_token(c), formula))
 
-    def shunting_yard_string(self, formula):
-        terms = [chr(i) for i in range(65, 91)]
-        output = []
-        for c in formula:
-            self.read_token(c, terms)
-        self.pop_remaining(output)
-        return output
+        # return the postfix expression
+        return self.pop_remaining()

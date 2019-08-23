@@ -1,14 +1,12 @@
-###########
-#SL_Engine#
-###########
-import os
+import string
 import src.lexer as sl
 import src.ast as ast
 from src.gen import generate
 from collections import defaultdict
 
 class Parser:
-    ''' This parser builds ASTs that contain logical exps '''
+    ''' Constructs a parser that builds ASTs from logical expressions '''
+
     def __init__(self):
         ''' Create parser with expression lexer and tree stack '''
         self.lexer = sl.Lexer()
@@ -21,35 +19,43 @@ class Parser:
         self.valid = None
         self.validStack = []
         self.vStack = []
+        self.alpha = list(string.ascii_uppercase)
+
 
     def clear_parser(self):
         self.tree_stack.clear()
         self.set.clear()
         self.seen.clear()
 
+
     def neg(self, atom):
         ''' Return the negation of the binary truth value '''
         return 'F' if atom == 'T' else 'T'
+
 
     def and_val(self, x, y):
         ''' Return logical and '''
         return 'T' if x == 'T' and y == 'T' else 'F'
 
+
     def or_val(self, x, y):
         ''' Return logical or '''
         return 'T' if x == 'T' or y == 'T' else 'F'
-    
+
+
     def cond_val(self, x, y):
         ''' Return logical conditional '''
         if x == 'T' and y == 'F':
             return 'F'
         return 'T'
 
+
     def bicond_val(self, x, y):
         ''' Return logical biconditional '''
         if (x == 'T' and y == 'T') or (x == 'F' and y == 'F'):
             return 'T'
         return 'F'
+
 
     def determine_truth(self, x, y, rootname):
         ''' Determine the truth value of the formula using binary functions '''
@@ -62,12 +68,15 @@ class Parser:
         elif rootname == '<->':
             return self.bicond_val(x, y)
 
+
     def addValue(self, z):
+        ''' add the top level truth values in order to determine validity '''
         self.validStack += z
         l = len(self.dist)
         if len(self.validStack) == (2**l):
             self.vStack.append(self.validStack)
             self.validStack = []
+
 
     def eval(self, root):
         z = None
@@ -88,22 +97,20 @@ class Parser:
         if root.root == True:
             self.addValue(z)
 
+
     def handle_root(self, root):
         ''' Recursively return true values '''
         if not root:
             return
-        #push return to ast's eval stack?
         self.handle_root(root.left)
         self.handle_root(root.right)
         self.eval(root)
 
+
     def generate_terms(self, t, exp):
         tmpExp = []
         df = defaultdict(lambda: None)
-        
-        #FIXME: for exp in expressions...
-        # for e in exp
-        # if expressions[exp][e] == None
+
         for e in exp:
             if df[e] == None:
                 x = t[0]
@@ -115,15 +122,18 @@ class Parser:
                 tmpExp.append(x)
         return tmpExp
 
+
     def strip_terms(self, exp):
-        seen = []
-        newArray = []
-        for e in exp:
-            if e in self.lexer.terms:
-                newArray.append(e)
-                if e not in seen:
-                    seen.append(e)
-        return newArray, seen
+        ''' return a list of used terms along with the same list without duplicates '''
+
+        # filter out all propositional variables
+        terms = list(filter(lambda x: True if x in self.alpha else False, list(exp)))
+
+        # make a list of terms void of duplicates
+        distinct = list(dict.fromkeys(terms))
+
+        return terms, distinct
+
 
     def in_order(self, root, table):
         if root is None:
@@ -135,7 +145,6 @@ class Parser:
 
     def get_truth_table(self, tree, exp):
         truth_table = []
-        newExp = []
         ts, dist = self.strip_terms(exp)
         truth_values = list(generate(len(dist)))
         terms = []
@@ -154,6 +163,7 @@ class Parser:
         return truth_table, dist, truth_values
 
     def check_if_valid(self, vTable):
+        ''' return false if truth matrix contains an instance of all true premises and a false conclusion '''
         for vT in vTable:
             for idx, v in enumerate(vT):
                 if v == 'T':
@@ -165,9 +175,10 @@ class Parser:
         return True
 
     def get_set_truth_table(self, tree, exp, total, master):
+
         # save total amount of distinct terms
         trus, total_distinct = self.strip_terms(exp)
-        #TODO: get indices of each element of trus from their place in total_distinct
+
         truth_table = []
         indices = []
         for tn in trus:
@@ -200,12 +211,7 @@ class Parser:
         self.handle_root(root.left)
         self.handle_root(root.right)
         self.eval(root)
-    
-    def print_ast(self):
-        ''' Print AST out sequentially (In-Order) '''
-        if self.tree_stack:
-            tree = self.tree_stack.pop()
-            self.print_ast_(tree)
+
 
     def insert_op(self, op):
         ''' Pop stack and make new operator ast '''
@@ -238,46 +244,34 @@ class Parser:
         ''' Create new ast with term as root '''
         if t not in self.seen:
             self.seen += t
-        tree = ast.AST(t)  # create tree with term as root
-        tree.init_t()      # initialize t_val to true
+        # create a tree with the term as a root
+        tree = ast.AST(t)
         self.tree_stack.append(tree)
+
 
     def insert(self, c):
         ''' Insert terms and ops accordingly '''
-        if c in self.lexer.terms:
-            self.insert_term(c)
+        self.insert_term(c) if c in self.lexer.terms else self.insert_op(c)
 
-        elif c in self.lexer.log_ops:
-            self.insert_op(c)
 
     def normalize(self, fs):
-        formulas = []
-        formula = ''
-        for f in fs:
-            if f == '\n':
-                formula += str(f)
-                formulas.append(formula)
-                formula = ''
-            else:
-                formula += str(f)
-        return formulas
+        ''' split expression string by newline into expressions '''
+        formulas = fs.split('\n')
+
+        # return list of expressions after filtering out empty strings (i.e. '')
+        return list(filter(lambda x: False if str(x) is '' else True, formulas))
+
 
     def get_tables(self, data):
         ''' return the truth tables for a set of sentences '''
-        # return a list of terms and a list of distinct terms
-        tz, total = self.strip_terms(data)
-        
-        # generate a master truth value matrix with 2**total rows
-        master_list = list(generate(len(total)))
-    
         # normalize expressions by newlines
         formulas = self.normalize(data)
         
-        output = []
+        #output = []
         # turn each expression into its postfix representation
-        #output = list(map(lambda x: self.lexer.shunting_yard_string(x), formulas))
-        for f in formulas:
-            output += self.lexer.shunting_yard_string(f)
+        output = list(map(lambda x: self.lexer.shunting_yard(x), formulas))
+        #for f in formulas:
+        #    output += self.lexer.shunting_yard(f)
 
         set_trus = []
         tables = []
@@ -294,30 +288,28 @@ class Parser:
         ''' check whether or not a set of sentences is valid '''
         tz, total = self.strip_terms(data)
         master_list = list(generate(len(total)))
-    
-        output = []
         
         # normalize expressions by newlines
         formulas = self.normalize(data)
-        
+
         # perform the shunting yard operation on each formula
-        #outtie = list(map(lambda x: self.lexer.shunting_yard_string(x), formulas))
-        for f in formulas:
-            output += self.lexer.shunting_yard_string(f)
-            
+        output = list(map(lambda x: self.lexer.shunting_yard(x), formulas))
+
         set_trus = []
         for idx, postfix in enumerate(output):
-            print("postfix:")
-            print(postfix)
-            for p in postfix:
-                self.insert(p)
-            print("tree:")
+            # insert each item from the postfix array into an ast
+            list(map(lambda x: self.insert(x), postfix))
+
             tree = self.tree_stack.pop()
-            print(tree)
+
             set_truth = list(self.get_set_truth_table(tree, formulas[idx], total, master_list))
+
             set_trus.append(set_truth)
 
+        # reorganize the truth matrix by row
         vTable = zip(*self.vStack)
+
+        # get the validity of the argument
         self.valid = self.check_if_valid(vTable)
-        
+
         return [total] + [master_list] + set_trus + [self.valid]
