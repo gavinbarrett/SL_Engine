@@ -9,6 +9,7 @@ class Lexer {
 	constructor(feed) {
 		this.next = null;
 		this.feed = feed;
+		let reg = /[A-Z]/;
 	}
 
 	p() {
@@ -74,11 +75,8 @@ class Lexer {
 	}
 
 	s() {
-		let reg = /[A-Z]/;
-		if (this.next.match(reg)) {
-			console.log(this.next, " matches");
+		if (this.next.match(this.reg))
 			this.scan();
-		}
 		else if (this.next === '(') {
 			this.scan();
 

@@ -16,9 +16,8 @@ function setup() {
 function draw() {
 	// draw background
 	background('green');
-	fill(255);
 	// every 15 loops, make a new connective
-	if (count % 15 === 0) {
+	if (count % 20 === 0) {
 		count = 0;
 		activeConnectives.push(new connective());
 	}
@@ -44,9 +43,10 @@ function connective() {
 
 	this.update = () => {
 		this.y -= (pow(this.size, 0.5) / 2);
-		if (this.y < -10) {
+		if (this.y < -100) {
 			let index = activeConnectives.indexOf(this);
-			activeConnectives.splice(index, 1);
+			let outBound = activeConnectives.splice(index, 1);
+			delete outBound;
 		}
 	};
 
