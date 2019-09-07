@@ -1,49 +1,51 @@
-class Parser:
-    
-    def __init__(self, feed):
+class Lexer:
+
+    def __init__(self):
         self.next = None
-        self.feed = feed
+        self.feed = ''
         self.open_paren = 0
         self.clos_paren = 0
         self.build = ''
         self.postfix = []
         self.op_stack = []
-        self.binary = ['~','^','v','->','<->']
+        self.binary_op = ['~','^','v','->','<->']
         self.prec = ['(','~','^','v','->','<->']
 
-    def p(self):
-        ''' Try to parse the input '''
+    def lexify(self, exp):
+        ''' Try to read the input into postfix '''
+        self.feed = exp
         # get the first character
         self.scan()
         # try to match an expression
-        self.e()
+        self.exp()
         # return true if parsing succeeded; return false otherwise
+        self.feed = ''
         if self.next == ')' and (self.open_paren - (self.clos_paren + 1)) != 0:
             raise Exception("Error: unaccompanied closing brace")
         return (True if self.next == None else False)
     
-    def e(self):
+    def exp(self):
         ''' Match an expression '''
         # match a unary expression
         if self.next == "~":
-            self.u()
+            self.unary()
         #match a binary expression
         else:
-            self.b()
+            self.binary()
             while self.next == '^':
                 self.scan()
-                self.b()
+                self.binary()
 
-    def u(self):
+    def unary(self):
         ''' Match unary function, negation (~) '''
         self.op_stack.append('~')
         self.scan()
-        self.e()
+        self.exp()
 
-    def b(self):
+    def binary(self):
         ''' Match binary functions '''
         # match the left argument
-        self.s()
+        self.atomic()
         self.build = ''
         # try to match biconditional head
         if self.next == '<':
@@ -59,11 +61,10 @@ class Parser:
         while self.next == 'v' or self.next == '^':
             self.proc_op(self.next)
             self.scan()
-            self.s()
+            self.atomic()
     
     def cond(self):
         ''' Match a conditional expression '''
-
         if self.next == '>':
             # update operator to either -> or <->
             self.build += self.next
@@ -75,7 +76,7 @@ class Parser:
             self.scan()
             
             # try to match an atomic statement
-            self.s()
+            self.atomic()
         # otherwise, operator is not in our language
         else:
             raise Exception("Error parsing conditional; invalid char: " + str(self.next))
@@ -95,7 +96,7 @@ class Parser:
         else:
             raise Exception('Error parsing biconditional; invalid char: ' + str(self.next))
 
-    def s(self):
+    def atomic(self):
         ''' Match atomic sentences '''
         if self.next.isalpha() and self.next.isupper():
             self.postfix += self.next
@@ -105,7 +106,7 @@ class Parser:
             self.open_paren += 1
             self.scan()
             # try to match another expression
-            self.e()
+            self.exp()
             if self.next == ')':
                 self.c_paren()
                 self.clos_paren += 1
@@ -113,13 +114,13 @@ class Parser:
             else:
                 raise Exception('Error: unaccompanied opening brace')
         elif self.next == '~':
-            self.u()
+            self.unary()
         else:
             raise Exception('Error: not a valid expression: ' + str(self.next))
 
     def o_paren(self):
+        ''' handle opening parentheses '''
         op = '('
-        ''' handle braces/parentheses '''
         if self.op_stack:    
             prev_op = self.op_stack.pop()
             if self.get_prec(prev_op) < self.get_prec(op):
@@ -136,6 +137,7 @@ class Parser:
             self.op_stack.append(op)
 
     def c_paren(self):
+        ''' handle closing parentheses  '''
         if self.op_stack:
             prev_op = self.op_stack.pop()
             while prev_op != '(':
@@ -162,6 +164,14 @@ class Parser:
         else:
             self.op_stack.append(op)
 
+    def pop_stack(self):
+        output = []
+        while self.op_stack:
+            op = self.op_stack.pop()
+            self.postfix.append(op)
+        output += self.postfix
+        self.postfix = []
+        return output
 
     def read(self):
         ''' Grab the next character '''
@@ -183,11 +193,3 @@ class Parser:
         ''' return the operator's precedence '''
         return self.prec.index(op)
 
-    def pop_stack(self):
-        output = []
-        while self.op_stack:
-            op = self.op_stack.pop()
-            self.postfix.append(op)
-        output += self.postfix
-        self.postfix = []
-        return output

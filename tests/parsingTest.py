@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 import sys
-from parse import Parser
+from lexer import Lexer
 
 def run_parser(arg):
-    parser = Parser(arg)
+    l = Lexer()
     try:
-        if parser.p():
+        if l.lexify(arg):
             print("\nParsing successful")
-            postfix = parser.pop_stack()
+            postfix = l.pop_stack()
             print(postfix)
     except Exception as exc:
         print("Parsing failed")
         print(exc)
 
-run_parser(sys.argv[1])
+run_parser('(P -> Q) -> ~R')
