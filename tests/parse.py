@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-import sys
-
 class Parser:
     
     def __init__(self, feed):
@@ -11,8 +8,9 @@ class Parser:
         self.build = ''
         self.postfix = []
         self.op_stack = []
-        self.prec = ['~','^','v','->','<->']
-        
+        self.binary = ['~','^','v','->','<->']
+        self.prec = ['(','~','^','v','->','<->']
+
     def p(self):
         ''' Try to parse the input '''
         # get the first character
@@ -32,7 +30,6 @@ class Parser:
         #match a binary expression
         else:
             self.b()
-            #self.scan()
             while self.next == '^':
                 self.scan()
                 self.b()
@@ -66,21 +63,35 @@ class Parser:
     
     def cond(self):
         ''' Match a conditional expression '''
+
         if self.next == '>':
+            # update operator to either -> or <->
             self.build += self.next
-            print(self.build)
+            
+            # add operator to op_stack or postfix
             self.proc_op(self.build)
+            
+            # scan the next character
             self.scan()
+            
+            # try to match an atomic statement
             self.s()
+        # otherwise, operator is not in our language
         else:
             raise Exception("Error parsing conditional; invalid char: " + str(self.next))
 
     def bicond(self):
         ''' Match a biconditional expression '''
         if self.next == '-':
+            # update the operator to either - or <-
             self.build += self.next
+            
+            # scan the next character
             self.scan()
+
+            # try to match a conditional
             self.cond()
+        # otherwise, operator is not in out language
         else:
             raise Exception('Error parsing biconditional; invalid char: ' + str(self.next))
 
@@ -90,11 +101,13 @@ class Parser:
             self.postfix += self.next
             self.scan()
         elif self.next == '(':
+            self.o_paren()
             self.open_paren += 1
             self.scan()
             # try to match another expression
             self.e()
             if self.next == ')':
+                self.c_paren()
                 self.clos_paren += 1
                 self.scan()
             else:
@@ -104,13 +117,58 @@ class Parser:
         else:
             raise Exception('Error: not a valid expression: ' + str(self.next))
 
+    def o_paren(self):
+        op = '('
+        ''' handle braces/parentheses '''
+        if self.op_stack:    
+            prev_op = self.op_stack.pop()
+            if self.get_prec(prev_op) < self.get_prec(op):
+                while self.get_prec(prev_op) < self.get_prec(op):
+                    self.postfix.append(prev_op)
+                    if self.op_stack:
+                        prev_op = self.op_stack.pop()
+                    else:
+                        self.op_stack.append(op)
+            else:
+                self.op_stack.append(prev_op)
+                self.op_stack.append(op)
+        else:
+            self.op_stack.append(op)
+
+    def c_paren(self):
+        if self.op_stack:
+            prev_op = self.op_stack.pop()
+            while prev_op != '(':
+                self.postfix.append(prev_op)
+                if self.op_stack:
+                    prev_op = self.op_stack.pop()
+                else:
+                    raise Exception('No opening brace detected\n')
+
+    def proc_op(self, op):
+        ''' process operators into the postfix expression '''
+        # if the stack is not empty, remove the top element
+        if self.op_stack:
+            prev_op = self.op_stack.pop()
+            # 
+            if self.get_prec(prev_op) <= self.get_prec(op):
+                self.op_stack.append(prev_op)
+                self.op_stack.append(op)
+            #
+            else:
+                self.postfix.append(prev_op)
+                self.op_stack.append(op)
+        # otherwise, add operator to stack
+        else:
+            self.op_stack.append(op)
+
+
     def read(self):
         ''' Grab the next character '''
         if not self.feed:
             return None
         c = self.feed[0]
         self.feed = self.feed[1:]
-        print(self.feed)
         return c
 
     def scan(self):
@@ -125,44 +183,11 @@ class Parser:
         ''' return the operator's precedence '''
         return self.prec.index(op)
 
-    def proc_op(self, op):
-        print(op)
-        ''' process operators into the postfix expression '''
-        # if the stack is not empty, remove the top element
-        if self.op_stack:
-            prev_op = self.op_stack.pop()
-            # 
-            if self.get_prec(prev_op) <= self.get_prec(op):
-                self.postfix.append(prev_op)
-                self.op_stack.append(op)
-            #
-            else:
-                self.op_stack.append(prev_op)
-                self.op_stack.append(op)
-        # otherwise, add operator to stack
-        else:
-            self.op_stack.append(op)
-
     def pop_stack(self):
         output = []
-        print(self.op_stack)
         while self.op_stack:
             op = self.op_stack.pop()
             self.postfix.append(op)
         output += self.postfix
         self.postfix = []
         return output
-
-def run_parser(arg):
-    parser = Parser(arg)
-    print("\nSource: " + arg)
-    try:
-        if parser.p():
-            print("Parsing successful")
-            postfix = parser.pop_stack()
-            print(postfix)
-    except Exception as exc:
-        print("Parsing failed")
-        print(exc)
-        
-run_parser(sys.argv[1])
