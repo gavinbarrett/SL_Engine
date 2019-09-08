@@ -1,3 +1,5 @@
+import string
+
 class Lexer:
 
     def __init__(self):
@@ -10,8 +12,39 @@ class Lexer:
         self.op_stack = []
         self.binary_op = ['~','^','v','->','<->']
         self.prec = ['(','~','^','v','->','<->']
+        self.terms = string.ascii_uppercase
+    
+    def read(self):
+        ''' Grab the next character '''
+        if not self.feed:
+            return None
+        c = self.feed[0]
+        self.feed = self.feed[1:]
+        return c
 
-    def lexify(self, exp):
+    def scan(self):
+        ''' Advance through the string '''
+        self.next = self.read()
+        if self.next == None:
+            return
+        while self.next.isspace():
+            self.next = self.read()
+
+    def get_prec(self, op):
+        ''' return the operator's precedence '''
+        return self.prec.index(op)
+
+    def lexify(self, args):
+        ''' lexify each expression '''
+        # filter out newlines and empty strings
+        args = args.split('\n')
+        args = list(filter(None, args))
+        output = []
+        for arg in args:
+            output += self.lexify_exp(arg)
+        return output
+
+    def lexify_exp(self, exp):
         ''' Try to read the input into postfix '''
         self.feed = exp
         # get the first character
@@ -22,7 +55,8 @@ class Lexer:
         self.feed = ''
         if self.next == ')' and (self.open_paren - (self.clos_paren + 1)) != 0:
             raise Exception("Error: unaccompanied closing brace")
-        return (True if self.next == None else False)
+        return self.pop_stack()
+        #return (True if self.next == None else False)
     
     def exp(self):
         ''' Match an expression '''
@@ -172,24 +206,4 @@ class Lexer:
         output += self.postfix
         self.postfix = []
         return output
-
-    def read(self):
-        ''' Grab the next character '''
-        if not self.feed:
-            return None
-        c = self.feed[0]
-        self.feed = self.feed[1:]
-        return c
-
-    def scan(self):
-        ''' Advance through the string '''
-        self.next = self.read()
-        if self.next == None:
-            return
-        while self.next.isspace():
-            self.next = self.read()
-
-    def get_prec(self, op):
-        ''' return the operator's precedence '''
-        return self.prec.index(op)
 

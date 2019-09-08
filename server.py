@@ -18,7 +18,7 @@ def valid_req():
     ''' return the validity of deriving a conclusion from a set of formulae '''
     # decode formulae
     formulae = request.data.decode('UTF-8')
-    
+    print(formulae) 
     # construct a new parser
     p = parser.Parser()
 

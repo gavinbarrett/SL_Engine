@@ -1,175 +1,211 @@
 import string
-class Lexer():
 
-    ''' Sentential Logic Lexer '''
+class Lexer:
+
     def __init__(self):
-        self.un_op = '~'
-        self.log_ops = ['~', '^', 'v', '->', '<->']
-        self.half_ops = ['<', '-', '<-', '>']
-        self.poss_ops = ['~', '^', 'v', '->', '<->', '-', '<', '>']
-        self.prec = ['[', '(', '~', '^', 'v', '->', '<->']
-        self.braces = ['(', ')', '[', ']', '{', '}']
-        self.braces_open = ['(', '[', '{']
-        self.braces_closed = [')', ']', '}']
-        self.w_space = ['\n', '\t', ' ']
-        self.newline = '\n'
-        self.terms = [chr(i) for i in range(65, 91)]
-        self.op_stack = []
-        self.b_stack = []
-        self.l_stack = []
+        self.next = None
+        self.feed = ''
+        self.open_paren = 0
+        self.clos_paren = 0
+        self.build = ''
         self.postfix = []
-        self.seen = []
-        self.tmp = ''
-        self.expressions = []
-        self.t_count = 0
+        self.op_stack = []
+        self.binary_op = ['~','^','v','->','<->']
+        self.prec = ['(','~','^','v','->','<->']
+        self.terms = list(string.ascii_uppercase)
+    
+    def read(self):
+        ''' Grab the next character '''
+        if not self.feed:
+            return None
+        c = self.feed[0]
+        self.feed = self.feed[1:]
+        return c
 
-    def print_exp(self):
-        ''' Print expression '''
-        print(self.postfix)
+    def scan(self):
+        ''' Advance through the string '''
+        self.next = self.read()
+        if self.next == None:
+            return
+        while self.next.isspace():
+            self.next = self.read()
 
-    def get_prec(self, c):
-        ''' Get precedence of operator '''
-        return self.prec.index(c)
+    def get_prec(self, op):
+        ''' return the operator's precedence '''
+        return self.prec.index(op)
 
-    def counter(self, c):
-        ''' Return corresponding brace '''
-        if c in self.braces_open:
-            return self.braces_closed[self.braces_open.index(c)]
-        elif c in self.braces_closed:
-            return self.braces_open[self.braces_closed.index(c)]
+    def lexify(self, args):
+        ''' lexify each expression '''
+        # filter out newlines and empty strings
+        args = args.split('\n')
+        args = list(filter(None, args))
+        #args = list(filter(lambda x: False if str(x) is '' else True, args))
+        output = []
+        for arg in args:
+            output += self.lexify_exp(arg)
+        return output
+        #return [self.lexify_exp(arg) for arg in args]
 
-    def build_op(self, c):
-        ''' Try to construct multi-token operator '''
-        while self.l_stack:
-            op = self.l_stack.pop()
-            op += c
-        if op in self.log_ops:
-            if not self.op_stack:
-                self.op_stack.append(op)
+    def lexify_exp(self, exp):
+        ''' Try to read the input into postfix '''
+        self.feed = exp
+        # get the first character
+        self.scan()
+        # try to match an expression
+        self.exp()
+        # return true if parsing succeeded; return false otherwise
+        self.feed = ''
+        if self.next == ')' and (self.open_paren - (self.clos_paren + 1)) != 0:
+            raise Exception("Error: unaccompanied closing brace")
+        return self.pop_stack()
+        #return (True if self.next == None else False)
+    
+    def exp(self):
+        ''' Match an expression '''
+        # match a unary expression
+        if self.next == "~":
+            self.unary()
+        #match a binary expression
+        else:
+            self.binary()
+            while self.next == '^':
+                self.scan()
+                self.binary()
+
+    def unary(self):
+        ''' Match unary function, negation (~) '''
+        self.op_stack.append('~')
+        self.scan()
+        self.exp()
+
+    def binary(self):
+        ''' Match binary functions '''
+        # match the left argument
+        self.atomic()
+        self.build = ''
+        # try to match biconditional head
+        if self.next == '<':
+            self.build += self.next
+            self.scan()
+            self.bicond()
+        # try to match conditional tail
+        elif self.next == '-':
+            self.build += self.next
+            self.scan()
+            self.cond()
+        # match the right argument
+        while self.next == 'v' or self.next == '^':
+            self.proc_op(self.next)
+            self.scan()
+            self.atomic()
+    
+    def cond(self):
+        ''' Match a conditional expression '''
+        if self.next == '>':
+            # update operator to either -> or <->
+            self.build += self.next
+            
+            # add operator to op_stack or postfix
+            self.proc_op(self.build)
+            
+            # scan the next character
+            self.scan()
+            
+            # try to match an atomic statement
+            self.atomic()
+        # otherwise, operator is not in our language
+        else:
+            raise Exception("Error parsing conditional; invalid char: " + str(self.next))
+
+    def bicond(self):
+        ''' Match a biconditional expression '''
+        if self.next == '-':
+            # update the operator to either - or <-
+            self.build += self.next
+            
+            # scan the next character
+            self.scan()
+
+            # try to match a conditional
+            self.cond()
+        # otherwise, operator is not in out language
+        else:
+            raise Exception('Error parsing biconditional; invalid char: ' + str(self.next))
+
+    def atomic(self):
+        ''' Match atomic sentences '''
+        if self.next.isalpha() and self.next.isupper():
+            self.postfix += self.next
+            self.scan()
+        elif self.next == '(':
+            self.o_paren()
+            self.open_paren += 1
+            self.scan()
+            # try to match another expression
+            self.exp()
+            if self.next == ')':
+                self.c_paren()
+                self.clos_paren += 1
+                self.scan()
             else:
-                a = self.op_stack.pop()
-                if self.get_prec(a) < self.get_prec(op):
-                    if a in self.log_ops:
-                        self.postfix.append(a)
-                    else:
-                        self.op_stack.append(a)
-                    self.op_stack.append(op)
-        elif c in self.poss_ops:
-            self.l_stack.append(op)
+                raise Exception('Error: unaccompanied opening brace')
+        elif self.next == '~':
+            self.unary()
+        else:
+            raise Exception('Error: not a valid expression: ' + str(self.next))
 
-    def handle_operators(self, c):
-        ''' Add valid operators; build ops from sub-op tokens '''
-        if c in self.un_op:
-            self.op_stack.append(c)
-        elif c in self.log_ops:
-            if self.op_stack:
-                a = self.op_stack.pop()
-                if self.get_prec(a) <= self.get_prec(c):
-                    if a in self.log_ops:
-                        self.postfix.append(a)
-                    else:
-                        self.op_stack.append(a)
-                    self.op_stack.append(c)
-                elif self.get_prec(a) > self.get_prec(c):
-                    self.op_stack.append(a)
-                    self.op_stack.append(c)
-                elif a == self.counter(c):
-                    return
-            else:
-                self.op_stack.append(c)
-        elif c in self.half_ops:
-            if not self.l_stack:
-                self.l_stack.append(c)
-            else:
-                self.build_op(c)
-
-    def open_brace(self, c):
-        ''' Handle opening brace '''
-        if self.op_stack:
-            a = self.op_stack.pop()
-            if self.get_prec(a) < self.get_prec(c):
-                while self.get_prec(a) < self.get_prec(c):
-                    self.postfix.append(a)
+    def o_paren(self):
+        ''' handle opening parentheses '''
+        op = '('
+        if self.op_stack:    
+            prev_op = self.op_stack.pop()
+            if self.get_prec(prev_op) < self.get_prec(op):
+                while self.get_prec(prev_op) < self.get_prec(op):
+                    self.postfix.append(prev_op)
                     if self.op_stack:
-                        a = self.op_stack.pop()
+                        prev_op = self.op_stack.pop()
                     else:
-                        self.op_stack.append(c)
+                        self.op_stack.append(op)
             else:
-                self.op_stack.append(a)
-                self.op_stack.append(c)
+                self.op_stack.append(prev_op)
+                self.op_stack.append(op)
         else:
-            self.op_stack.append(c)
+            self.op_stack.append(op)
 
-    def closed_brace(self, c):
-        ''' Handle closing brace '''
-        if not self.op_stack:
-            raise Exception('Stack empty!\n')
-        else:
-            a = self.op_stack.pop()
-            while a != self.counter(c):
-                self.postfix.append(a)
+    def c_paren(self):
+        ''' handle closing parentheses  '''
+        if self.op_stack:
+            prev_op = self.op_stack.pop()
+            while prev_op != '(':
+                self.postfix.append(prev_op)
                 if self.op_stack:
-                    a = self.op_stack.pop()
+                    prev_op = self.op_stack.pop()
                 else:
                     raise Exception('No opening brace detected\n')
 
-    def handle_braces(self, c):
-        ''' Make sure braces are balanced '''
-        if c in self.braces_open:
-            self.open_brace(c)
-        elif c in self.braces_closed:
-            self.closed_brace(c)
-    
-    def handle_terms(self, t):
-        ''' Append token t to postfix; track term count '''
-        if t in self.seen:
-            pass
+    def proc_op(self, op):
+        ''' process operators into the postfix expression '''
+        # if the stack is not empty, remove the top element
+        if self.op_stack:
+            prev_op = self.op_stack.pop()
+            # 
+            if self.get_prec(prev_op) <= self.get_prec(op):
+                self.op_stack.append(prev_op)
+                self.op_stack.append(op)
+            #
+            else:
+                self.postfix.append(prev_op)
+                self.op_stack.append(op)
+        # otherwise, add operator to stack
         else:
-            self.seen.append(t)
-            self.t_count += 1
-        self.postfix.append(t)
+            self.op_stack.append(op)
 
-    def pop_remaining(self):
-        ''' Moves remaining tokens from op_stack to output '''
+    def pop_stack(self):
         output = []
         while self.op_stack:
             op = self.op_stack.pop()
-            if op in self.braces_open:
-                raise Exception('no matching closing brace\n')
             self.postfix.append(op)
         output += self.postfix
         self.postfix = []
         return output
 
-
-    def read_token(self, token):
-        ''' Read in tokens and operators '''
-        if token == '\n':
-            self.expressions.append(self.tmp)
-            self.tmp = ""
-        elif token in self.terms:
-            self.tmp += token
-            self.handle_terms(token)
-        elif token in self.braces:
-            self.tmp += token
-            self.handle_braces(token)
-        elif token in self.poss_ops:
-            self.tmp += token
-            self.handle_operators(token)
-        elif token.isspace():
-            self.tmp += token
-        elif token is self.newline:
-            self.expressions.append(self.tmp)
-            self.tmp = ''
-        elif not token:
-            print('no token!')
-        else:
-            raise Exception('invalid token: ' + str(ord(token)))
-
-    def shunting_yard(self, formula):
-        ''' Perform the shunting yard algorithm on the expression, returning its postfix '''
-        # put each character in its appropriate structure
-        list(map(lambda c: self.read_token(c), formula))
-
-        # return the postfix expression
-        return self.pop_remaining()

@@ -84,11 +84,11 @@ class Parser:
             z = self.tt[0]
             self.tt = self.tt[1:]
             root.eval_stack.append(z)
-        elif root.name in self.lexer.un_op:
+        elif root.name is '~':
             l = root.right.eval_stack[0]
             z = self.neg(l)
             root.eval_stack.append(z)
-        elif root.name in self.lexer.log_ops:
+        elif root.name in self.lexer.binary_op:
             x = root.left.eval_stack[0]
             y = root.right.eval_stack[0]
             z = self.determine_truth(x,y,root.name)
@@ -218,7 +218,7 @@ class Parser:
         #TODO: designate t as the root of the tree;
         # overwrite child nodes if they are specified as the root
         t = ast.AST(op)
-        if op in self.lexer.un_op:
+        if op is '~':
             if self.tree_stack:
                 # if it is a negation, put as right child
                 tree = self.tree_stack.pop()
@@ -228,7 +228,7 @@ class Parser:
             else:
                 self.tree_stack.append(op)
 
-        elif op in self.lexer.log_ops:
+        elif op in self.lexer.binary_op:
             if self.tree_stack:
                 tree = self.tree_stack.pop()
                 tree.root = False
@@ -269,7 +269,7 @@ class Parser:
         
         #output = []
         # turn each expression into its postfix representation
-        output = list(map(lambda x: self.lexer.shunting_yard(x), formulas))
+        output = list(map(lambda x: self.lexer.lexify(x), formulas))
         #for f in formulas:
         #    output += self.lexer.shunting_yard(f)
 
@@ -293,9 +293,11 @@ class Parser:
         formulas = self.normalize(data)
 
         # perform the shunting yard operation on each formula
-        output = list(map(lambda x: self.lexer.shunting_yard(x), formulas))
+        output = list(map(lambda x: self.lexer.lexify(x), formulas))
 
         set_trus = []
+        print("out")
+        print(output)
         for idx, postfix in enumerate(output):
             # insert each item from the postfix array into an ast
             list(map(lambda x: self.insert(x), postfix))
@@ -313,3 +315,4 @@ class Parser:
         self.valid = self.check_if_valid(vTable)
 
         return [total] + [master_list] + set_trus + [self.valid]
+
