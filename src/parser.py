@@ -315,4 +315,3 @@ class Parser:
         self.valid = self.check_if_valid(vTable)
 
         return [total] + [master_list] + set_trus + [self.valid]
-
