@@ -21,27 +21,23 @@ class Parser:
         self.vStack = []
         self.alpha = list(string.ascii_uppercase)
 
-
     def clear_parser(self):
+        ''' Return the parser to its initialized state '''
         self.tree_stack.clear()
         self.set.clear()
         self.seen.clear()
-
 
     def neg(self, atom):
         ''' Return the negation of the binary truth value '''
         return 'F' if atom == 'T' else 'T'
 
-
     def and_val(self, x, y):
         ''' Return logical and '''
         return 'T' if x == 'T' and y == 'T' else 'F'
 
-
     def or_val(self, x, y):
         ''' Return logical or '''
         return 'T' if x == 'T' or y == 'T' else 'F'
-
 
     def cond_val(self, x, y):
         ''' Return logical conditional '''
@@ -49,13 +45,11 @@ class Parser:
             return 'F'
         return 'T'
 
-
     def bicond_val(self, x, y):
         ''' Return logical biconditional '''
         if (x == 'T' and y == 'T') or (x == 'F' and y == 'F'):
             return 'T'
         return 'F'
-
 
     def determine_truth(self, x, y, rootname):
         ''' Determine the truth value of the formula using binary functions '''
@@ -68,46 +62,63 @@ class Parser:
         elif rootname == '<->':
             return self.bicond_val(x, y)
 
-
-    def addValue(self, z):
-        ''' add the top level truth values in order to determine validity '''
-        self.validStack += z
-        l = len(self.dist)
-        if len(self.validStack) == (2**l):
+    def addValue(self, value):
+        ''' Add the top level truth values in order to determine validity '''
+        self.validStack += value
+        #
+        if len(self.validStack) == (2**len(self.dist)):
             self.vStack.append(self.validStack)
             self.validStack = []
+    
+    def insert_term_value(self, truth_value, root):
+        ''' '''
+        truth_value = self.tt[0]
+        self.tt = self.tt[1:]
+        root.eval_stack.append(truth_value)
+        return truth_value
 
+    def insert_unary_value(self, truth_value, root):
+        ''' Add the negation of the truth value to the root's evaluation stack '''
+        truth_value = root.right.eval_stack[0]
+        negated_value = self.neg(truth_value)
+        root.eval_stack.append(negated_value)
+        return truth_value
+
+    def insert_binary_value(self, truth_value, root):
+        ''' Add the binary computation of the truth value to the root's evaluation stack '''
+        left_arg = root.left.eval_stack[0]
+        right_arg = root.right.eval_stack[0]
+        truth_value = self.determine_truth(left_arg, right_arg, root.name)
+        root.eval_stack.append(truth_value)
+        return truth_value
 
     def eval(self, root):
-        z = None
+        ''' Compute the parent node's truth value from its children '''
+        truth_value = None
+        #
         if root.name in self.lexer.terms:
-            z = self.tt[0]
-            self.tt = self.tt[1:]
-            root.eval_stack.append(z)
+            truth_value = self.insert_term_value(truth_value, root)
+        #
         elif root.name is '~':
-            l = root.right.eval_stack[0]
-            z = self.neg(l)
-            root.eval_stack.append(z)
+            truth_value = self.insert_unary_value(truth_value, root)
+        #
         elif root.name in self.lexer.binary_op:
-            x = root.left.eval_stack[0]
-            y = root.right.eval_stack[0]
-            z = self.determine_truth(x,y,root.name)
-            root.eval_stack.append(z)
+            truth_value = self.insert_binary_value(truth_value, root)
         # if token is the root of the tree, save truth value
         if root.root == True:
-            self.addValue(z)
-
+            self.addValue(truth_value)
 
     def handle_root(self, root):
         ''' Recursively return true values '''
         if not root:
             return
+        #
         self.handle_root(root.left)
         self.handle_root(root.right)
         self.eval(root)
 
-
     def generate_terms(self, t, exp):
+        ''' '''
         tmpExp = []
         df = defaultdict(lambda: None)
 
@@ -122,28 +133,29 @@ class Parser:
                 tmpExp.append(x)
         return tmpExp
 
-
     def strip_terms(self, exp):
-        ''' return a list of used terms along with the same list without duplicates '''
-
+        ''' Return a list of used terms along with the same list without duplicates '''
         # filter out all propositional variables
         terms = list(filter(lambda x: True if x in self.alpha else False, list(exp)))
-
         # make a list of terms void of duplicates
         distinct = list(dict.fromkeys(terms))
-
         return terms, distinct
 
-
     def in_order(self, root, table):
+        ''' Traverse the AST in in-order fashion '''
+        # base case for recursion
         if root is None:
             return
+        # traverse down the left branch
         self.in_order(root.left, table)
-        table.append(root.eval_stack[0])
-        root.eval_stack.pop()
+        # add the stack value to the table 
+        value = root.eval_stack.pop(0)
+        table.append(value)
+        # traverse down the right branch
         self.in_order(root.right, table)
 
     def get_truth_table(self, tree, exp):
+        ''' '''
         truth_table = []
         ts, dist = self.strip_terms(exp)
         truth_values = list(generate(len(dist)))
@@ -166,16 +178,19 @@ class Parser:
         ''' return false if truth matrix contains an instance of all true premises and a false conclusion '''
         for vT in vTable:
             for idx, v in enumerate(vT):
+                # while the value is true, continue to read
                 if v == 'T':
                     continue
+                # if the last truth value is false, the argument is invalid
                 elif v == 'F' and idx == (len(vT)-1):
                     return False
                 else:
                     break
+        # argument is valid
         return True
 
     def get_set_truth_table(self, tree, exp, total, master):
-
+        ''' '''
         # save total amount of distinct terms
         trus, total_distinct = self.strip_terms(exp)
 
@@ -206,6 +221,7 @@ class Parser:
 
 
     def print_tt(self, root):
+        ''' '''
         if root is None:
             return
         self.handle_root(root.left)
@@ -261,17 +277,13 @@ class Parser:
         # return list of expressions after filtering out empty strings (i.e. '')
         return list(filter(lambda x: False if str(x) is '' else True, formulas))
 
-
     def get_tables(self, data):
         ''' return the truth tables for a set of sentences '''
         # normalize expressions by newlines
         formulas = self.normalize(data)
         
-        #output = []
         # turn each expression into its postfix representation
         output = list(map(lambda x: self.lexer.lexify(x), formulas))
-        #for f in formulas:
-        #    output += self.lexer.shunting_yard(f)
 
         set_trus = []
         tables = []
@@ -282,8 +294,6 @@ class Parser:
             tables.append(list(self.get_truth_table(tree, formulas[idx])))
         return tables
     
-
-
     def get_validity(self, data):
         ''' check whether or not a set of sentences is valid '''
         tz, total = self.strip_terms(data)
@@ -296,8 +306,6 @@ class Parser:
         output = list(map(lambda x: self.lexer.lexify(x), formulas))
 
         set_trus = []
-        print("out")
-        print(output)
         for idx, postfix in enumerate(output):
             # insert each item from the postfix array into an ast
             list(map(lambda x: self.insert(x), postfix))

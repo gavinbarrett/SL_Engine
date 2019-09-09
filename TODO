@@ -1,2 +1,3 @@
 -> Add documentation to the parser.py file
 -> Pass .py files through pylint and work to remove errors
+-> Make sure that empty inputs (such as collections of newlines and empty strings) cannot be passed through the lexer
