@@ -1,1 +1,2 @@
--> Fix double negative bug
+-> Add documentation to the parser.py file
+-> Pass .py files through pylint and work to remove errors
