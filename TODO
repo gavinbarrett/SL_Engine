@@ -1,3 +1,4 @@
 -> Add documentation to the parser.py file
 -> Pass .py files through pylint and work to remove errors
 -> Make sure that empty inputs (such as collections of newlines and empty strings) cannot be passed through the lexer
+-> Simplify API requests to one endpoint; require api call to contain a boolean to determine whether we return the truth tables or the validity tables
