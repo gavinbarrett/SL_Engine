@@ -1,5 +1,5 @@
 /* 
- * This is a lexer for analyzing the structure of well formed sentential logic formulas;
+ * This is a frontend lexer for analyzing the structure of well formed sentential logic formulas;
  * the analysis techniques have been greatly inspired by the following: http://www.cs.utsa.edu/~wagner/CS3723/rdparse/rdparser6.html
  * 
  * */
@@ -12,75 +12,76 @@ class Lexer {
 		let reg = /[A-Z]/;
 	}
 
-	p() {
+	lex() {
 		/* Try to parse the input */
 		this.scan();
 		if (this.next === '\n')
 			return false;
-		this.e();
+		this.expression();
 		return this.next === '\n';
 	}
 
-	e() {
+	expression() {
 		/* Try to match expression */
 		if (this.next === '~')
-			this.u();
+			this.unary();
 		else {
-			this.b();
+			this.binary();
 			while(this.next === '^') {
 				this.scan();
-				this.b();
+				this.binary();
 			}
 		}
 	}
 
-	u() {
+	unary() {
 		/* Try to match unary operator */
 		this.scan();
-		this.e();
+		this.expression();
 	}
 
-	b() {
+	binary() {
 		/* Try to match binary operator */
-		this.s();
+		this.atomic();
 
 		if (this.next === '<') {
 			this.scan();
-			this.bicond();
+			this.biconditional();
 		} else if (this.next === '-') {
 			this.scan();
-			this.cond();
+			this.conditional();
 		} while (this.next === 'v') {
 			this.scan();
-			this.s();
+			this.atomic();
 		}
 	}
 
-	cond() {
+	conditional() {
 		/* Try to match a conditional */
 		if (this.next === '>') {
 			this.scan();
-			this.s();
+			this.atomic();
 		} else
 			throw 'Error parsing: invalid char: ', this.next;
 	}
 
-	bicond() {
+	biconditional() {
 		/* Try to match a biconditional */
 		if (this.next === '-') {
 			this.scan();
-			this.cond();
+			this.conditional();
 		} else 
 			throw 'Error parsing: invalid char: ', this.next;
 	}
 
-	s() {
+	atomic() {
+		/* Try to match an atomic statement (i.e. A-Z) */
 		if (this.next.match(this.reg))
 			this.scan();
 		else if (this.next === '(') {
 			this.scan();
 
-			this.e();
+			this.expression();
 
 			if (this.next === ')')
 				this.scan();
@@ -88,7 +89,7 @@ class Lexer {
 				throw 'Error: missing brace';
 		} else if (this.next === '~') {
 			this.scan();
-			this.e();
+			this.expression();
 		} else
 			throw 'Error: not an acceptable expression: ', this.next;
 	}
@@ -96,9 +97,9 @@ class Lexer {
 	read() {
 		if (this.feed.length === 0)
 			return null;
-		let c = this.feed.slice(0, 1);
+		let character = this.feed.slice(0, 1);
 		this.feed = this.feed.slice(1);
-		return c;
+		return character;
 	}
 
 	scan() {
@@ -113,11 +114,10 @@ class Lexer {
 export default function lexical_analysis(arg) {
 	let lexer = new Lexer(arg);
 	try {
-		if (lexer.p()) {
+		if (lexer.lex()) {
 			console.log('Analysis successful\n');
-			return 1
-		} else
-			throw 'Error: analysis unsuccessful;\n no end symbol \\n';
+			return 1;
+		}
 	} catch(error) {
 		console.log("Analysis failed\n");
 		return 0;
