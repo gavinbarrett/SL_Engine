@@ -1,7 +1,7 @@
 import string
-import src.lexer as sl
-import src.ast as ast
-from src.gen import generate
+import lexer as sl
+import ast as ast
+from gen import generate
 from collections import defaultdict
 
 class Parser:
@@ -172,6 +172,7 @@ class Parser:
             self.in_order(tree, table)
             truth_table.append(table)
         truth_table = truth_table[::1]
+        print(truth_table)
         return truth_table, dist, truth_values
 
     def check_if_valid(self, vTable):
@@ -193,7 +194,6 @@ class Parser:
         ''' '''
         # save total amount of distinct terms
         trus, total_distinct = self.strip_terms(exp)
-
         truth_table = []
         indices = []
         for tn in trus:
@@ -264,16 +264,13 @@ class Parser:
         tree = ast.AST(t)
         self.tree_stack.append(tree)
 
-
     def insert(self, c):
         ''' Insert terms and ops accordingly '''
         self.insert_term(c) if c in self.lexer.terms else self.insert_op(c)
 
-
     def normalize(self, fs):
         ''' split expression string by newline into expressions '''
         formulas = fs.split('\n')
-
         # return list of expressions after filtering out empty strings (i.e. '')
         return list(filter(lambda x: False if str(x) is '' else True, formulas))
 

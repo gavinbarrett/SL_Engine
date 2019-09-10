@@ -152,6 +152,7 @@ var TruthTable = function (_React$Component4) {
 				var tr = React.createElement(TruthTableRow, { row: _this4.state.t[i], key: i });
 				newTable.push(tr);
 			}
+			// rerender the page with the truth table
 			_this4.setState({
 				table: newTable
 			});
@@ -543,20 +544,24 @@ var ReplPage = function (_React$Component16) {
 		_this16.retrieveTruthTable = function (formulas, bool) {
 			/*  takes in valid formulas and sends them to the server; displays
     * their truth tables upon return */
-
+			// if nothing was input, do not send an AJAX request
+			if (!formulas) return;
 			// select appropriate api function
-			var api = _this16.selectSwitch(bool);
+			//let api = this.selectSwitch(bool);
 
 			// initialize http request
-			var xhr = request('POST', api);
-
+			var xhr = request('POST', '/valid');
+			console.log(formulas);
 			xhr.onload = function () {
 				// parse retrieved JSON
 				var respText = JSON.parse(xhr.responseText);
 				/* output the truth values */
+				console.log(respText);
 				bool == "t" ? _this16.showTT(respText, formulas) : _this16.showValidity(respText, formulas);
 			};
-
+			console.log(formulas);
+			formulas = [formulas] + [bool];
+			console.log(formulas);
 			/* send ajax request of the formulas */
 			xhr.send(formulas);
 		};
@@ -715,6 +720,7 @@ var ReplPage = function (_React$Component16) {
 		};
 
 		_this16.scrollUp = function () {
+			/*  */
 			var s = void 0;
 			if (_this16.state.b == "t") s = document.getElementById('tableContainer');else s = document.getElementById('validContainer');
 			s.classList.toggle('scrollUpHidden');
@@ -722,6 +728,7 @@ var ReplPage = function (_React$Component16) {
 		};
 
 		_this16.scrollDown = function () {
+			/*  */
 			var s = void 0;
 			if (_this16.state.b == "t") s = document.getElementById("tableContainer");else s = document.getElementById("validContainer");
 			s.classList.toggle('scrollDown');
@@ -734,10 +741,10 @@ var ReplPage = function (_React$Component16) {
 		};
 
 		_this16.state = {
-			table: undefined,
+			table: [],
 			valid: undefined,
 			tables: [],
-			out: undefined,
+			out: [],
 			b: "t"
 		};
 		return _this16;

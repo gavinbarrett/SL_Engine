@@ -99,6 +99,7 @@ class TruthTable extends React.Component {
 			let tr = <TruthTableRow row={this.state.t[i]} key={i}/>
 			newTable.push(tr);
 		}
+		// rerender the page with the truth table
 		this.setState({
 			table: newTable,
 		});
@@ -298,10 +299,10 @@ class ReplPage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			table: undefined,
+			table: [],
 			valid: undefined,
 			tables: [],
-			out: undefined,
+			out: [],
 			b: "t",
 		};
 	}
@@ -320,20 +321,25 @@ class ReplPage extends React.Component {
 	retrieveTruthTable = (formulas, bool) => {
 		/*  takes in valid formulas and sends them to the server; displays
 		 * their truth tables upon return */
-		
+		// if nothing was input, do not send an AJAX request
+		if (!formulas)
+			return;
 		// select appropriate api function
-		let api = this.selectSwitch(bool);
+		//let api = this.selectSwitch(bool);
 		
 		// initialize http request
-		let xhr = request('POST', api);
-
+		let xhr = request('POST', '/valid');
+		console.log(formulas);
 		xhr.onload = () => {
 			// parse retrieved JSON
 			let respText = JSON.parse(xhr.responseText);
 			/* output the truth values */
+			console.log(respText);
 			(bool == "t") ? this.showTT(respText, formulas) : this.showValidity(respText, formulas);
 		};
-		
+		console.log(formulas);
+		formulas = [formulas] + [bool]
+		console.log(formulas);
 		/* send ajax request of the formulas */
 		xhr.send(formulas);	
 	}
@@ -476,6 +482,7 @@ class ReplPage extends React.Component {
 	}
 	
 	scrollUp = () => {
+		/*  */
 		let s;
 		if (this.state.b == "t")
 			s = document.getElementById('tableContainer');
@@ -486,6 +493,7 @@ class ReplPage extends React.Component {
 	}
 	
 	scrollDown = () => {
+		/*  */
 		let s;
 		if (this.state.b == "t")
 			s = document.getElementById("tableContainer");

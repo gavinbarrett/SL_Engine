@@ -4,3 +4,4 @@
 -> Simplify API requests to one endpoint; require api call to contain a boolean to determine whether we return the truth tables or the validity tables
 -> Simplify lexer and parser files, perhaps merging into one file; using a recursive descent parser gives us complete traversal abilities that may make our
 in_order() function obsolete.
+-> migrating the recursive lexer code seems to have broken the truth table functionality
