@@ -65,7 +65,7 @@ class Parser:
     def addValue(self, value):
         ''' Add the top level truth values in order to determine validity '''
         self.validStack += value
-        #
+        # add value to the stack
         if len(self.validStack) == (2**len(self.dist)):
             self.vStack.append(self.validStack)
             self.validStack = []
@@ -112,7 +112,7 @@ class Parser:
         ''' Recursively return true values '''
         if not root:
             return
-        #
+        # post-order traversal
         self.handle_root(root.left)
         self.handle_root(root.right)
         self.eval(root)
@@ -173,11 +173,12 @@ class Parser:
         for term in terms:
             table = []
             self.tt = term
-            # calculate 
+            # calculate values
             self.print_tt(tree)
             # save
             self.in_order(tree, table)
             truth_table.append(table)
+        # reverse the truth values
         truth_table = truth_table[::1]
         return truth_table, dist, truth_values
 
@@ -213,11 +214,11 @@ class Parser:
             truth_value = []
             for i in indices:
                 truth_value.append(tv[i])
-            truth_values.append(troo)
+            truth_values.append(truth_value)
         
         # TODO: refactor below
         terms = []
-        for tr in troos:
+        for tr in truth_values:
             terms.append(self.generate_truth_assign(tr, trus))
         
         for t in terms:

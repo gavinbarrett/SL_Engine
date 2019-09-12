@@ -329,17 +329,13 @@ class ReplPage extends React.Component {
 		
 		// initialize http request
 		let xhr = request('POST', '/valid');
-		console.log(formulas);
 		xhr.onload = () => {
 			// parse retrieved JSON
 			let respText = JSON.parse(xhr.responseText);
 			/* output the truth values */
-			console.log(respText);
 			(bool == "t") ? this.showTT(respText, formulas) : this.showValidity(respText, formulas);
 		};
-		console.log(formulas);
 		formulas = [formulas] + [bool]
-		console.log(formulas);
 		/* send ajax request of the formulas */
 		xhr.send(formulas);	
 	}

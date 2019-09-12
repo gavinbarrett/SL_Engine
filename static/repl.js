@@ -551,17 +551,13 @@ var ReplPage = function (_React$Component16) {
 
 			// initialize http request
 			var xhr = request('POST', '/valid');
-			console.log(formulas);
 			xhr.onload = function () {
 				// parse retrieved JSON
 				var respText = JSON.parse(xhr.responseText);
 				/* output the truth values */
-				console.log(respText);
 				bool == "t" ? _this16.showTT(respText, formulas) : _this16.showValidity(respText, formulas);
 			};
-			console.log(formulas);
 			formulas = [formulas] + [bool];
-			console.log(formulas);
 			/* send ajax request of the formulas */
 			xhr.send(formulas);
 		};

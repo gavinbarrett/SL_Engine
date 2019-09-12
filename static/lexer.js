@@ -112,9 +112,8 @@ class Lexer {
 }
 
 export default function lexical_analysis(arg) {
-	alert(arg);
 	if (!arg)
-		alert('empty');
+		return;
 	let lexer = new Lexer(arg);
 	try {
 		if (lexer.lex()) {
