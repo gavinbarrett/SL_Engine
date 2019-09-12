@@ -1,6 +1,6 @@
 import string
-import lexer as sl
 import ast as ast
+from lexer import *
 from gen import generate
 from collections import defaultdict
 
@@ -9,7 +9,7 @@ class Parser:
 
     def __init__(self):
         ''' Create parser with expression lexer and tree stack '''
-        self.lexer = sl.Lexer()
+        self.lexer = Lexer()
         self.tree_stack = []
         self.set = []
         self.seen = []
@@ -71,7 +71,7 @@ class Parser:
             self.validStack = []
     
     def insert_term_value(self, truth_value, root):
-        ''' '''
+        ''' Insert a truth value for the term (/A-Z/) '''
         truth_value = self.tt[0]
         self.tt = self.tt[1:]
         root.eval_stack.append(truth_value)
@@ -95,13 +95,13 @@ class Parser:
     def eval(self, root):
         ''' Compute the parent node's truth value from its children '''
         truth_value = None
-        #
+        # insert a truth value for an atomic sentence
         if root.name in self.lexer.terms:
             truth_value = self.insert_term_value(truth_value, root)
-        #
+        # compute the negation of an expression
         elif root.name is '~':
             truth_value = self.insert_unary_value(truth_value, root)
-        #
+        # compute the output of a binary function
         elif root.name in self.lexer.binary_op:
             truth_value = self.insert_binary_value(truth_value, root)
         # if token is the root of the tree, save truth value
@@ -117,20 +117,26 @@ class Parser:
         self.handle_root(root.right)
         self.eval(root)
 
-    def generate_terms(self, t, exp):
-        ''' '''
+    def generate_truth_assign(self, t, expression):
+        ''' Generate the initial truth assignments for each term '''
         tmpExp = []
-        df = defaultdict(lambda: None)
-
-        for e in exp:
-            if df[e] == None:
-                x = t[0]
+        # create an empty dictionary to store seen terms
+        char_map = defaultdict(lambda: None)
+        for character in expression:
+            # if the term hasn't been seen
+            if char_map[character] == None:
+                # pop the head character off and
+                next_char = t[0]
                 t = t[1:]
-                df[e] = x
-                tmpExp.append(x)
-            elif df[e] != None:
-                x = df[e]
-                tmpExp.append(x)
+                # update character map with seen char
+                char_map[character] = next_char
+                # add character to temporary exp
+                tmpExp.append(next_char)
+            # otherwise, if the term has been seen
+            elif char_map[character] != None:
+                # append the seen term to the temporary exp
+                next_char = char_map[character]
+                tmpExp.append(next_char)
         return tmpExp
 
     def strip_terms(self, exp):
@@ -155,24 +161,24 @@ class Parser:
         self.in_order(root.right, table)
 
     def get_truth_table(self, tree, exp):
-        ''' '''
+        ''' Return the truth table '''
         truth_table = []
         ts, dist = self.strip_terms(exp)
         truth_values = list(generate(len(dist)))
         terms = []
-        for t in truth_values:
-            term = self.generate_terms(t,ts)
-            terms.append(term)
-        for t in terms:
+        #truth_values = list(map(self.generate_truth_assign(, ts), truth_values))
+        for val in truth_values:
+            terms.append(self.generate_truth_assign(val ,ts))
+        
+        for term in terms:
             table = []
-            self.tt = t
-            # calculate
+            self.tt = term
+            # calculate 
             self.print_tt(tree)
             # save
             self.in_order(tree, table)
             truth_table.append(table)
         truth_table = truth_table[::1]
-        print(truth_table)
         return truth_table, dist, truth_values
 
     def check_if_valid(self, vTable):
@@ -191,7 +197,7 @@ class Parser:
         return True
 
     def get_set_truth_table(self, tree, exp, total, master):
-        ''' '''
+        ''' Return the truth table '''
         # save total amount of distinct terms
         trus, total_distinct = self.strip_terms(exp)
         truth_table = []
@@ -200,17 +206,20 @@ class Parser:
             indices.append(total.index(tn))
         self.dist = total
         # for each truth value state(row) in the list, strip out relevant truth values
+        
         # TODO: refactor with map and lambda
-        troos = []
+        truth_values = []
         for tv in master:
-            troo = []
+            truth_value = []
             for i in indices:
-                troo.append(tv[i])
-            troos.append(troo)
+                truth_value.append(tv[i])
+            truth_values.append(troo)
+        
+        # TODO: refactor below
         terms = []
         for tr in troos:
-            term = self.generate_terms(tr, trus)
-            terms.append(term)
+            terms.append(self.generate_truth_assign(tr, trus))
+        
         for t in terms:
             table = []
             self.tt = t
@@ -221,13 +230,14 @@ class Parser:
 
 
     def print_tt(self, root):
-        ''' '''
+        ''' Loop through the AST and evaluate, returning the set of tables '''
         if root is None:
             return
+        #
         self.handle_root(root.left)
         self.handle_root(root.right)
+        # evaluate the root node
         self.eval(root)
-
 
     def insert_op(self, op):
         ''' Pop stack and make new operator ast '''
@@ -243,7 +253,6 @@ class Parser:
                 self.tree_stack.append(t)
             else:
                 self.tree_stack.append(op)
-
         elif op in self.lexer.binary_op:
             if self.tree_stack:
                 tree = self.tree_stack.pop()
@@ -256,12 +265,12 @@ class Parser:
             else:
                 raise Exception('Stack empty')
 
-    def insert_term(self, t):
+    def insert_term(self, term):
         ''' Create new ast with term as root '''
-        if t not in self.seen:
-            self.seen += t
+        if term not in self.seen:
+            self.seen += term
         # create a tree with the term as a root
-        tree = ast.AST(t)
+        tree = ast.AST(term)
         self.tree_stack.append(tree)
 
     def insert(self, c):
@@ -282,7 +291,7 @@ class Parser:
         # turn each expression into its postfix representation
         output = list(map(lambda x: self.lexer.lexify(x), formulas))
 
-        set_trus = []
+        #TODO: consider refactoring
         tables = []
         for idx, postfix in enumerate(output):
             for p in postfix:
@@ -318,5 +327,6 @@ class Parser:
 
         # get the validity of the argument
         self.valid = self.check_if_valid(vTable)
-
+        
+        #TODO: reformat return value
         return [total] + [master_list] + set_trus + [self.valid]

@@ -1,10 +1,11 @@
 class AST:
     """ Atomic node of expression tree """
 
-    def __init__(self, c):
+    def __init__(self, character):
+
         self.left = None
         self.right = None
-        self.name = c
+        self.name = character
         self.eval_stack = []
         self.root = True
 
