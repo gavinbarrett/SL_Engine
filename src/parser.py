@@ -1,7 +1,7 @@
 import string
-import ast as ast
-from lexer import *
-from gen import generate
+import src.ast as ast
+from src.lexer import *
+from src.gen import generate
 from collections import defaultdict
 
 class Parser:
