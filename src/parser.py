@@ -16,9 +16,9 @@ class Parser:
         self.output = []
         self.tt = []
         self.dist = []
-        self.valid = None
         self.validStack = []
         self.vStack = []
+        self.valid = None
         self.alpha = list(string.ascii_uppercase)
 
     def clear_parser(self):
@@ -92,7 +92,7 @@ class Parser:
         root.eval_stack.append(truth_value)
         return truth_value
 
-    def eval(self, root):
+    def evaluate(self, root):
         ''' Compute the parent node's truth value from its children '''
         truth_value = None
         # insert a truth value for an atomic sentence
@@ -115,7 +115,7 @@ class Parser:
         # post-order traversal
         self.handle_root(root.left)
         self.handle_root(root.right)
-        self.eval(root)
+        self.evaluate(root)
 
     def generate_truth_assign(self, t, expression):
         ''' Generate the initial truth assignments for each term '''
@@ -229,16 +229,14 @@ class Parser:
             truth_table.append(table)
         return truth_table
 
-
     def print_tt(self, root):
         ''' Loop through the AST and evaluate, returning the set of tables '''
         if root is None:
             return
-        #
         self.handle_root(root.left)
         self.handle_root(root.right)
         # evaluate the root node
-        self.eval(root)
+        self.evaluate(root)
 
     def insert_op(self, op):
         ''' Pop stack and make new operator ast '''
