@@ -29,24 +29,24 @@ function draw() {
 }
 
 function random_conn() {
-	let r = Math.floor(random(0,4));
+	let r = Math.floor(random(0, 4));
 	return symbols[r];
 }
 
 function connective() {
 	/* constructs a connective */
 	this.x = random(0, document.body.offsetWidth);
-	this.y = document.body.offsetHeight*0.90;
-	
+	this.y = document.body.offsetHeight * 0.90;
+
 	this.size = random(20, 35);
 	this.sym = random_conn();
 
 	this.update = () => {
-		this.y -= (pow(this.size, 0.5) / 2);
+		this.y -= pow(this.size, 0.5) / 2;
 		if (this.y < -100) {
 			let index = activeConnectives.indexOf(this);
 			let outBound = activeConnectives.splice(index, 1);
-			delete outBound;
+			//delete outBound;
 		}
 	};
 

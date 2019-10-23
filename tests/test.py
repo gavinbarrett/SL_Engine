@@ -1,10 +1,18 @@
-from src.parser import Parser
+from lexer import *
 
 def run():
-    exp = 'P -> Q\nQ\nP\n'
-    p = Parser()
-    c = p.get_validity(exp)
-    print("\nResult:\n")
-    for cs in c:
-        print(cs)
+    l = Lexer()
+    print('~P v ~D')
+    print(l.lexify('~P v ~D\n'))
+    print('~Q -> R')
+    print(l.lexify('~Q -> R\n'))
+    print('F ^ ~R')
+    print(l.lexify('F ^ ~R\n'))
+    print('~~N v O')
+    print(l.lexify('~~N v O\n'))
+    print('Y ^ ~~T')
+    print(l.lexify('Y ^ ~~T\n'))
+    print('E v ~E')
+    print(l.lexify('E v ~E'))
+
 run()

@@ -1,7 +1,7 @@
 import string
-import src.ast as ast
-from src.lexer import *
-from src.gen import generate
+import ast as ast
+from lexer import *
+from gen import generate
 from collections import defaultdict
 
 class Parser:
@@ -81,7 +81,6 @@ class Parser:
         ''' Add the negation of the truth value to the root's evaluation stack '''
         #FIXME: make sure correct values are inserted
         truth_value = root.right.eval_stack[0]
-        #truth_value = root.root
         negated_value = self.neg(truth_value)
         root.eval_stack.append(negated_value)
         return truth_value
@@ -304,6 +303,8 @@ class Parser:
     
     def get_validity(self, data):
         ''' check whether or not a set of sentences is valid '''
+        # tz contains all actual propositions, even repeats
+        # total is the set of propositions (no repeats) this is useful for generating initial truth values
         tz, total = self.strip_terms(data)
         master_list = list(generate(len(total)))
         

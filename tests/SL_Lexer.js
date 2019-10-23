@@ -3,22 +3,21 @@
 const return_alpha = () => {
 	/* Return an uppercase alphabet */
 	let alphabet = [];
-	for (let i = 65; i < 91; i++)
-		alphabet.push(String.fromCharCode(i));
+	for (let i = 65; i < 91; i++) alphabet.push(String.fromCharCode(i));
 	return alphabet;
-}
+};
 
 class Lexer {
 	/* Create a lexer to recognize sentential logic */
 	constructor() {
 		this.un_op = '~';
-		this.log_ops = ['~','^','v','->','<->'];
-		this.half_ops = ['<','-','<-','>'];
-		this.poss_ops = ['~','^','v','->','<->','-','<','>']
-		this.prec = ['(','[','~','^','v','->','<->'];
-		this.braces = ['(',')','[',']','{','}'];
-		this.braces_open = ['(','[','{'];
-		this.braces_closed = [')',']','}'];
+		this.log_ops = ['~', '^', 'v', '->', '<->'];
+		this.half_ops = ['<', '-', '<-', '>'];
+		this.poss_ops = ['~', '^', 'v', '->', '<->', '-', '<', '>'];
+		this.prec = ['(', '[', '~', '^', 'v', '->', '<->'];
+		this.braces = ['(', ')', '[', ']', '{', '}'];
+		this.braces_open = ['(', '[', '{'];
+		this.braces_closed = [')', ']', '}'];
 		this.w_space = ['\n', '\t', ' '];
 		this.space = ' ';
 		this.newline = '\n';
@@ -36,9 +35,7 @@ class Lexer {
 
 	handle_terms(term) {
 		/* Take care of atomic statements */
-		if (this.seen.includes(term)) {
-
-		} else {
+		if (this.seen.includes(term)) {} else {
 			this.seen.push(term);
 			this.t_count += 1;
 		}
@@ -52,10 +49,7 @@ class Lexer {
 			if (this.get_prec(a) < this.get_prec(brace)) {
 				while (this.get_prec(a) < this.get_prec(brace)) {
 					this.postfix.push(a);
-					if (this.op_stack.length == 0)
-						a = this.op_stack.pop();
-					else
-						this.op_stack.push(brace);
+					if (this.op_stack.length == 0) a = this.op_stack.pop();else this.op_stack.push(brace);
 				}
 			} else {
 				this.op_stack.push(a);
@@ -68,9 +62,7 @@ class Lexer {
 
 	closed_brace(brace) {
 		/* Handle closing braces */
-		if (this.op_stack.length == 0)
-			console.log("Stack is empty!");
-		else {
+		if (this.op_stack.length == 0) console.log("Stack is empty!");else {
 			let a = this.op_stack.pop();
 			while (a != this.counter(brace)) {
 				this.postfix.push(a);
@@ -86,10 +78,7 @@ class Lexer {
 
 	handle_braces(brace) {
 		/* Take care of braces */
-		if (this.braces_open.includes(brace))
-			this.open_brace(brace);
-		else if (this.braces_closed.includes(brace))
-			this.closed_brace(brace);
+		if (this.braces_open.includes(brace)) this.open_brace(brace);else if (this.braces_closed.includes(brace)) this.closed_brace(brace);
 	}
 
 	get_prec(op) {
@@ -108,8 +97,7 @@ class Lexer {
 
 	get_op(operator) {
 		let op = '';
-		for (let i = this.l_stack.length; i > 0; i--)
-			op = this.l_stack.pop() + operator;
+		for (let i = this.l_stack.length; i > 0; i--) op = this.l_stack.pop() + operator;
 		return op;
 	}
 
@@ -117,15 +105,10 @@ class Lexer {
 		/* Update a candidate operator to one of: (<,-,->,<-,<->) */
 		let op = this.get_op(operator);
 		if (this.log_ops.includes(op)) {
-			if (this.op_stack.length == 0)
-				this.op_stack.push(op);
-			else {
+			if (this.op_stack.length == 0) this.op_stack.push(op);else {
 				let a = this.op_stack.pop();
 				if (this.get_prec(a) < this.get_prec(op)) {
-					if (this.log_ops.includes(a))
-						this.postfix.push(a);
-					else
-						this.op_stack.push(a);
+					if (this.log_ops.includes(a)) this.postfix.push(a);else this.op_stack.push(a);
 					this.op_stack.push(op);
 				}
 			}
@@ -165,9 +148,7 @@ class Lexer {
 	}
 
 	read_charac(charac) {
-		if (this.prev == undefined) {
-
-		}	
+		if (this.prev == undefined) {}
 		/* Try to read the next character */
 		if (charac == '\n') {
 			this.expressions.push(this.tmp);
@@ -183,13 +164,12 @@ class Lexer {
 			this.handle_operators(charac);
 		} else if (charac == this.space) {
 			return;
-		} else
-			throw "Invalid character " + charac;
+		} else throw "Invalid character " + charac;
 	}
 
 	pop_remaining(output) {
 		/* Pop the remaining elements of the operator stack */
-		while(this.op_stack.length > 0) {
+		while (this.op_stack.length > 0) {
 			let a = this.op_stack.pop();
 			//FIXME: sometimes undefined is added to the tail of the list; below is just a quick fix
 			if (a == undefined) {
@@ -211,10 +191,9 @@ class Lexer {
 		/* Return the postfix of the formula */
 		let output = [];
 		try {
-		for (let i = 0; i < formulas.length; i++)
-			this.read_charac(formulas[i]);
-		this.pop_remaining(output);
-		} catch(error) {
+			for (let i = 0; i < formulas.length; i++) this.read_charac(formulas[i]);
+			this.pop_remaining(output);
+		} catch (error) {
 			console.log(error);
 		}
 		console.log(output);
@@ -253,50 +232,44 @@ function run_test() {
 	let btest4 = "A -> \n";
 	let btest5 = "B ^ S)\n";
 	console.log(btest);
-	try {	
-	lex.shunting_yard(btest);
-	}
-	catch (error) {
+	try {
+		lex.shunting_yard(btest);
+	} catch (error) {
 		console.log("Error is: ");
 		console.log(error);
 	}
 	console.log(btest1);
 	try {
-	lex.shunting_yard(btest1);
-	}
-	catch(error) {
+		lex.shunting_yard(btest1);
+	} catch (error) {
 		console.log("Error is: ");
 		console.log(error);
 	}
 	console.log(btest2);
 	try {
-	lex.shunting_yard(btest2);
-	}
-	catch(error) {
+		lex.shunting_yard(btest2);
+	} catch (error) {
 		console.log("Error is: ");
 		console.log(error);
 	}
 	console.log(btest3);
 	try {
-	lex.shunting_yard(btest3);
-	}
-	catch(error) {
+		lex.shunting_yard(btest3);
+	} catch (error) {
 		console.log("Error is: ");
 		console.log(error);
 	}
 	console.log(btest4);
 	try {
-	lex.shunting_yard(btest4);
-	}
-	catch(error) {
+		lex.shunting_yard(btest4);
+	} catch (error) {
 		console.log("Error is: ");
 		console.log(error);
 	}
 	console.log(btest5);
 	try {
-	lex.shunting_yard(btest5);
-	}
-	catch(error) {
+		lex.shunting_yard(btest5);
+	} catch (error) {
 		console.log("Error is: ");
 		console.log(error);
 	}

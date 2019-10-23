@@ -1,5 +1,3 @@
 -> Pass .py files through pylint and work to remove errors
 -> Simplify lexer and parser files, perhaps merging into one file; using a recursive descent parser gives us complete traversal abilities that may make our
 in_order() function obsolete.
-
-BUG - Fix bug that interprets sentences like ~T v D and interprets the negation as the negation of the truth value of the expression

@@ -85,20 +85,41 @@ class Lexer:
         # match a unary expression
         if self.next == "~":
             self.unary()
+        #elif self.next in self.terms:
+        #    self.atomic()
         #match a binary expression
-        else:
+        else: #self.next == '(':
             self.binary()
             while self.next == '^':
                 self.scan()
                 self.binary()
-
+        #else:
+        #    self.atomic()
 
     def unary(self):
         ''' Match unary function, negation (~) '''
         # append ~ to the stack and try to match its corresponding expression
-        self.op_stack.append('~')
         self.scan()
-        self.exp()
+        #self.op_stack.append('~')
+        #self.exp()
+        self.op_stack.append('~')
+        if self.next == '(':
+            self.binary()
+        elif self.next in self.terms:
+            self.exp()
+        else:
+            #self.postfix += '~'
+            self.exp()    
+            #self.atomic()
+        while self.next == 'v' or self.next == '^':
+            self.process_op(self.next)
+            self.scan()
+            self.atomic()
+        #self.exp()
+        #while self.next == 'v' or self.next == '^':
+        #    self.process_op(self.next)
+        #    self.scan()
+        #    self.atomic()
 
 
     def binary(self):
@@ -153,10 +174,19 @@ class Lexer:
 
     def atomic(self):
         ''' Match atomic sentences '''
+        # if the next character is a negation, try to match a negated expression
+        if self.next == '~':
+            #self.exp()
+            self.unary()
         # if the next character is an uppercase term [A-Z], add to output
         # and scan for the next character
-        if self.next.isalpha() and self.next.isupper():
+        elif self.next.isalpha() and self.next.isupper():
+            #FIXME: check to see if term should be negated!
             self.postfix += self.next
+            if self.op_stack:
+                if self.op_stack[-1] == '~':
+                    self.op_stack.pop(-1)
+                    self.postfix += '~'
             self.scan()
         # if the next character is an open parenthesis, adjust the
         # stack accordingly, increment counter, and scan for next character
@@ -174,9 +204,6 @@ class Lexer:
                 self.scan()
             else:
                 raise Exception('Error: unaccompanied opening brace')
-        # if the next character is a negation, try to match a negated expression
-        elif self.next == '~':
-            self.unary()
         else:
             raise Exception('Error: not a valid expression: ' + str(self.next))
 

@@ -92,14 +92,19 @@ class Lexer:
                 self.scan()
                 self.binary()
 
-
     def unary(self):
         ''' Match unary function, negation (~) '''
         # append ~ to the stack and try to match its corresponding expression
-        self.op_stack.append('~')
         self.scan()
-        self.exp()
-
+        self.op_stack.append('~')
+        if self.next == '(':
+            self.binary()
+        else:
+            self.exp()    
+        while self.next == 'v' or self.next == '^':
+            self.process_op(self.next)
+            self.scan()
+            self.atomic()
 
     def binary(self):
         ''' Match binary functions: ^, v, ->, <-> '''
@@ -150,13 +155,21 @@ class Lexer:
         else:
             raise Exception('Error parsing biconditional; invalid char: ' + str(self.next))
 
-
     def atomic(self):
         ''' Match atomic sentences '''
+        # if the next character is a negation, try to match a negated expression
+        if self.next == '~':
+            #self.exp()
+            self.unary()
         # if the next character is an uppercase term [A-Z], add to output
         # and scan for the next character
-        if self.next.isalpha() and self.next.isupper():
+        elif self.next.isalpha() and self.next.isupper():
             self.postfix += self.next
+            if self.op_stack:
+                if self.op_stack[-1] == '~':
+                    # append the term's negation
+                    self.op_stack.pop(-1)
+                    self.postfix += '~'
             self.scan()
         # if the next character is an open parenthesis, adjust the
         # stack accordingly, increment counter, and scan for next character
@@ -174,12 +187,8 @@ class Lexer:
                 self.scan()
             else:
                 raise Exception('Error: unaccompanied opening brace')
-        # if the next character is a negation, try to match a negated expression
-        elif self.next == '~':
-            self.unary()
         else:
             raise Exception('Error: not a valid expression: ' + str(self.next))
-
 
     def o_paren(self):
         ''' handle opening parentheses '''
@@ -205,7 +214,6 @@ class Lexer:
         else:
             self.op_stack.append(self.oparen)
 
-
     def c_paren(self):
         ''' handle closing parentheses  '''
         # if stack is not empty, remove the top operator
@@ -220,7 +228,6 @@ class Lexer:
                 # if the stack is empty, raise an error
                 else:
                     raise Exception('No opening brace detected\n')
-
 
     def process_op(self, operator):
         ''' process operators into the postfix expression '''
@@ -238,7 +245,6 @@ class Lexer:
         # otherwise, add operator to stack
         else:
             self.op_stack.append(operator)
-
 
     def pop_stack(self):
         ''' pop the remainder of the stack to the output queue '''
