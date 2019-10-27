@@ -28,11 +28,12 @@ class Parser {
 		else if (this.next === '(') {
 			this.open += 1;
 			this.open_parenthesis();
-		} else if (this.next.match(this.reg))
-			this.atomic();
-		else
-			throw "Error: malformed expression";
-		return this.next === null;
+		} else if (this.next) {
+			if (this.next.match(this.reg))
+				this.atomic();
+			else
+				throw "Error: malformed expression";
+		}
 	}
 
 	open_parenthesis() {
@@ -46,10 +47,13 @@ class Parser {
 		} else if (this.next === ')') {
 			this.closed += 1;
 			this.closed_parenthesis();
-		} else if (this.next.match(this.reg))
-			this.atomic();
-		else
-			throw "Error: malformed formula following open parenthesis";
+		} else if (this.next) {
+			if (this.next.match(this.reg))
+				this.atomic();
+			
+			else
+				throw "Error: malformed formula following open parenthesis";
+		}
 	}
 
 	closed_parenthesis() {
@@ -76,6 +80,11 @@ class Parser {
 		else if (this.next === ')') {
 			this.closed += 1;
 			this.closed_parenthesis();
+		} else if (this.next) {
+			if (this.next.match(this.reg))
+				throw "Error: atomic sentences not seperated by operators";
+			else if (this.next === '~')
+				throw "Error: atomic sentence precedes negation"
 		} else if (this.feed === '' && (this.open === this.closed))
 			console.log("Terminating in atomic state");
 		else
@@ -90,10 +99,13 @@ class Parser {
 		else if (this.next === '(') {
 			this.open += 1;
 			this.open_parenthesis();
-		} else if (this.next.match(this.reg))
-			this.atomic();
-		else
-			throw "Error: malformed formula after unary operator";
+		} else if (this.next) {
+			if (this.next.match(this.reg))
+				this.atomic();
+			else
+				throw "Error: malformed formula after unary operator";
+		} else
+			throw "Error: string terminated after unary operator";
 	}
 
 	binary() {
@@ -109,12 +121,14 @@ class Parser {
 			else if (this.next === '(') {
 				this.open += 1;
 				this.open_parenthesis();
-			} else if (this.next.match(this.reg))
-				this.atomic();
-			else
-				throw "Error: malformed formula after binary operator";
+			} else if (this.next) {
+				if (this.next.match(this.reg))
+					this.atomic();
+				else
+					throw "Error: malformed formula after binary operator";
+			} else
+				throw "Error: string terminated after binary operator"
 		}
-
 	}
 
 
@@ -151,15 +165,12 @@ class Parser {
 		while (this.next === " ")
 			this.next = this.read();
 	}
-	
-	
-
 }
 
 let test = (string) => {
 	let p = new Parser(string);
+	console.log("Testing ", string);
 	try {
-		console.log("Testing ", string);
 		p.expression();
 		console.log('Analysis successful\n');
 	} catch (error) {
@@ -183,7 +194,7 @@ test("(C ^ A) -> D");
 test("~T ^ ~B");
 test("~~T ^ ~T");
 
-console.log("##################\n# Non - Passing States #\n##################\n");
+console.log("########################\n# Non - Passing States #\n########################\n");
 test("~P v ~(A v )");
 test("-> (I ^ ~(P v Q))");
 test("P B");
