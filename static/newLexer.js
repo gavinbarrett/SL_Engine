@@ -156,10 +156,46 @@ class Parser {
 
 }
 
-let p = new Parser('(~~~T v Z)');
-try {
-	p.expression();
-	console.log('\nAnalysis successful\n');
-} catch (error) {
-	console.log('Analysis failed\n', error);
+let test = (string) => {
+	let p = new Parser(string);
+	try {
+		console.log("Testing ", string);
+		p.expression();
+		console.log('Analysis successful\n');
+	} catch (error) {
+		console.log('Analysis failed\n', error);
+	}
 }
+console.log("##################\n# Passing States #\n##################\n");
+test("~P v ~(A v ~B)");
+test("P -> (I ^ ~(P v Q))");
+test("P ^ B");
+test("P");
+test("~~P");
+test("~~~~~T");
+test("R <-> ~(B ^ Z)");
+test("L ^ N ^ S");
+test("(B v D v S) ^ ~F");
+test("(A v B) ^ ~(A ^ B)");
+test("P -> P");
+test("~~P -> G");
+test("(C ^ A) -> D");
+test("~T ^ ~B");
+test("~~T ^ ~T");
+
+console.log("##################\n# Non - Passing States #\n##################\n");
+test("~P v ~(A v )");
+test("-> (I ^ ~(P v Q))");
+test("P B");
+test("P P");
+test("~~");
+test("~~R~~~T");
+test("R <- ~(B ^ Z)");
+test("L ^  ^ S");
+test("B v D v S) ^ ~F");
+test("(A v B) ^ ~A ^ B)");
+test("P -> ");
+test("~~ -> G");
+test("(C ^ A -> D");
+test("~T ^");
+test("~~T  ~T");
