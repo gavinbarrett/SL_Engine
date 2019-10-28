@@ -55,10 +55,11 @@ class Parser:
 		args = list(filter(bool, args))
 		# append operators to the output
 		output = []
-		print("args:")
-		print(args)
 		for arg in args:
-			output.append(self.lexify_exp(arg))
+			print("\nTesting " + arg)
+			post = self.lexify_exp(arg)
+			print('postfix: ' + str(post) + '\n')
+			output.append(post)
 		return output
 
 	def lexify_exp(self, exp):
@@ -71,9 +72,6 @@ class Parser:
 		self.exp()
 		# reset the feed
 		self.feed = ''
-		# if number of parentheses don't match, raise an error
-		#if self.next == ')' and (self.open_paren - (self.clos_paren + 1)) != 0:
-		#	raise Exception("Error: unaccompanied closing brace")
 		# return the final postfix representation
 		return self.pop_stack()
 
@@ -112,7 +110,6 @@ class Parser:
 	
 	def binary(self):
 		''' Match binary functions: ^, v, ->, <-> '''
-		print("self.next is: " + self.next)
 		if self.next == '<':
 			self.build += self.next
 			self.biconditional()
@@ -138,7 +135,6 @@ class Parser:
 
 	def conditional(self):
 		''' Match a conditional expression '''
-		print("self.next is: " + self.next)
 		self.scan()
 		if self.next == '>':
 			# update operator to either -> or <->
@@ -154,7 +150,6 @@ class Parser:
 
 	def biconditional(self):
 		''' Match a biconditional expression '''
-		print("self.next is: " + self.next)
 		self.scan()
 		if self.next == '-':
 			# update the operator to either - or <-
@@ -186,7 +181,7 @@ class Parser:
 			elif self.next == '~':
 				raise Exception("Error: atomic sentence precedes negation\n")
 		elif self.feed == '' and (self.open == self.closed):
-			print("Terminating in atomic state\n")
+			print("Terminating in atomic state")
 		else:
 			raise Exception("Error: malformed formula after atomic sentence\n")
 
@@ -246,7 +241,7 @@ class Parser:
 					raise Exception('No opening brace detected\n')
 	
 		if self.feed == '' and (self.open == self.closed):
-			print("Terminating in parenthesis\n")
+			print("Terminating in parenthesis state")
 		else:
 			self.scan()
 			if self.next == ')':
