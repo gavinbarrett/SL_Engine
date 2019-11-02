@@ -1,5 +1,5 @@
-import lexical_analysis from './lexer.js';
-
+//import lexical_analysis from './lexer.js';
+import lexical_analysis from './newLexer.js';
 function request(url, method) {
 	/* Open an http request */
 	let xhr = new XMLHttpRequest();

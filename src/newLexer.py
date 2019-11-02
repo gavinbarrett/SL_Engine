@@ -22,7 +22,8 @@ class Parser:
 		self.binary_stem = ['^', 'v', '<', '-']
 		self.oparen = '('
 		self.binary_op = ['~', '^', 'v', '->', '<->']
-		self.prec = ['(', '~', '^', 'v', '->', '<->']
+		#self.prec = ['(', '~', '^', 'v', '->', '<->']
+		self.prec = ['(', '<->', '->', 'v', '^', '~']
 		self.terms = list(string.ascii_uppercase)
 
 	def read(self):
@@ -153,7 +154,7 @@ class Parser:
 		self.scan()
 		if self.next == '-':
 			# update the operator to either - or <-
-			#self.build += self.next
+			self.build += self.next
 			# try to match a conditional
 			self.conditional()
 			# otherwise, operator is not in out language
@@ -224,7 +225,6 @@ class Parser:
 			else:
 				raise Exception("Error: malformed formula following open parenthesis\n")
 
-
 	def c_paren(self):
 		''' handle closing parentheses  '''
 		# if stack is not empty, remove the top operator
@@ -258,10 +258,10 @@ class Parser:
 		if self.op_stack:
 			prev_op = self.op_stack.pop()
 			# if stack operator has lower precedence, add both to the stack
-			if self.get_precedence(prev_op) <= self.get_precedence(operator):
+			if self.get_precedence(prev_op) < self.get_precedence(operator):
 				self.op_stack.append(prev_op)
 				self.op_stack.append(operator)
-		# otherwise, append the stack operator to output and push op to stack
+			# otherwise, append the stack operator to output and push op to stack
 			else:
 				self.postfix.append(prev_op)
 				self.op_stack.append(operator)
