@@ -1,12 +1,24 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.Button = exports.Banner = exports.Segment = exports.Truth = exports.TruthTable = exports.TruthTableRow = exports.TruthTableContainer = exports.TableOutput = exports.ReplContainer = exports.ReplPage = undefined;
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _newLexer = require("./newLexer.js");
+
+var _newLexer2 = _interopRequireDefault(_newLexer);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //import lexical_analysis from './lexer.js';
 
-import lexical_analysis from './lexer.js';
 
 function request(url, method) {
 	/* Open an http request */
@@ -564,7 +576,7 @@ var ReplPage = function (_React$Component16) {
 
 		_this16.retrieveInput = function (event) {
 			var formulas = document.getElementById('replInput').value;
-
+			console.log("formulas: \n", formulas);
 			if (formulas.slice(-1) != "\n") formulas += "\n";
 
 			var fs = formulas.split('\n');
@@ -579,7 +591,7 @@ var ReplPage = function (_React$Component16) {
 				var a = fs2[f] + '\n';
 				newForms += a;
 				/* call lexical_analysis() to check grammar */
-				var t = lexical_analysis(a);
+				var t = (0, _newLexer2.default)(a);
 				if (!t) return;
 			}
 
@@ -716,7 +728,7 @@ var ReplPage = function (_React$Component16) {
 		};
 
 		_this16.scrollUp = function () {
-			/*  */
+			/* move the output container into the user interface */
 			var s = void 0;
 			if (_this16.state.b == "t") s = document.getElementById('tableContainer');else s = document.getElementById('validContainer');
 			s.classList.toggle('scrollUpHidden');
@@ -724,7 +736,7 @@ var ReplPage = function (_React$Component16) {
 		};
 
 		_this16.scrollDown = function () {
-			/*  */
+			/* move the output container out of the user interface */
 			var s = void 0;
 			if (_this16.state.b == "t") s = document.getElementById("tableContainer");else s = document.getElementById("validContainer");
 			s.classList.toggle('scrollDown');
@@ -773,4 +785,13 @@ var ReplPage = function (_React$Component16) {
 	return ReplPage;
 }(React.Component);
 
-export { ReplPage, ReplContainer, TableOutput, TruthTableContainer, TruthTableRow, TruthTable, Truth, Segment, Banner, Button };
+exports.ReplPage = ReplPage;
+exports.ReplContainer = ReplContainer;
+exports.TableOutput = TableOutput;
+exports.TruthTableContainer = TruthTableContainer;
+exports.TruthTableRow = TruthTableRow;
+exports.TruthTable = TruthTable;
+exports.Truth = Truth;
+exports.Segment = Segment;
+exports.Banner = Banner;
+exports.Button = Button;

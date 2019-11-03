@@ -1,6 +1,6 @@
 import string
 
-class Parser:
+class Lexer:
 	'''
 	This module is designed to be capable of reading through and interpreting expressions of propositional logic. There are two core functionalities of this module:
 	1.) To determine whether a given input is a valid expression in the language of propositional logic, and,
@@ -57,26 +57,21 @@ class Parser:
 		# append operators to the output
 		output = []
 		for arg in args:
-			print("\nTesting " + arg)
-			post = self.lexify_exp(arg)
-			print('postfix: ' + str(post) + '\n')
-			output.append(post)
+			output += self.lexify_exp(arg)
 		return output
 
 	def lexify_exp(self, exp):
 		''' Try to read the input into postfix '''
 		# set the feed to the expression
 		self.feed = exp
-		# get the first character
-		# self.scan()
 		# try to match an expression
-		self.exp()
+		self.expression()
 		# reset the feed
 		self.feed = ''
 		# return the final postfix representation
 		return self.pop_stack()
 
-	def exp(self):
+	def expression(self):
 		''' Match an expression '''
 		# match a unary expression
 		self.scan()
@@ -182,7 +177,8 @@ class Parser:
 			elif self.next == '~':
 				raise Exception("Error: atomic sentence precedes negation\n")
 		elif self.feed == '' and (self.open == self.closed):
-			print("Terminating in atomic state")
+			pass
+			#print("Terminating in atomic state")
 		else:
 			raise Exception("Error: malformed formula after atomic sentence\n")
 
@@ -241,7 +237,8 @@ class Parser:
 					raise Exception('No opening brace detected\n')
 	
 		if self.feed == '' and (self.open == self.closed):
-			print("Terminating in parenthesis state")
+			pass
+			#print("Terminating in parenthesis state")
 		else:
 			self.scan()
 			if self.next == ')':

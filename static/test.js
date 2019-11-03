@@ -1,3 +1,5 @@
-import {lexical_analysis} from './lexer.js';
+'use strict';
 
-lexical_analysis('P -> Q\n');
+var _lexer = require('./lexer.js');
+
+(0, _lexer.lexical_analysis)('P -> Q\n');

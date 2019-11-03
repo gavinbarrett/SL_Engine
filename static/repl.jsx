@@ -181,7 +181,6 @@ class ValidOutput extends React.Component {
         }
 }
 
-
 class TableOutput extends React.Component {
 	constructor(props) {
                 super(props);
@@ -342,7 +341,7 @@ class ReplPage extends React.Component {
 	
 	retrieveInput = (event) => {
         	let formulas = document.getElementById('replInput').value;
-
+		console.log("formulas: \n", formulas);
 		if (formulas.slice(-1) != "\n")
 			formulas += "\n";
 	
@@ -478,7 +477,7 @@ class ReplPage extends React.Component {
 	}
 	
 	scrollUp = () => {
-		/*  */
+		/* move the output container into the user interface */
 		let s;
 		if (this.state.b == "t")
 			s = document.getElementById('tableContainer');
@@ -489,7 +488,7 @@ class ReplPage extends React.Component {
 	}
 	
 	scrollDown = () => {
-		/*  */
+		/* move the output container out of the user interface */
 		let s;
 		if (this.state.b == "t")
 			s = document.getElementById("tableContainer");

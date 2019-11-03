@@ -1,7 +1,8 @@
 import string
-import src.ast as ast
-from src.lexer import *
-from src.gen import generate
+import ast as ast
+from newLexer import *
+from gen import generate
+#FIXME: put src. in front of ast, newLexer, gen
 from collections import defaultdict
 
 class Parser:
@@ -84,7 +85,7 @@ class Parser:
         #truth_value = root.root
         negated_value = self.neg(truth_value)
         root.eval_stack.append(negated_value)
-        return truth_value
+        return negated_value #truth_value
 
     def insert_binary_value(self, truth_value, root):
         ''' Add the binary computation of the truth value to the root's evaluation stack '''
@@ -312,12 +313,11 @@ class Parser:
 
         # perform the shunting yard operation on each formula
         output = list(map(lambda x: self.lexer.lexify(x), formulas))
-
         set_trus = []
         for idx, postfix in enumerate(output):
             # insert each item from the postfix array into an ast
             list(map(lambda x: self.insert(x), postfix))
-
+            #print(postfix)
             tree = self.tree_stack.pop()
 
             set_truth = list(self.get_set_truth_table(tree, formulas[idx], total, master_list))
@@ -325,8 +325,10 @@ class Parser:
             set_trus.append(set_truth)
 
         # reorganize the truth matrix by row
-        vTable = zip(*self.vStack)
+        vTable = list(zip(*self.vStack))
 
+        for vts in vTable:
+            print(vts)
         # get the validity of the argument
         self.valid = self.check_if_valid(vTable)
         
