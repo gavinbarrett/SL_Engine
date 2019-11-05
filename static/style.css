@@ -97,7 +97,7 @@ html, body {
 	color: white;
 }
 
-#bottom {
+#Bottom {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -112,7 +112,7 @@ html, body {
 	clip-path: polygon(0% 32%, 100% 0%, 100% 100%, 0% 100%);
 }
 
-#replPage {
+#ReplPage {
 	height: 100vh;
 	width: 100vw;
         background-color: green;
@@ -124,7 +124,7 @@ html, body {
 	align-items: center;
 }
 
-.segment {
+.Segment {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -143,7 +143,7 @@ html, body {
 	font-size: 100%;
 }
 
-#bannerWrapper {
+#BannerWrapper {
 	background-color: white;
 	margin: 0;
 	padding: 0;
@@ -165,7 +165,7 @@ html, body {
 	width: 70%;
 }
 
-#replContainer {
+#ReplContainer {
 	margin: 1%;
 	background-color: white;
 	display: flex;
@@ -177,7 +177,7 @@ html, body {
 }
 
 
-#selector {
+#Selector {
 	width: 90%;
 	display: flex;
 	justify-content: space-evenly;
@@ -185,12 +185,12 @@ html, body {
 	font-family: Trebuchet MS;
 }
 
-.partition {
+.Partition {
 	height: 60vh;
 	color: black;
 }
 
-.selectorLink {
+.SelectorLink {
 	width: 50%;
 	display: flex;
 	justify-content: space-evenly;
@@ -198,17 +198,17 @@ html, body {
 	font-family: Trebuchet MS;
 }
 
-.selectorLink:hover {
+.SelectorLink:hover {
 	background: green;
 	color: white;
 }
 
-.selectorSelected {
+.SelectorSelected {
 	background: green;
 	color: white;
 }
 
-.selectorUnselected {
+.SelectorUnselected {
 	background: white;
 }
 
@@ -222,7 +222,7 @@ html, body {
 	flex-direction: column;
 }
 
-#button {
+#Button {
 	font-family: Trebuchet MS;
 	color: #e0e0e0;
 	font-size: 3vw;
@@ -233,11 +233,11 @@ html, body {
 	margin: 1%;
 }
 
-#button:hover {
+#Button:hover {
 	color: white;
 }
 
-#tableContainer {
+#TableContainer {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -255,7 +255,7 @@ html, body {
 	text-align: center;
 }
 
-#validContainer {
+#ValidContainer {
 	display: flex;
 	align-items: center;
         font-family: Trebuchet MS;
@@ -272,11 +272,11 @@ html, body {
         text-align: center;
 }
 
-#valid {
+#Valid {
 	color: green;
 }
 
-#invalid {
+#Invalid {
 	color: red;
 }
 
@@ -306,7 +306,7 @@ html, body {
 	height: 100%;
 }
 
-.tableWrap {
+.TableWrap {
 	width: 60%;
 	display: flex;
 	flex-direction: row;
@@ -336,7 +336,7 @@ html, body {
 
 }
 
-#replInput {
+#ReplInput {
 	display: flex;
 	font-size: 3vw;
 	text-align: center;

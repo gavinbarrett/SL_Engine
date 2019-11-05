@@ -1,7 +1,7 @@
 import string
-import ast as ast
-from newLexer import *
-from gen import generate
+import src.ast as ast
+from src.newLexer import *
+from src.gen import generate
 #FIXME: put src. in front of ast, newLexer, gen
 from collections import defaultdict
 

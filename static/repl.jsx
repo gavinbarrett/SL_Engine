@@ -16,7 +16,7 @@ class Segment extends React.Component {
 		}
 	}
 	render() {
-		return(<div className="segment">
+		return(<div className="Segment">
 			<div className="sym">
 			{this.state.symbol}
 			</div>
@@ -44,7 +44,7 @@ class Banner extends React.Component {
 		}
 	}
 	render() {
-		return(<div id="bannerWrapper">
+		return(<div id="BannerWrapper">
 		<Segment sym={this.state.negation} eng={this.state.neg} />
 		<Segment sym={this.state.conjunction} eng={this.state.con} />
 		<Segment sym={this.state.disjunction} eng={this.state.dis} />
@@ -83,10 +83,9 @@ class TruthTableRow extends React.Component {
 
 class TruthTable extends React.Component {
 	constructor(props) {
-		super(props);
 		this.state =  {
-			table: [],
-			t: props.table,
+			Table: [],
+			t: props.Table,
 			exp: props.exp,
 		};
 	}
@@ -99,16 +98,16 @@ class TruthTable extends React.Component {
 			let tr = <TruthTableRow row={this.state.t[i]} key={i}/>
 			newTable.push(tr);
 		}
-		// rerender the page with the truth table
+		// rerender the page with the Truth Table
 		this.setState({
-			table: newTable,
+			Table: newTable,
 		});
 	}
 	render() {
 		return(<div className="tt">
 			{this.state.exp}
 			<hr></hr>
-			{this.state.table}
+			{this.state.Table}
 		</div>);
 	}
 }
@@ -124,7 +123,7 @@ class TruthTableContainer extends React.Component {
 	}
 }
 
-class Valid extends React.Component {
+class valid extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -138,21 +137,21 @@ class Valid extends React.Component {
 	}
 }
 
-class Invalid extends React.Component {
+class invalid extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			notValid: props.invalid,
+			notvalid: props.invalid,
 		};
 	}
 	render() {
 		return(<div id="invalid">
-			{this.state.notValid}
+			{this.state.notvalid}
 		</div>);
 	}
 }
 
-class ValidOutput extends React.Component {
+class validOutput extends React.Component {
 	constructor(props) {
                 super(props);
                 this.state = {
@@ -185,24 +184,24 @@ class TableOutput extends React.Component {
 	constructor(props) {
                 super(props);
                 this.state = {
-                        tables: props.tables,
+                        Tables: props.Tables,
 			scrollUp: props.scrollUp,
 			scrollDown: props.scrollDown,
                 };
         }
 	componentDidMount() {
 		/* run scroll animation after object is created */
-		this.state.scrollUp('tableContainer');
+		this.state.scrollUp('TableContainer');
 	}
         render() {
-                return(<div id="tableContainer" className="scrollUpHidden">
+                return(<div id="TableContainer" className="scrollUpHidden">
                         <div className="close" onClick={this.state.scrollDown}></div>
-			{this.state.tables}
+			{this.state.Tables}
                 </div>);
         }
 }
 
-class Partition extends React.Component {
+class partition extends React.Component {
 	constructor(props) {
 		super(props);
 	}
@@ -216,12 +215,12 @@ class Button extends React.Component {
 		super(props);
 		this.state = {
 			retrieve: props.retInput,
-			button: 'calculate',
+			Button: 'calculate',
 		}
 	}
 	render() {
-		return(<div id="button" onClick={this.state.retrieve}>
-			{this.state.button}
+		return(<div id="Button" onClick={this.state.retrieve}>
+			{this.state.Button}
 		</div>);
 	}
 }
@@ -243,7 +242,7 @@ class Truth extends React.Component {
 	}
 }
 
-class SelectorLink extends React.Component {
+class selectorLink extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -259,18 +258,18 @@ class SelectorLink extends React.Component {
 	}
 }
 
-class Selector extends React.Component {
+class selector extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			tables: "truth tables",
+			Tables: "Truth Tables",
 			validity: "validity check",
 			link: props.link,
 		};
 	}
 	render() {
 		return(<div id="selector">
-			<SelectorLink i={"t"} link={this.state.tables} l={this.state.link}/><SelectorLink i={"v"} link={this.state.validity} l={this.state.link}/>
+			<selectorLink i={"t"} link={this.state.Tables} l={this.state.link}/><selectorLink i={"v"} link={this.state.validity} l={this.state.link}/>
 		</div>);
 	}
 }
@@ -284,23 +283,23 @@ class ReplContainer extends React.Component {
 		};
 	}
 	render() {
-        	return(<div id="replContainer">
-               		<Selector link={this.state.link}/>
-			<textarea id="replInput"></textarea>
+        	return(<div id="ReplContainer">
+               		<selector link={this.state.link}/>
+			<textarea id="ReplInput"></textarea>
         	</div>);
 	}
 }
 
 class ReplPage extends React.Component {
 	/* This page takes input and sends logical formulae to the server
-	 * for processing; The page will display the truth tables if the input was
+	 * for processing; The page will display the Truth Tables if the input was
 	 * accepted by the lexer */
 	constructor(props) {
 		super(props);
 		this.state = {
-			table: [],
+			Table: [],
 			valid: undefined,
-			tables: [],
+			Tables: [],
 			out: [],
 			b: "t",
 		};
@@ -311,15 +310,15 @@ class ReplPage extends React.Component {
 	}
 	selectSwitch = (bool) => {
 		/* return correct api function based on state */
-		//return (bool == true) ? '/table':'/valid';
+		//return (bool == true) ? '/Table':'/valid';
 		if (bool == "t")
-			return "/table";
+			return "/Table";
 		else
 			return "/valid";
 	}
 	retrieveTruthTable = (formulas, bool) => {
 		/*  takes in valid formulas and sends them to the server; displays
-		 * their truth tables upon return */
+		 * their Truth Tables upon return */
 		// if nothing was input, do not send an AJAX request
 		if (!formulas)
 			return;
@@ -331,8 +330,8 @@ class ReplPage extends React.Component {
 		xhr.onload = () => {
 			// parse retrieved JSON
 			let respText = JSON.parse(xhr.responseText);
-			/* output the truth values */
-			(bool == "t") ? this.showTT(respText, formulas) : this.showValidity(respText, formulas);
+			/* output the Truth values */
+			(bool == "t") ? this.showTT(respText, formulas) : this.showvalidity(respText, formulas);
 		};
 		formulas = [formulas] + [bool]
 		/* send ajax request of the formulas */
@@ -340,7 +339,7 @@ class ReplPage extends React.Component {
 	}
 	
 	retrieveInput = (event) => {
-        	let formulas = document.getElementById('replInput').value;
+        	let formulas = document.getElementById('ReplInput').value;
 		console.log("formulas: \n", formulas);
 		if (formulas.slice(-1) != "\n")
 			formulas += "\n";
@@ -381,55 +380,55 @@ class ReplPage extends React.Component {
 	}
 	
 	showTT = (respT, formulas) => {
-		/* Display the individual truth tables */
+		/* Display the individual Truth Tables */
 		formulas = this.normalize(formulas);
-		let truthArray = [];
+		let TruthArray = [];
 
 		for (let i = 0; i < respT.length; i++) {
-			/* Each respT[i] is a truth table */
-			let table = <div className="tableWrap"><TruthTable table={respT[i][2]} exp={respT[i][1]} key={i}/><TruthTable table={respT[i][0]} exp={formulas[i]} key={i}/></div>;
+			/* Each respT[i] is a Truth Table */
+			let Table = <div className="TableWrap"><TruthTable Table={respT[i][2]} exp={respT[i][1]} key={i}/><TruthTable Table={respT[i][0]} exp={formulas[i]} key={i}/></div>;
 
-			truthArray.push(table);
+			TruthArray.push(Table);
 		}
-		let ttOut = <TableOutput tables={truthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
+		let ttOut = <TableOutput Tables={TruthArray} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
 
 		this.setState({
 			out: ttOut,
-		}, () => { console.log(this.state.tables) });
+		}, () => { console.log(this.state.Tables) });
 	}
-	showValidity = (respT, formulas) => {
+	showvalidity = (respT, formulas) => {
 		/* test validity */
 		
 		formulas = this.normalize(formulas);
 		
-		let truthArray = [];
+		let TruthArray = [];
 
 		let terms = respT[0];
 
 		let validity = respT.pop();
 		
 		// save the correct message
-		let message = (validity) ? <Valid valid={"Valid!"} /> : <Invalid invalid={"Invalid!"} />;
+		let message = (validity) ? <valid valid={"valid!"} /> : <invalid invalid={"invalid!"} />;
 		let init_vals = respT[1];
 		
-		let init_table = <div className="tableWrap"><TruthTable table={init_vals} exp={terms} key={0}/></div>;
+		let init_Table = <div className="TableWrap"><TruthTable Table={init_vals} exp={terms} key={0}/></div>;
 
-		/* add initial truth assignments */
-		truthArray.push(init_table);
+		/* add initial Truth assignments */
+		TruthArray.push(init_Table);
 		let nextTable;
-		let p = <Partition />;
-		truthArray.push(p);
+		let p = <partition />;
+		TruthArray.push(p);
 
-		/* add calculated tables*/
+		/* add calculated Tables*/
 		for (let i = 2; i < respT.length; i++) {
-			nextTable = <div className="tableWrap"><TruthTable table={respT[i]} exp={formulas[(i-2)]} key={i}/></div>;
-			truthArray.push(nextTable);
-			p = <Partition />;
-			truthArray.push(p);
+			nextTable = <div className="TableWrap"><TruthTable Table={respT[i]} exp={formulas[(i-2)]} key={i}/></div>;
+			TruthArray.push(nextTable);
+			p = <partition />;
+			TruthArray.push(p);
 		}
 		
-		/* package up all tables */
-		let ttOut = <ValidOutput valid={truthArray} validity={message} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
+		/* package up all Tables */
+		let ttOut = <validOutput valid={TruthArray} validity={message} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
 		
 		/* change output state */
 		this.setState({
@@ -439,14 +438,14 @@ class ReplPage extends React.Component {
 
 	updateLink = (event) => {
 		/* update boolean to determine which api function to call 
-		 * this method is called anytime the selector buttons are clicked */
+		 * this method is called anytime the selector Buttons are clicked */
 
 		// access dom element
 		let sel = document.getElementById(event.target.id);
 		// save the other selector to contrast selection highlighting
 		let unsel;
 		let ttOut;
-		let truthArray = [];
+		let TruthArray = [];
 		
 		if (event.target.id == "t") {
 			unsel = document.getElementById("v");
@@ -466,13 +465,13 @@ class ReplPage extends React.Component {
 		// update state property
 		this.setState({
 			b: event.target.id,
-			tables: [],
+			Tables: [],
 		});
 	};
 	
 	clearTables = () => {
 		this.setState({
-			tables: [],
+			Tables: [],
 		});
 	}
 	
@@ -480,7 +479,7 @@ class ReplPage extends React.Component {
 		/* move the output container into the user interface */
 		let s;
 		if (this.state.b == "t")
-			s = document.getElementById('tableContainer');
+			s = document.getElementById('TableContainer');
 		else
 			s = document.getElementById('validContainer');
 		s.classList.toggle('scrollUpHidden');
@@ -491,20 +490,20 @@ class ReplPage extends React.Component {
 		/* move the output container out of the user interface */
 		let s;
 		if (this.state.b == "t")
-			s = document.getElementById("tableContainer");
+			s = document.getElementById("TableContainer");
 		else
 			s = document.getElementById("validContainer");
 		s.classList.toggle('scrollDown');
 		setTimeout(() => {
 			this.setState({ 
 				out: undefined,
-				tables: [],
+				Tables: [],
 			})
 		}, 1000);
 	}
 	
 	render() {
-	return(<div id="replPage">
+	return(<div id="ReplPage">
 		<Banner />
 		<div id="pageContainer">
 		<ReplContainer b={this.state.b} link={this.updateLink}/>
@@ -527,3 +526,4 @@ export {
 	Banner,
 	Button,
 }
+
