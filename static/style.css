@@ -12,6 +12,7 @@ html, body {
 	margin: 0;
 	display: block;
 	background: transparent;
+	font-family: "Trebuchet MS", sans-serif;
 }
 
 #initialFBox {
@@ -60,20 +61,18 @@ html, body {
 #heading {
 	display: flex;
 	background-color: transparent;
-	font-family: Trebuchet MS;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	height: 50%;
 	width: 60%;
-        transform-origin: top left;
+    transform-origin: top left;
 	color: white;
 	font-size: 20vw;
 	text-align: center;
 }
 
 #subHead {
-	font-family: Trebuchet MS;
 	font-size: 2vw;
 }
 
@@ -84,7 +83,6 @@ html, body {
 	width: 30vw;
 	height: 25%;
 	background-color: green;
-	font-family: Trebuchet MS;
 	font-size: 1.7vw;
 	text-align: center;
 	margin: 0;
@@ -115,7 +113,7 @@ html, body {
 #ReplPage {
 	height: 100vh;
 	width: 100vw;
-        background-color: green;
+    background-color: green;
 	display: flex;
 	margin: 0px;
 	padding: 0px;
@@ -130,7 +128,6 @@ html, body {
 	justify-content: center;
 	align-items: center;
 	width: 20%;
-	font-family: Trebuchet MS;
 	padding: 0;
 	margin: 0;
 }
@@ -182,7 +179,6 @@ html, body {
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;
-	font-family: Trebuchet MS;
 }
 
 .Partition {
@@ -195,7 +191,6 @@ html, body {
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;
-	font-family: Trebuchet MS;
 }
 
 .SelectorLink:hover {
@@ -223,7 +218,6 @@ html, body {
 }
 
 #Button {
-	font-family: Trebuchet MS;
 	color: #e0e0e0;
 	font-size: 3vw;
 	background-color: DarkGreen;
@@ -241,7 +235,6 @@ html, body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	font-family: Trebuchet MS;
 	overflow-y: auto;
 	letter-spacing: 2px;
 	background-color: white;
@@ -258,18 +251,17 @@ html, body {
 #ValidContainer {
 	display: flex;
 	align-items: center;
-        font-family: Trebuchet MS;
-        overflow-y: auto;
-        letter-spacing: 2px;
-        background-color: white;
-        height: 80%;
+    overflow-y: auto;
+    letter-spacing: 2px;
+    background-color: white;
+    height: 80%;
 	width: 85%;
 	border-radius: 10px;
-        border-style: solid;
-        border-width: 5px;
-        border-color: green;
-        position: absolute;
-        text-align: center;
+    border-style: solid;
+    border-width: 5px;
+    border-color: green;
+    position: absolute;
+    text-align: center;
 }
 
 #Valid {
@@ -294,7 +286,6 @@ html, body {
 	justify-content: center;
 	text-align: center;
 	font-size: 3vw;
-	font-family: Trebuchet MS;
 	width: 100%;
 	height: 50%;
 }
