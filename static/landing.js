@@ -168,9 +168,9 @@ function lexical_analysis(string) {
   if (!string) return;
   var expArray = string.split("\n");
   console.log(expArray);
-  expArray.forEach(function (s) {
-    var p = new Parser(s);
-    console.log(s);
+
+  for (var i = 0; i < expArray.length; i++) {
+    var p = new Parser(expArray[i]);
 
     try {
       p.expression();
@@ -179,8 +179,23 @@ function lexical_analysis(string) {
       console.log('Analysis failed.\n');
       return 0;
     }
-  });
+  }
+
   return 1;
+  /*
+  	expArray.forEach((s) => {
+  		let p = new Parser(s);
+  		console.log(s);
+  		try {
+  			p.expression();
+  			console.log('Analysis successful.\n');
+  		} catch (error) {
+  			console.log('Analysis failed.\n');
+  			return 0;
+  		}
+  	});
+  	return 1;
+  */
 }
 /* End Parser definitions */
 

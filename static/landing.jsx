@@ -174,20 +174,19 @@ class Parser {
 
 function lexical_analysis(string) {
 	if (!string)
-		return;
+		return 0;
 	let expArray = string.split("\n");
 	console.log(expArray);
-	expArray.forEach((s) => {
-		let p = new Parser(s);
-		console.log(s);
+	for (let i = 0; i < expArray.length; i++) {
+		let p = new Parser(expArray[i]);
 		try {
-			p.expression();
+			p.expression()
 			console.log('Analysis successful.\n');
 		} catch (error) {
 			console.log('Analysis failed.\n');
 			return 0;
 		}
-	});
+	}
 	return 1;
 }
 
