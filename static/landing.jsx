@@ -66,8 +66,11 @@ class Parser {
 				this.closed_parenthesis();
 			} else if (this.binary_ops.includes(this.next))
 				this.binary();
-			else
+			else {
+				console.log("this.next: ");
+				console.log(this.next.charCodeAt(0));
 				throw "Error: malformed formula following closing parenthesis\n";
+			}
 		}
 	}
 
@@ -168,8 +171,24 @@ class Parser {
 function lexical_analysis(string) {
 	if (!string)
 		return;
+	let expArray = string.split("\n");
+	console.log(expArray);
+	expArray.forEach((s) => {
+		let p = new Parser(s);
+		console.log(s);
+		try {
+			p.expression();
+			console.log('Analysis successful.\n');
+		} catch (error) {
+			console.log('Analysis failed.\n');
+			return 0;
+		}
+	});
+	return 1;
+/*
 	let p = new Parser(string);
 	console.log("Testing ", string);
+	// change parser to normalize each string and pass each one in successively
 	try {
 		p.expression();
 		console.log('Analysis successful\n');
@@ -178,7 +197,9 @@ function lexical_analysis(string) {
 		console.log('Analysis failed\n', error);
 		return 0;	
 	}
+*/
 }
+
 
 /* Begin Page definitions */
 
@@ -265,11 +286,14 @@ class TruthTableRow extends React.Component {
 
 class TruthTable extends React.Component {
 	constructor(props) {
+		super(props);	
 		this.state =  {
 			Table: [],
 			t: props.Table,
 			exp: props.exp,
+		
 		};
+		this.addValues = this.addValues.bind(this); 
 	}
 	componentDidMount() {
 		this.addValues();
@@ -486,6 +510,7 @@ class ReplPage extends React.Component {
 			b: "t",
 		};
 		this.showTT = this.showTT.bind(this);
+		this.showValidity = this.showValidity.bind(this);
 	}
 	componentDidMount() {
 		let tab = document.getElementById("t");
@@ -515,7 +540,12 @@ class ReplPage extends React.Component {
 			let respText = JSON.parse(xhr.responseText);
 			/* output the Truth values */
 			console.log(respText);
-			(bool == "t") ? () => {this.showTT(respText, formulas)} : () => {this.showValidity(respText, formulas) };
+			console.log("bool: ", bool);
+			if (bool == "t")
+				this.showTT(respText, formulas);
+			else
+				this.showValidity(respText, formulas);
+			//(bool == "t") ? () => {this.showTT(respText, formulas)} : () => {this.showValidity(respText, formulas) };
 		};
 		formulas = [formulas] + [bool]
 		/* send ajax request of the formulas */
@@ -581,6 +611,7 @@ class ReplPage extends React.Component {
 		}, () => { console.log(this.state.Tables) });
 	}
 	showValidity = (respT, formulas) => {
+		console.log("We are valid");
 		/* test Validity */
 		
 		formulas = this.normalize(formulas);

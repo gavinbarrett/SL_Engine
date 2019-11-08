@@ -66,8 +66,11 @@ class Parser {
 				this.closed_parenthesis();
 			} else if (this.binary_ops.includes(this.next))
 				this.binary();
-			else
+			else {
+				console.log("this.next: ");
+				console.log(this.next.charCodeAt(0));
 				throw "Error: malformed formula following closing parenthesis\n";
+			}
 		}
 	}
 
@@ -168,6 +171,21 @@ class Parser {
 export default function lexical_analysis(string) {
 	if (!string)
 		return;
+	expArray = string.split("\n");
+	console.log(expArray);
+	expArray.forEach((s) => {
+		let p = new Parser(s);
+		console.log(s);
+		try {
+			p.expression();
+			console.log('Analysis successful.\n');
+		} catch (error) {
+			console.log('Analysis failed.\n');
+			return 0;
+		}
+	});
+	return 1;
+/*
 	let p = new Parser(string);
 	console.log("Testing ", string);
 	// change parser to normalize each string and pass each one in successively
@@ -179,5 +197,6 @@ export default function lexical_analysis(string) {
 		console.log('Analysis failed\n', error);
 		return 0;	
 	}
+*/
 }
 

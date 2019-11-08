@@ -81,7 +81,11 @@ function () {
         if (this.next === ')') {
           this.closed += 1;
           this.closed_parenthesis();
-        } else if (this.binary_ops.includes(this.next)) this.binary();else throw "Error: malformed formula following closing parenthesis\n";
+        } else if (this.binary_ops.includes(this.next)) this.binary();else {
+          console.log("this.next: ");
+          console.log(this.next.charCodeAt(0));
+          throw "Error: malformed formula following closing parenthesis\n";
+        }
       }
     }
   }, {
@@ -159,17 +163,34 @@ function () {
 
 function lexical_analysis(string) {
   if (!string) return;
-  var p = new Parser(string);
-  console.log("Testing ", string);
+  var expArray = string.split("\n");
+  console.log(expArray);
+  expArray.forEach(function (s) {
+    var p = new Parser(s);
+    console.log(s);
 
-  try {
-    p.expression();
-    console.log('Analysis successful\n');
-    return 1;
-  } catch (error) {
-    console.log('Analysis failed\n', error);
-    return 0;
-  }
+    try {
+      p.expression();
+      console.log('Analysis successful.\n');
+    } catch (error) {
+      console.log('Analysis failed.\n');
+      return 0;
+    }
+  });
+  return 1;
+  /*
+  	let p = new Parser(string);
+  	console.log("Testing ", string);
+  	// change parser to normalize each string and pass each one in successively
+  	try {
+  		p.expression();
+  		console.log('Analysis successful\n');
+  		return 1;
+  	} catch (error) {
+  		console.log('Analysis failed\n', error);
+  		return 0;	
+  	}
+  */
 }
 /* Begin Page definitions */
 
@@ -328,12 +349,32 @@ function (_React$Component4) {
 
     _classCallCheck(this, TruthTable);
 
+    _this4 = _possibleConstructorReturn(this, _getPrototypeOf(TruthTable).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_this4), "addValues", function () {
+      var newTable = [];
+
+      for (var i = 0; i < _this4.state.t.length; i++) {
+        var tr = React.createElement(TruthTableRow, {
+          row: _this4.state.t[i],
+          key: i
+        });
+        newTable.push(tr);
+      } // rerender the page with the Truth Table
+
+
+      _this4.setState({
+        Table: newTable
+      });
+    });
+
     _this4.state = {
       Table: [],
       t: props.Table,
       exp: props.exp
     };
-    return _possibleConstructorReturn(_this4);
+    _this4.addValues = _this4.addValues.bind(_assertThisInitialized(_this4));
+    return _this4;
   }
 
   _createClass(TruthTable, [{
@@ -748,11 +789,8 @@ function (_React$Component16) {
         /* output the Truth values */
 
         console.log(respText);
-        bool == "t" ? function () {
-          _this14.showTT(respText, formulas);
-        } : function () {
-          _this14.showValidity(respText, formulas);
-        };
+        console.log("bool: ", bool);
+        if (bool == "t") _this14.showTT(respText, formulas);else _this14.showValidity(respText, formulas); //(bool == "t") ? () => {this.showTT(respText, formulas)} : () => {this.showValidity(respText, formulas) };
       };
 
       formulas = [formulas] + [bool];
@@ -839,7 +877,9 @@ function (_React$Component16) {
     });
 
     _defineProperty(_assertThisInitialized(_this14), "showValidity", function (respT, formulas) {
+      console.log("We are valid");
       /* test Validity */
+
       formulas = _this14.normalize(formulas);
       var TruthArray = [];
       var terms = respT[0];
@@ -961,6 +1001,7 @@ function (_React$Component16) {
       b: "t"
     };
     _this14.showTT = _this14.showTT.bind(_assertThisInitialized(_this14));
+    _this14.showValidity = _this14.showValidity.bind(_assertThisInitialized(_this14));
     return _this14;
   }
 
