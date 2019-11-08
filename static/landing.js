@@ -20,6 +20,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/* The main project files for Organon are being temporarily consolidated in this file due to issue that occur when transpiling ES6 -> ES5; the first major block of code contains the front-end parser; the second block contains the definition*/
+
+/* Begin Parser Definitions*/
 var Parser =
 /*#__PURE__*/
 function () {
@@ -178,21 +181,10 @@ function lexical_analysis(string) {
     }
   });
   return 1;
-  /*
-  	let p = new Parser(string);
-  	console.log("Testing ", string);
-  	// change parser to normalize each string and pass each one in successively
-  	try {
-  		p.expression();
-  		console.log('Analysis successful\n');
-  		return 1;
-  	} catch (error) {
-  		console.log('Analysis failed\n', error);
-  		return 0;	
-  	}
-  */
 }
-/* Begin Page definitions */
+/* End Parser definitions */
+
+/* Begin ReplPage definitions */
 
 
 function request(url, method) {
@@ -1033,6 +1025,10 @@ function (_React$Component16) {
 function RenderRepl() {
   ReactDOM.render(React.createElement(ReplPage, null), document.getElementById('root'));
 }
+/* End ReplPage Definitions */
+
+/* Begin Landing Page Definitions */
+
 
 function Page(props) {
   return React.createElement("div", {
@@ -1073,4 +1069,5 @@ function RenderLanding(props) {
 }
 
 ReactDOM.render(React.createElement(RenderLanding, null), document.getElementById('root'));
+/* End Landing Page Definitions */
 

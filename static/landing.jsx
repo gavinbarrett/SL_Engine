@@ -1,3 +1,7 @@
+/* The main project files for Organon are being temporarily consolidated in this file due to issue that occur when transpiling ES6 -> ES5; the first major block of code contains the front-end parser; the second block contains the definition*/
+
+
+/* Begin Parser Definitions*/
 class Parser {
 	
 	constructor(feed) {
@@ -185,23 +189,14 @@ function lexical_analysis(string) {
 		}
 	});
 	return 1;
-/*
-	let p = new Parser(string);
-	console.log("Testing ", string);
-	// change parser to normalize each string and pass each one in successively
-	try {
-		p.expression();
-		console.log('Analysis successful\n');
-		return 1;
-	} catch (error) {
-		console.log('Analysis failed\n', error);
-		return 0;	
-	}
-*/
 }
 
 
-/* Begin Page definitions */
+/* End Parser definitions */
+
+
+/* Begin ReplPage definitions */
+
 
 function request(url, method) {
 	/* Open an http request */
@@ -291,7 +286,6 @@ class TruthTable extends React.Component {
 			Table: [],
 			t: props.Table,
 			exp: props.exp,
-		
 		};
 		this.addValues = this.addValues.bind(this); 
 	}
@@ -733,6 +727,13 @@ function RenderRepl() {
 	ReactDOM.render(<ReplPage />, document.getElementById('root'));
 }
 
+
+/* End ReplPage Definitions */
+
+
+/* Begin Landing Page Definitions */
+
+
 function Page(props) {
 	return(<div id="message">
 		<Heading heading="Organon" sub="propositional logic analyzer"/>
@@ -768,3 +769,7 @@ function RenderLanding(props) {
 }
 
 ReactDOM.render(<RenderLanding/>, document.getElementById('root'));
+
+/* End Landing Page Definitions */
+
+
