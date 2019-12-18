@@ -1,0 +1,32 @@
+{
+  "name": "SL_Engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "babel ./static/ -d ./static/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gavinbarrett/SL_Engine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gavinbarrett/SL_Engine/issues"
+  },
+  "homepage": "https://github.com/gavinbarrett/SL_Engine#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.6.3"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.5.5"
+  }
+}
