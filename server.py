@@ -8,37 +8,51 @@ from src import lexer
 app = Flask(__name__)
 
 def respond(data, mode):
-    ''' select correct function from parser interface '''
-    p = parser.Parser()
-    return p.get_tables(data) if mode == 't' else p.get_validity(data)
+	''' select correct function from parser interface '''
+	p = parser.Parser()
+	return p.get_tables(data) if mode == 't' else p.get_validity(data)
+
+@app.route('/valid_api', methods=['POST'])
+def valid_boolean():
+	data = request.get_data()
+	#data = data.decode("utf-8")
+	print(data)
+	print('Responding..')
+	formulae = request.data.decode('UTF-8')
+	print(f"Formulae: {formulae}")
+	package = respond(formulae, 'v')
+	print(package)
+	print("Sending value back")
+	p = {'value':package[-1]}
+	return p
 
 @app.route('/valid', methods=['POST'])
 def valid_req():
-    ''' return the validity of deriving a conclusion from a set of formulae '''
-    # decode formulae
-    formulae = request.data.decode('UTF-8')
-    
-    # determine the mode for the request
-    # t -> truth tables
-    # v -> validity
-    mode = formulae[-1]
-    
-    # grab formulae
-    formulae = formulae[0:-1]
-    
-    print(formulae)
+	''' return the validity of deriving a conclusion from a set of formulae '''
+	# decode formulae
+	formulae = request.data.decode('UTF-8')
+	
+	# determine the mode for the request
+	# t -> truth tables
+	# v -> validity
+	mode = formulae[-1]
+	
+	# grab formulae
+	formulae = formulae[0:-1]
+	
+	print(formulae)
 
-    # parse the formulae and return the truth matrices
-    package = respond(formulae, mode)
-    for p in package:
-        print(p) 
-
-    return jsonify(package)
+	# parse the formulae and return the truth matrices
+	package = respond(formulae, mode)
+	#for p in package:
+	#	print(p) 
+	print(package[-1])
+	return jsonify(package)
 
 @app.route("/")
 def server_static():
-    ''' Return Organon's landing page '''
-    return render_template('./index.html')
+	''' Return Organon's landing page '''
+	return render_template('./index.html')
 
 if __name__ == "__main__":
-    app.run(threaded=True)
+	app.run(threaded=True)
