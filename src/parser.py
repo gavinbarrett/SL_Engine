@@ -102,7 +102,7 @@ class Parser:
         if root.name in self.lexer.terms:
             truth_value = self.insert_term_value(truth_value, root)
         # compute the negation of an expression
-        elif root.name is '~':
+        elif root.name == '~':
             truth_value = self.insert_unary_value(truth_value, root)
         # compute the output of a binary function
         elif root.name in self.lexer.binary_op:
@@ -247,7 +247,7 @@ class Parser:
         #TODO: designate t as the root of the tree;
         # overwrite child nodes if they are specified as the root
         t = ast.AST(op)
-        if op is '~':
+        if op == '~':
             if self.tree_stack:
                 # if it is a negation, put as right child
                 tree = self.tree_stack.pop()
@@ -284,7 +284,7 @@ class Parser:
         ''' split expression string by newline into expressions '''
         formulas = fs.split('\n')
         # return list of expressions after filtering out empty strings (i.e. '')
-        return list(filter(lambda x: False if str(x) is '' else True, formulas))
+        return list(filter(lambda x: False if str(x) == '' else True, formulas))
 
     def get_tables(self, data):
         ''' return the truth tables for a set of sentences '''
@@ -327,8 +327,9 @@ class Parser:
         # reorganize the truth matrix by row
         vTable = list(zip(*self.vStack))
 
-        for vts in vTable:
-            print(vts)
+		# uncomment below to print table
+        #for vts in vTable:
+        #    print(vts)
         # get the validity of the argument
         self.valid = self.check_if_valid(vTable)
         

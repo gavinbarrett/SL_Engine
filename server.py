@@ -15,16 +15,9 @@ def respond(data, mode):
 @app.route('/valid_api', methods=['POST'])
 def valid_boolean():
 	data = request.get_data()
-	#data = data.decode("utf-8")
-	print(data)
-	print('Responding..')
 	formulae = request.data.decode('UTF-8')
-	print(f"Formulae: {formulae}")
 	package = respond(formulae, 'v')
-	print(package)
-	print("Sending value back")
-	p = {'value':package[-1]}
-	return p
+	return json.dumps({'value':package[-1]})
 
 @app.route('/valid', methods=['POST'])
 def valid_req():
@@ -40,7 +33,7 @@ def valid_req():
 	# grab formulae
 	formulae = formulae[0:-1]
 	
-	print(formulae)
+	#print(formulae)
 
 	# parse the formulae and return the truth matrices
 	package = respond(formulae, mode)
