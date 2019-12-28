@@ -18,15 +18,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-//import lexical_analysis from './lexer.js';
-import lexical_analysis from './newLexer.js';
+import lexical_analysis from './parser.js';
 
-function request(url, method) {
+var request = function request(url, method) {
   /* Open an http request */
   var xhr = new XMLHttpRequest();
   xhr.open(url, method, true);
   return xhr;
-}
+};
 
 var Segment =
 /*#__PURE__*/

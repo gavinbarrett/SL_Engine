@@ -33,7 +33,7 @@ def valid_req():
 	# grab formulae
 	formulae = formulae[0:-1]
 	
-	print(formulae)
+	#print(formulae)
 
 	# parse the formulae and return the truth matrices
 	package = respond(formulae, mode)
