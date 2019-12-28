@@ -1,14 +1,3 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Button = exports.Banner = exports.Segment = exports.Truth = exports.TruthTable = exports.TruthTableRow = exports.TruthTableContainer = exports.TableOutput = exports.ReplContainer = exports.ReplPage = void 0;
-
-var _newLexer = _interopRequireDefault(require("./newLexer.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -28,6 +17,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+//import lexical_analysis from './lexer.js';
+import lexical_analysis from './newLexer.js';
 
 function request(url, method) {
   /* Open an http request */
@@ -69,8 +61,6 @@ function (_React$Component) {
 
   return Segment;
 }(React.Component);
-
-exports.Segment = Segment;
 
 var Banner =
 /*#__PURE__*/
@@ -125,8 +115,6 @@ function (_React$Component2) {
   return Banner;
 }(React.Component);
 
-exports.Banner = Banner;
-
 var TruthTableRow =
 /*#__PURE__*/
 function (_React$Component3) {
@@ -177,8 +165,6 @@ function (_React$Component3) {
   return TruthTableRow;
 }(React.Component);
 
-exports.TruthTableRow = TruthTableRow;
-
 var TruthTable =
 /*#__PURE__*/
 function (_React$Component4) {
@@ -189,12 +175,34 @@ function (_React$Component4) {
 
     _classCallCheck(this, TruthTable);
 
+    _this4 = _possibleConstructorReturn(this, _getPrototypeOf(TruthTable).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_this4), "addValues", function () {
+      var newTable = [];
+
+      for (var i = 0; i < _this4.state.t.length; i++) {
+        var tr = React.createElement(TruthTableRow, {
+          row: _this4.state.t[i],
+          key: i
+        });
+        newTable.push(tr);
+      } // rerender the page with the Truth Table
+
+
+      _this4.setState({
+        Table: newTable
+      });
+    });
+
     _this4.state = {
       Table: [],
       t: props.Table,
       exp: props.exp
     };
-    return _possibleConstructorReturn(_this4);
+
+    _this4.addValues.bind(_assertThisInitialized(_this4));
+
+    return _this4;
   }
 
   _createClass(TruthTable, [{
@@ -213,8 +221,6 @@ function (_React$Component4) {
 
   return TruthTable;
 }(React.Component);
-
-exports.TruthTable = TruthTable;
 
 var TruthTableContainer =
 /*#__PURE__*/
@@ -239,77 +245,75 @@ function (_React$Component5) {
   return TruthTableContainer;
 }(React.Component);
 
-exports.TruthTableContainer = TruthTableContainer;
-
-var valid =
+var Valid =
 /*#__PURE__*/
 function (_React$Component6) {
-  _inherits(valid, _React$Component6);
+  _inherits(Valid, _React$Component6);
 
-  function valid(props) {
+  function Valid(props) {
     var _this5;
 
-    _classCallCheck(this, valid);
+    _classCallCheck(this, Valid);
 
-    _this5 = _possibleConstructorReturn(this, _getPrototypeOf(valid).call(this, props));
+    _this5 = _possibleConstructorReturn(this, _getPrototypeOf(Valid).call(this, props));
     _this5.state = {
       valid: props.valid
     };
     return _this5;
   }
 
-  _createClass(valid, [{
+  _createClass(Valid, [{
     key: "render",
     value: function render() {
       return React.createElement("div", {
-        id: "valid"
+        id: "Valid"
       }, this.state.valid);
     }
   }]);
 
-  return valid;
+  return Valid;
 }(React.Component);
 
-var invalid =
+var Invalid =
 /*#__PURE__*/
 function (_React$Component7) {
-  _inherits(invalid, _React$Component7);
+  _inherits(Invalid, _React$Component7);
 
-  function invalid(props) {
+  function Invalid(props) {
     var _this6;
 
-    _classCallCheck(this, invalid);
+    _classCallCheck(this, Invalid);
 
-    _this6 = _possibleConstructorReturn(this, _getPrototypeOf(invalid).call(this, props));
+    _this6 = _possibleConstructorReturn(this, _getPrototypeOf(Invalid).call(this, props));
     _this6.state = {
       notvalid: props.invalid
     };
     return _this6;
   }
 
-  _createClass(invalid, [{
+  _createClass(Invalid, [{
     key: "render",
     value: function render() {
       return React.createElement("div", {
-        id: "invalid"
+        id: "Invalid"
       }, this.state.notvalid);
     }
   }]);
 
-  return invalid;
+  return Invalid;
 }(React.Component);
 
-var validOutput =
+var ValidOutput =
 /*#__PURE__*/
 function (_React$Component8) {
-  _inherits(validOutput, _React$Component8);
+  _inherits(ValidOutput, _React$Component8);
 
-  function validOutput(props) {
+  function ValidOutput(props) {
     var _this7;
 
-    _classCallCheck(this, validOutput);
+    _classCallCheck(this, ValidOutput);
 
-    _this7 = _possibleConstructorReturn(this, _getPrototypeOf(validOutput).call(this, props));
+    _this7 = _possibleConstructorReturn(this, _getPrototypeOf(ValidOutput).call(this, props));
     _this7.state = {
       valid: props.valid,
       validity: props.validity,
@@ -319,17 +323,17 @@ function (_React$Component8) {
     return _this7;
   }
 
-  _createClass(validOutput, [{
+  _createClass(ValidOutput, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       /* run scroll animation after object is created */
-      this.state.scrollUp('validContainer');
+      this.state.scrollUp('ValidContainer');
     }
   }, {
     key: "render",
     value: function render() {
       return React.createElement("div", {
-        id: "validContainer",
+        id: "ValidContainer",
         className: "scrollUpHidden"
       }, React.createElement("div", {
         className: "close",
@@ -344,7 +348,7 @@ function (_React$Component8) {
     }
   }]);
 
-  return validOutput;
+  return ValidOutput;
 }(React.Component);
 
 var TableOutput =
@@ -388,29 +392,27 @@ function (_React$Component9) {
   return TableOutput;
 }(React.Component);
 
-exports.TableOutput = TableOutput;
-
-var partition =
+var Partition =
 /*#__PURE__*/
 function (_React$Component10) {
-  _inherits(partition, _React$Component10);
+  _inherits(Partition, _React$Component10);
 
-  function partition(props) {
-    _classCallCheck(this, partition);
+  function Partition(props) {
+    _classCallCheck(this, Partition);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(partition).call(this, props));
+    return _possibleConstructorReturn(this, _getPrototypeOf(Partition).call(this, props));
   }
 
-  _createClass(partition, [{
+  _createClass(Partition, [{
     key: "render",
     value: function render() {
       return React.createElement("hr", {
-        className: "partition"
+        className: "Partition"
       });
     }
   }]);
 
-  return partition;
+  return Partition;
 }(React.Component);
 
 var Button =
@@ -444,8 +446,6 @@ function (_React$Component11) {
   return Button;
 }(React.Component);
 
-exports.Button = Button;
-
 var Truth =
 /*#__PURE__*/
 function (_React$Component12) {
@@ -474,19 +474,17 @@ function (_React$Component12) {
   return Truth;
 }(React.Component);
 
-exports.Truth = Truth;
-
-var selectorLink =
+var SelectorLink =
 /*#__PURE__*/
 function (_React$Component13) {
-  _inherits(selectorLink, _React$Component13);
+  _inherits(SelectorLink, _React$Component13);
 
-  function selectorLink(props) {
+  function SelectorLink(props) {
     var _this11;
 
-    _classCallCheck(this, selectorLink);
+    _classCallCheck(this, SelectorLink);
 
-    _this11 = _possibleConstructorReturn(this, _getPrototypeOf(selectorLink).call(this, props));
+    _this11 = _possibleConstructorReturn(this, _getPrototypeOf(SelectorLink).call(this, props));
     _this11.state = {
       link: props.link,
       i: props.i,
@@ -495,49 +493,49 @@ function (_React$Component13) {
     return _this11;
   }
 
-  _createClass(selectorLink, [{
+  _createClass(SelectorLink, [{
     key: "render",
     value: function render() {
       return React.createElement("div", {
         id: this.state.i,
-        className: "selectorLink",
+        className: "SelectorLink",
         onClick: this.state.l
       }, this.state.link);
     }
   }]);
 
-  return selectorLink;
+  return SelectorLink;
 }(React.Component);
 
-var selector =
+var Selector =
 /*#__PURE__*/
 function (_React$Component14) {
-  _inherits(selector, _React$Component14);
+  _inherits(Selector, _React$Component14);
 
-  function selector(props) {
+  function Selector(props) {
     var _this12;
 
-    _classCallCheck(this, selector);
+    _classCallCheck(this, Selector);
 
-    _this12 = _possibleConstructorReturn(this, _getPrototypeOf(selector).call(this, props));
+    _this12 = _possibleConstructorReturn(this, _getPrototypeOf(Selector).call(this, props));
     _this12.state = {
       Tables: "Truth Tables",
-      validity: "validity check",
+      validity: "Validity Check",
       link: props.link
     };
     return _this12;
   }
 
-  _createClass(selector, [{
+  _createClass(Selector, [{
     key: "render",
     value: function render() {
       return React.createElement("div", {
-        id: "selector"
-      }, React.createElement("selectorLink", {
+        id: "Selector"
+      }, React.createElement(SelectorLink, {
         i: "t",
         link: this.state.Tables,
         l: this.state.link
-      }), React.createElement("selectorLink", {
+      }), React.createElement(SelectorLink, {
         i: "v",
         link: this.state.validity,
         l: this.state.link
@@ -545,7 +543,7 @@ function (_React$Component14) {
     }
   }]);
 
-  return selector;
+  return Selector;
 }(React.Component);
 
 var ReplContainer =
@@ -571,7 +569,7 @@ function (_React$Component15) {
     value: function render() {
       return React.createElement("div", {
         id: "ReplContainer"
-      }, React.createElement("selector", {
+      }, React.createElement(Selector, {
         link: this.state.link
       }), React.createElement("textarea", {
         id: "ReplInput"
@@ -581,8 +579,6 @@ function (_React$Component15) {
 
   return ReplContainer;
 }(React.Component);
-
-exports.ReplContainer = ReplContainer;
 
 var ReplPage =
 /*#__PURE__*/
@@ -645,7 +641,7 @@ function (_React$Component16) {
         newForms += a;
         /* call lexical_analysis() to check grammar */
 
-        var t = (0, _newLexer["default"])(a);
+        var t = lexical_analysis(a);
         if (!t) return;
       }
       /* send data to be analyzed on the server */
@@ -676,6 +672,7 @@ function (_React$Component16) {
       /* Display the individual Truth Tables */
       formulas = _this14.normalize(formulas);
       var TruthArray = [];
+      console.log("respT:");
 
       for (var i = 0; i < respT.length; i++) {
         /* Each respT[i] is a Truth Table */
@@ -713,9 +710,9 @@ function (_React$Component16) {
       var terms = respT[0];
       var validity = respT.pop(); // save the correct message
 
-      var message = validity ? React.createElement("valid", {
+      var message = validity ? React.createElement(Valid, {
         valid: "valid!"
-      }) : React.createElement("invalid", {
+      }) : React.createElement(Invalid, {
         invalid: "invalid!"
       });
       var init_vals = respT[1];
@@ -730,7 +727,7 @@ function (_React$Component16) {
 
       TruthArray.push(init_Table);
       var nextTable;
-      var p = React.createElement("partition", null);
+      var p = React.createElement(Partition, null);
       TruthArray.push(p);
       /* add calculated Tables*/
 
@@ -743,13 +740,13 @@ function (_React$Component16) {
           key: i
         }));
         TruthArray.push(nextTable);
-        p = React.createElement("partition", null);
+        p = React.createElement(Partition, null);
         TruthArray.push(p);
       }
       /* package up all Tables */
 
 
-      var ttOut = React.createElement("validOutput", {
+      var ttOut = React.createElement(ValidOutput, {
         valid: TruthArray,
         validity: message,
         scrollUp: _this14.scrollUp,
@@ -781,10 +778,10 @@ function (_React$Component16) {
 
       if (event.target.id == _this14.state.b) {//pass
       } else {
-        unsel.classList.remove("selectorSelected");
-        sel.classList.remove("selectorUnselected");
-        unsel.classList.add("selectorUnselected");
-        sel.classList.add("selectorSelected");
+        unsel.classList.remove("SelectorSelected");
+        sel.classList.remove("SelectorUnselected");
+        unsel.classList.add("SelectorUnselected");
+        sel.classList.add("SelectorSelected");
       } // update state property
 
 
@@ -803,7 +800,7 @@ function (_React$Component16) {
     _defineProperty(_assertThisInitialized(_this14), "scrollUp", function () {
       /* move the output container into the user interface */
       var s;
-      if (_this14.state.b == "t") s = document.getElementById('TableContainer');else s = document.getElementById('validContainer');
+      if (_this14.state.b == "t") s = document.getElementById('TableContainer');else s = document.getElementById('ValidContainer');
       s.classList.toggle('scrollUpHidden');
       s.classList.toggle('scrollUp');
     });
@@ -811,7 +808,7 @@ function (_React$Component16) {
     _defineProperty(_assertThisInitialized(_this14), "scrollDown", function () {
       /* move the output container out of the user interface */
       var s;
-      if (_this14.state.b == "t") s = document.getElementById("TableContainer");else s = document.getElementById("validContainer");
+      if (_this14.state.b == "t") s = document.getElementById("TableContainer");else s = document.getElementById("ValidContainer");
       s.classList.toggle('scrollDown');
       setTimeout(function () {
         _this14.setState({
@@ -835,7 +832,7 @@ function (_React$Component16) {
     key: "componentDidMount",
     value: function componentDidMount() {
       var tab = document.getElementById("t");
-      tab.classList.add("selectorSelected");
+      tab.classList.add("SelectorSelected");
     }
   }, {
     key: "render",
@@ -856,4 +853,4 @@ function (_React$Component16) {
   return ReplPage;
 }(React.Component);
 
-exports.ReplPage = ReplPage;
+export { ReplPage, ReplContainer, TableOutput, TruthTableContainer, TruthTableRow, TruthTable, Truth, Segment, Banner, Button };

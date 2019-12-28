@@ -171,7 +171,7 @@ class Parser {
 export default function lexical_analysis(string) {
 	if (!string)
 		return;
-	expArray = string.split("\n");
+	let expArray = string.split("\n");
 	console.log(expArray);
 	expArray.forEach((s) => {
 		let p = new Parser(s);

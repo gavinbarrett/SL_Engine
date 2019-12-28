@@ -83,11 +83,13 @@ class TruthTableRow extends React.Component {
 
 class TruthTable extends React.Component {
 	constructor(props) {
+		super(props);
 		this.state =  {
 			Table: [],
 			t: props.Table,
 			exp: props.exp,
 		};
+		this.addValues.bind(this);
 	}
 	componentDidMount() {
 		this.addValues();
@@ -123,7 +125,7 @@ class TruthTableContainer extends React.Component {
 	}
 }
 
-class valid extends React.Component {
+class Valid extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -131,13 +133,13 @@ class valid extends React.Component {
 		};
 	}
 	render() {
-		return(<div id="valid">
+		return(<div id="Valid">
 			{this.state.valid}
 		</div>);
 	}
 }
 
-class invalid extends React.Component {
+class Invalid extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -145,13 +147,13 @@ class invalid extends React.Component {
 		};
 	}
 	render() {
-		return(<div id="invalid">
+		return(<div id="Invalid">
 			{this.state.notvalid}
 		</div>);
 	}
 }
 
-class validOutput extends React.Component {
+class ValidOutput extends React.Component {
 	constructor(props) {
                 super(props);
                 this.state = {
@@ -163,10 +165,10 @@ class validOutput extends React.Component {
         }
 	componentDidMount() {
 		/* run scroll animation after object is created */
-		this.state.scrollUp('validContainer');
+		this.state.scrollUp('ValidContainer');
 	}
         render() {
-                return(<div id="validContainer" className="scrollUpHidden">
+                return(<div id="ValidContainer" className="scrollUpHidden">
                         <div className="close" onClick={this.state.scrollDown}></div>
 			<div id="outputWrapper">
 			<div id="outputHeader">
@@ -201,12 +203,12 @@ class TableOutput extends React.Component {
         }
 }
 
-class partition extends React.Component {
+class Partition extends React.Component {
 	constructor(props) {
 		super(props);
 	}
 	render() {
-		return(<hr className="partition"></hr>);
+		return(<hr className="Partition"></hr>);
 	}
 }
 
@@ -242,7 +244,7 @@ class Truth extends React.Component {
 	}
 }
 
-class selectorLink extends React.Component {
+class SelectorLink extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -252,24 +254,24 @@ class selectorLink extends React.Component {
 		};
 	}
 	render() {
-		return(<div id={this.state.i} className="selectorLink" onClick={this.state.l}>
+		return(<div id={this.state.i} className="SelectorLink" onClick={this.state.l}>
 			{this.state.link}
 		</div>);
 	}
 }
 
-class selector extends React.Component {
+class Selector extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			Tables: "Truth Tables",
-			validity: "validity check",
+			validity: "Validity Check",
 			link: props.link,
 		};
 	}
 	render() {
-		return(<div id="selector">
-			<selectorLink i={"t"} link={this.state.Tables} l={this.state.link}/><selectorLink i={"v"} link={this.state.validity} l={this.state.link}/>
+		return(<div id="Selector">
+			<SelectorLink i={"t"} link={this.state.Tables} l={this.state.link}/><SelectorLink i={"v"} link={this.state.validity} l={this.state.link}/>
 		</div>);
 	}
 }
@@ -284,7 +286,7 @@ class ReplContainer extends React.Component {
 	}
 	render() {
         	return(<div id="ReplContainer">
-               		<selector link={this.state.link}/>
+               		<Selector link={this.state.link}/>
 			<textarea id="ReplInput"></textarea>
         	</div>);
 	}
@@ -306,7 +308,7 @@ class ReplPage extends React.Component {
 	}
 	componentDidMount() {
 		let tab = document.getElementById("t");
-		tab.classList.add("selectorSelected");
+		tab.classList.add("SelectorSelected");
 	}
 	selectSwitch = (bool) => {
 		/* return correct api function based on state */
@@ -383,7 +385,7 @@ class ReplPage extends React.Component {
 		/* Display the individual Truth Tables */
 		formulas = this.normalize(formulas);
 		let TruthArray = [];
-
+		console.log("respT:");
 		for (let i = 0; i < respT.length; i++) {
 			/* Each respT[i] is a Truth Table */
 			let Table = <div className="TableWrap"><TruthTable Table={respT[i][2]} exp={respT[i][1]} key={i}/><TruthTable Table={respT[i][0]} exp={formulas[i]} key={i}/></div>;
@@ -408,7 +410,7 @@ class ReplPage extends React.Component {
 		let validity = respT.pop();
 		
 		// save the correct message
-		let message = (validity) ? <valid valid={"valid!"} /> : <invalid invalid={"invalid!"} />;
+		let message = (validity) ? <Valid valid={"valid!"} /> : <Invalid invalid={"invalid!"} />;
 		let init_vals = respT[1];
 		
 		let init_Table = <div className="TableWrap"><TruthTable Table={init_vals} exp={terms} key={0}/></div>;
@@ -416,19 +418,19 @@ class ReplPage extends React.Component {
 		/* add initial Truth assignments */
 		TruthArray.push(init_Table);
 		let nextTable;
-		let p = <partition />;
+		let p = <Partition />;
 		TruthArray.push(p);
 
 		/* add calculated Tables*/
 		for (let i = 2; i < respT.length; i++) {
 			nextTable = <div className="TableWrap"><TruthTable Table={respT[i]} exp={formulas[(i-2)]} key={i}/></div>;
 			TruthArray.push(nextTable);
-			p = <partition />;
+			p = <Partition />;
 			TruthArray.push(p);
 		}
 		
 		/* package up all Tables */
-		let ttOut = <validOutput valid={TruthArray} validity={message} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
+		let ttOut = <ValidOutput valid={TruthArray} validity={message} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
 		
 		/* change output state */
 		this.setState({
@@ -456,10 +458,10 @@ class ReplPage extends React.Component {
 		if (event.target.id == this.state.b) {
 			//pass
 		} else {
-			unsel.classList.remove("selectorSelected");
-			sel.classList.remove("selectorUnselected");
-			unsel.classList.add("selectorUnselected");
-			sel.classList.add("selectorSelected");
+			unsel.classList.remove("SelectorSelected");
+			sel.classList.remove("SelectorUnselected");
+			unsel.classList.add("SelectorUnselected");
+			sel.classList.add("SelectorSelected");
 		}
 		
 		// update state property
@@ -481,7 +483,7 @@ class ReplPage extends React.Component {
 		if (this.state.b == "t")
 			s = document.getElementById('TableContainer');
 		else
-			s = document.getElementById('validContainer');
+			s = document.getElementById('ValidContainer');
 		s.classList.toggle('scrollUpHidden');
 		s.classList.toggle('scrollUp');
 	}
@@ -492,7 +494,7 @@ class ReplPage extends React.Component {
 		if (this.state.b == "t")
 			s = document.getElementById("TableContainer");
 		else
-			s = document.getElementById("validContainer");
+			s = document.getElementById("ValidContainer");
 		s.classList.toggle('scrollDown');
 		setTimeout(() => {
 			this.setState({ 
@@ -526,4 +528,3 @@ export {
 	Banner,
 	Button,
 }
-

@@ -2,10 +2,11 @@
 
 
 /* Begin Parser Definitions*/
+/*
 class Parser {
 	
 	constructor(feed) {
-		/* construct a parser to recognize propositional logic */
+		// construct a parser to recognize propositional logic
 		this.next = null;
 		this.feed = feed;
 		this.reg = /[A-Z]/;
@@ -15,7 +16,7 @@ class Parser {
 	}
 	
 	lex() {
-		/* try to parse the input */
+		// try to parse the input
 		this.scan();
 		if (this.next === '\n')
 			return false;
@@ -24,7 +25,7 @@ class Parser {
 	}
 
 	expression() {
-		/* try to parse the expression */
+		// try to parse the expression
 		this.scan();
 		if (this.next === '~')
 			this.unary()
@@ -40,7 +41,7 @@ class Parser {
 	}
 
 	open_parenthesis() {
-		/* handle opening parenthesis */
+		// handle opening parenthesis
 		this.scan();
 		if (this.next === '~')
 			this.unary();
@@ -60,7 +61,7 @@ class Parser {
 	}
 
 	closed_parenthesis() {
-		/* handle closing parenthesis */
+		// handle closing parenthesis
 		if (this.feed === '' && (this.open === this.closed))
 			console.log("Terminating in parenthesis");
 		else {
@@ -79,7 +80,7 @@ class Parser {
 	}
 
 	atomic() {
-		/* handle an atomic sentence */
+		// handle an atomic sentence
 		this.scan();
 		if (this.binary_ops.includes(this.next))
 			this.binary();
@@ -98,7 +99,7 @@ class Parser {
 	}
 
 	unary() {
-		/* handle a unary operator */
+		// handle a unary operator
 		this.scan();
 		if (this.next === '~')
 			this.unary();
@@ -115,7 +116,7 @@ class Parser {
 	}
 
 	binary() {
-		/* handle a binary operator */
+		// handle a binary operator
 		if (this.next === '<')
 			this.biconditional();
 		else if (this.next === '-')
@@ -190,15 +191,17 @@ function lexical_analysis(string) {
 	return 1;
 }
 
+*/
 
 /* End Parser definitions */
 
+//import { lexical_analysis } from './newLexer.js';
 
 /* Begin ReplPage definitions */
 
-
+/*
 function request(url, method) {
-	/* Open an http request */
+	// Open an http request
 	let xhr = new XMLHttpRequest();
 	xhr.open(url, method, true);
 	return xhr;
@@ -361,7 +364,7 @@ class ValidOutput extends React.Component {
                 };
         }
 	componentDidMount() {
-		/* run scroll animation after object is created */
+		// run scroll animation after object is created
 		this.state.scrollUp('ValidContainer');
 	}
         render() {
@@ -389,7 +392,7 @@ class TableOutput extends React.Component {
                 };
         }
 	componentDidMount() {
-		/* run scroll animation after object is created */
+		// run scroll animation after object is created
 		this.state.scrollUp('TableContainer');
 	}
         render() {
@@ -490,9 +493,7 @@ class ReplContainer extends React.Component {
 }
 
 class ReplPage extends React.Component {
-	/* This page takes input and sends logical formulae to the server
-	 * for processing; The page will display the Truth Tables if the input was
-	 * accepted by the lexer */
+	// This page takes input and sends logical formulae to the server for processing; The page will display the Truth Tables if the input was accepted by the lexer
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -510,7 +511,7 @@ class ReplPage extends React.Component {
 		tab.classList.add("SelectorSelected");
 	}
 	selectSwitch = (bool) => {
-		/* return correct api function based on state */
+		// return correct api function based on state
 		//return (bool == true) ? '/Table':'/Valid';
 		if (bool == "t")
 			return "/table";
@@ -518,8 +519,7 @@ class ReplPage extends React.Component {
 			return "/valid";
 	}
 	retrieveTruthTable = (formulas, bool) => {
-		/*  takes in Valid formulas and sends them to the server; displays
-		 * their Truth Tables upon return */
+		//  takes in Valid formulas and sends them to the server; displays their Truth Tables upon return
 		// if nothing was input, do not send an AJAX request
 		if (!formulas)
 			return;
@@ -531,7 +531,7 @@ class ReplPage extends React.Component {
 		xhr.onload = () => {
 			// parse retrieved JSON
 			let respText = JSON.parse(xhr.responseText);
-			/* output the Truth values */
+			// output the Truth values
 			console.log(respText);
 			console.log("bool: ", bool);
 			if (bool == "t")
@@ -541,7 +541,7 @@ class ReplPage extends React.Component {
 			//(bool == "t") ? () => {this.showTT(respText, formulas)} : () => {this.showValidity(respText, formulas) };
 		};
 		formulas = [formulas] + [bool]
-		/* send ajax request of the formulas */
+		// send ajax request of the formulas
 		xhr.send(formulas);	
 	}
 	
@@ -560,18 +560,18 @@ class ReplPage extends React.Component {
 		for (let f = 0; f < fs2.length; f++) {
 			let a = fs2[f] + '\n'
 			newForms += a;
-			/* call lexical_analysis() to check grammar */
+			// call lexical_analysis() to check grammar
 			let t = lexical_analysis(a);
 			if (!t)
 				return;
 		}
 		
-		/* send data to be analyzed on the server */
+		// send data to be analyzed on the server
 		this.retrieveTruthTable(newForms, this.state.b);
 	}
 	
 	normalize = (formulas) => {
-		/* normalize expressions by newline */
+		// normalize expressions by newline
 		let forms = [];
 		let form = ''
 		for (let i = 0; i < formulas.length; i++) {
@@ -587,12 +587,12 @@ class ReplPage extends React.Component {
 	}
 	
 	showTT = (respT, formulas) => {
-		/* Display the individual Truth Tables */
+		// Display the individual Truth Tables
 		formulas = this.normalize(formulas);
 		let TruthArray = [];
 
 		for (let i = 0; i < respT.length; i++) {
-			/* Each respT[i] is a Truth Table */
+			// Each respT[i] is a Truth Table
 			let Table = <div className="TableWrap"><TruthTable Table={respT[i][2]} exp={respT[i][1]} key={i}/><TruthTable Table={respT[i][0]} exp={formulas[i]} key={i}/></div>;
 
 			TruthArray.push(Table);
@@ -605,7 +605,7 @@ class ReplPage extends React.Component {
 	}
 	showValidity = (respT, formulas) => {
 		console.log("We are valid");
-		/* test Validity */
+		// test Validity
 		
 		formulas = this.normalize(formulas);
 		
@@ -621,13 +621,13 @@ class ReplPage extends React.Component {
 		
 		let init_Table = <div className="TableWrap"><TruthTable Table={init_vals} exp={terms} key={0}/></div>;
 
-		/* add initial Truth assignments */
+		// add initial Truth assignments
 		TruthArray.push(init_Table);
 		let nextTable;
 		let p = <Partition />;
 		TruthArray.push(p);
 
-		/* add calculated Tables*/
+		// add calculated Tables
 		for (let i = 2; i < respT.length; i++) {
 			nextTable = <div className="TableWrap"><TruthTable Table={respT[i]} exp={formulas[(i-2)]} key={i}/></div>;
 			TruthArray.push(nextTable);
@@ -635,18 +635,17 @@ class ReplPage extends React.Component {
 			TruthArray.push(p);
 		}
 		
-		/* package up all Tables */
+		// package up all Tables
 		let ttOut = <ValidOutput Valid={TruthArray} Validity={message} scrollUp={this.scrollUp} scrollDown={this.scrollDown}/>;
 		
-		/* change output state */
+		// change output state
 		this.setState({
 			out: ttOut,
 		});
 	}
 
 	updateLink = (event) => {
-		/* update boolean to determine which api function to call 
-		 * this method is called anytime the Selector Buttons are clicked */
+		// update boolean to determine which api function to call this method is called anytime the Selector Buttons are clicked
 
 		// access dom element
 		let sel = document.getElementById(event.target.id);
@@ -684,7 +683,7 @@ class ReplPage extends React.Component {
 	}
 	
 	scrollUp = () => {
-		/* move the output container into the user interface */
+		// move the output container into the user interface
 		let s;
 		if (this.state.b == "t")
 			s = document.getElementById('TableContainer');
@@ -695,7 +694,7 @@ class ReplPage extends React.Component {
 	}
 	
 	scrollDown = () => {
-		/* move the output container out of the user interface */
+		// move the output container out of the user interface
 		let s;
 		if (this.state.b == "t")
 			s = document.getElementById("TableContainer");
@@ -725,13 +724,26 @@ class ReplPage extends React.Component {
 function RenderRepl() {
 	ReactDOM.render(<ReplPage />, document.getElementById('root'));
 }
-
+*/
 
 /* End ReplPage Definitions */
 
 
 /* Begin Landing Page Definitions */
 
+import { ReplPage } from './repl.js';
+import { ReplContainer } from './repl.js';
+import { TableOutput } from './repl.js';
+import { TruthTableContainer } from './repl.js';
+import { TruthTableRow } from './repl.js';
+import { TruthTable } from './repl.js';
+import { Truth } from './repl.js';
+import { Segment } from './repl.js';
+import { Banner } from './repl.js';
+
+function RenderRepl() {
+	ReactDOM.render(<ReplPage />, document.getElementById('root'));
+}
 
 function Page(props) {
 	return(<div id="message">
