@@ -231,8 +231,8 @@ class Truth extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			a: "T",
-			b: "F",
+			a: "1",
+			b: "0",
 		}
 	}
 	render() {
@@ -410,7 +410,7 @@ class ReplPage extends React.Component {
 		let validity = respT.pop();
 		
 		// save the correct message
-		let message = (validity) ? <Valid valid={"valid!"} /> : <Invalid invalid={"invalid!"} />;
+		let message = (validity) ? <Valid valid={"Valid!"} /> : <Invalid invalid={"Invalid!"} />;
 		let init_vals = respT[1];
 		
 		let init_Table = <div className="TableWrap"><TruthTable Table={init_vals} exp={terms} key={0}/></div>;

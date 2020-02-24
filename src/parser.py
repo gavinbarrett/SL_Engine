@@ -2,7 +2,6 @@ import string
 import src.ast as ast
 from src.newLexer import *
 from src.gen import generate
-#FIXME: put src. in front of ast, newLexer, gen
 from collections import defaultdict
 
 class Parser:
@@ -30,27 +29,27 @@ class Parser:
 
     def neg(self, atom):
         ''' Return the negation of the binary truth value '''
-        return 'F' if atom == 'T' else 'T'
+        return '0' if atom == '1' else '1'
 
     def and_val(self, x, y):
         ''' Return logical and '''
-        return 'T' if x == 'T' and y == 'T' else 'F'
+        return '1' if x == '1' and y == '1' else '0'
 
     def or_val(self, x, y):
         ''' Return logical or '''
-        return 'T' if x == 'T' or y == 'T' else 'F'
+        return '1' if x == '1' or y == '1' else '0'
 
     def cond_val(self, x, y):
         ''' Return logical conditional '''
-        if x == 'T' and y == 'F':
-            return 'F'
-        return 'T'
+        if x == '1' and y == '0':
+            return '0'
+        return '1'
 
     def bicond_val(self, x, y):
         ''' Return logical biconditional '''
-        if (x == 'T' and y == 'T') or (x == 'F' and y == 'F'):
-            return 'T'
-        return 'F'
+        if (x == '1' and y == '1') or (x == '0' and y == '0'):
+            return '1'
+        return '0'
 
     def determine_truth(self, x, y, rootname):
         ''' Determine the truth value of the formula using binary functions '''
@@ -191,10 +190,10 @@ class Parser:
         for vT in vTable:
             for idx, v in enumerate(vT):
                 # while the value is true, continue to read
-                if v == 'T':
+                if v == '1':
                     continue
                 # if the last truth value is false, the argument is invalid
-                elif v == 'F' and idx == (len(vT)-1):
+                elif v == '0' and idx == (len(vT)-1):
                     return False
                 else:
                     break
@@ -334,4 +333,8 @@ class Parser:
         self.valid = self.check_if_valid(vTable)
         
         #TODO: reformat return value
+        print(f"\nTotal: {total}")
+        print(f"Master: {master_list}")
+        print(f"Set: {set_trus}")
+        print(f"Valid: {self.valid}")
         return [total] + [master_list] + set_trus + [self.valid]

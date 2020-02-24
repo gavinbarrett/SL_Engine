@@ -457,8 +457,8 @@ function (_React$Component12) {
 
     _this10 = _possibleConstructorReturn(this, _getPrototypeOf(Truth).call(this, props));
     _this10.state = {
-      a: "T",
-      b: "F"
+      a: "1",
+      b: "0"
     };
     return _this10;
   }
@@ -710,9 +710,9 @@ function (_React$Component16) {
       var validity = respT.pop(); // save the correct message
 
       var message = validity ? React.createElement(Valid, {
-        valid: "valid!"
+        valid: "Valid!"
       }) : React.createElement(Invalid, {
-        invalid: "invalid!"
+        invalid: "Invalid!"
       });
       var init_vals = respT[1];
       var init_Table = React.createElement("div", {
