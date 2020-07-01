@@ -11,11 +11,12 @@ function setup() {
 	createCanvas(windowWidth, windowHeight);
 	fill(255);
 	textFont('Helvetica');
+	fill("#2a9d8f");
 }
 
 function draw() {
 	// draw background
-	background('green');
+	background('#264653');
 	// every 15 loops, make a new connective
 	if (count % 20 === 0) {
 		count = 0;

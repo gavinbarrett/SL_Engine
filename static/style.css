@@ -1,8 +1,8 @@
 ::selection {
-  background: #008000; /* WebKit/Blink Browsers */
+  background: #f4a261; /* WebKit/Blink Browsers */
 }
 ::-moz-selection {
-  background: #008000; /* Gecko Browsers */
+  background: #f4a261; /* Gecko Browsers */
 }
 
 html, body {
@@ -13,6 +13,41 @@ html, body {
 	display: block;
 	background: transparent;
 	font-family: "Trebuchet MS", sans-serif;
+}
+
+#l {
+	color: #264653;
+}
+
+#l:hover {
+	color: #2a9d8f;
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  color: #e9c46a;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: #e9c46a;
+  color: #264653;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }
 
 #initialFBox {
@@ -37,7 +72,7 @@ html, body {
 	align-items: center;
 	position: relative;
 	width: 100vw;
-	height: 150vh;
+	height: 130vh;
 	transform-origin: top left;
 	background: rgba(0,0,0,0);
 }
@@ -65,34 +100,34 @@ html, body {
 	justify-content: center;
 	align-items: center;
 	height: 50%;
-	width: 60%;
+	width: 80%;
     transform-origin: top left;
-	color: white;
+	color: #e9c46a;
 	font-size: 20vw;
 	text-align: center;
 }
 
 #subHead {
-	font-size: 2vw;
+	font-size: 5vw;
 }
 
 #inputWrapper {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 30vw;
-	height: 25%;
-	background-color: green;
-	font-size: 1.7vw;
+	width: 35vw;
+	height: 30%;
+	background-color: #264653;
+	font-size: 4vw;
 	text-align: center;
 	margin: 0;
 	padding: 0;
-	border-radius: 7px;
-	color: #e0e0e0;
+	border-radius: 10px;
+	color: #e9c46a;
 }
 
 #inputWrapper:hover {
-	color: white;
+	color: #2a9d8f;
 }
 
 #Bottom {
@@ -101,9 +136,9 @@ html, body {
 	align-items: center;
 	text-align: center;
 	margin-top: -10px;
-	height: 40vh;
+	height: 70vh;
 	width: 100vw;
-	background-color: white;
+	background-color: #e9c46a;
 	margin: 0;
 	position: relative;
 	padding: 0;
@@ -113,7 +148,7 @@ html, body {
 #ReplPage {
 	height: 100vh;
 	width: 100vw;
-    background-color: green;
+    background-color: #264653;
 	display: flex;
 	margin: 0px;
 	padding: 0px;
@@ -122,35 +157,20 @@ html, body {
 	align-items: center;
 }
 
-.Segment {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	width: 20%;
-	padding: 0;
-	margin: 0;
-}
-
-.sym {
-	font-size: 6vw;
-}
-
-.eng {
-	font-size: 100%;
-}
-
 #BannerWrapper {
-	background-color: white;
+	background-color: #E9C46A;
 	margin: 0;
 	padding: 0;
 	top: 0px;
 	display: flex;
 	width: 100%;
 	height: 20%;
+	font-size: 8vw;
 	flex-direction: row;
+	align-items: center;
 	justify-content: space-evenly;
 	box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.7);
+	color: #264653;
 }
 
 #pageContainer {
@@ -159,12 +179,65 @@ html, body {
 	justify-content: flex-end;
 	align-items: center;
 	height: 80%;
-	width: 70%;
+	width: 100%;
 }
 
 #ReplContainer {
 	margin: 1%;
-	background-color: white;
+	background-color: #264653;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 90%;
+}
+
+#ReplInput {
+	display: flex;
+	font-size: 8vw;
+	text-align: center;
+	resize: none;
+	width: 90%;
+	height: 80%;
+	background-color: #e9c46a;
+	color: #264653;
+	border-radius: 5px;
+	border-style: none;
+}
+
+@media screen and (min-width: 770px) {
+#message {
+	display: flex;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	width: 100vw;
+	height: 150vh;
+	transform-origin: top left;
+	background: rgba(0,0,0,0);
+}
+#BannerWrapper {
+	background-color: #E9C46A;
+	margin: 0;
+	padding: 0;
+	top: 0px;
+	display: flex;
+	width: 100%;
+	height: 20%;
+	font-size: 5vw;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-evenly;
+	box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.7);
+	color: #264653;
+}
+#ReplContainer {
+	margin: 1%;
+	background-color: #264653;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -172,160 +245,14 @@ html, body {
 	width: 80%;
 	height: 90%;
 }
-
-#Selector {
-	width: 90%;
-	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-}
-
-.Partition {
-	height: 60vh;
-	color: black;
-}
-
-.SelectorLink {
-	width: 50%;
-	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-}
-
-.SelectorLink:hover {
-	background: green;
-	color: white;
-}
-
-.SelectorSelected {
-	background: green;
-	color: white;
-}
-
-.SelectorUnselected {
-	background: white;
-}
-
-.rowFormat {
-	display: flex;
-	flex-direction: row;
-}
-
-.colFormat {
+#pageContainer {
 	display: flex;
 	flex-direction: column;
-}
-
-#Button {
-	color: #e0e0e0;
-	font-size: 3vw;
-	background-color: DarkGreen;
-	border-radius: 7px;
-	text-align: center;
-	width: 20%;
-	margin: 1%;
-}
-
-#Button:hover {
-	color: white;
-}
-
-#TableContainer {
-	display: flex;
-	flex-direction: column;
+	justify-content: flex-end;
 	align-items: center;
-	overflow-y: auto;
-	letter-spacing: 2px;
-	background-color: white;
 	height: 80%;
-	width: 85%;
-	border-radius: 10px;
-	border-style: solid;
-	border-width: 5px;
-	border-color: green;
-	position: absolute;
-	text-align: center;
+	width: 70%;
 }
-
-#ValidContainer {
-	display: flex;
-	align-items: center;
-    overflow-y: auto;
-    letter-spacing: 2px;
-    background-color: white;
-    height: 80%;
-	width: 85%;
-	border-radius: 10px;
-    border-style: solid;
-    border-width: 5px;
-    border-color: green;
-    position: absolute;
-    text-align: center;
-}
-
-#Valid {
-	color: green;
-}
-
-#Invalid {
-	color: red;
-}
-
-#outputWrapper {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	height: 100%;
-}
-
-#outputHeader {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	font-size: 3vw;
-	width: 100%;
-	height: 50%;
-}
-
-#outputTables {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	height: 100%;
-}
-
-.TableWrap {
-	width: 60%;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	font-size: 4vh;
-}
-
-.TableWrap1 {
-	display: flex;
-}
-
-#ttContainer {
-	background-color: white;
-}
-
-::-webkit-scrollbar {
-	background-color: green;
-}
-
-.tt {
-	padding: 5%;
-}
-
-.ttRow {
-	display: block;
-	text-align: center;
-
-}
-
 #ReplInput {
 	display: flex;
 	font-size: 3vw;
@@ -333,63 +260,49 @@ html, body {
 	resize: none;
 	width: 90%;
 	height: 80%;
+	background-color: #e9c46a;
+	border-radius: 5px;
+	border-style: none;
+	color: #264653;
 }
+#subHead {
+	font-size: 5vw;
+}
+#Bottom {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	margin-top: -10px;
+	height: 40vh;
+	width: 100vw;
+	background-color: #e9c46a;
+	margin: 0;
+	position: relative;
+	padding: 0;
+	clip-path: polygon(0% 32%, 100% 0%, 100% 100%, 0% 100%);
+}
+#inputWrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 30vw;
+	height: 25%;
+	background-color: #264653;
+	font-size: 1.7vw;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	border-radius: 7px;
+	color: #e9c46a;
+}
+}
+
+::-webkit-scrollbar {
+	background-color: green;
+}
+
 
 textarea:focus {
 	outline: none;
-}
-
-/* Below are the scrolling functions for the ouput */
-
-.scrollUpHidden {
-	display: none;
-}
-
-.scrollUp {
-	display: flex;
-	animation-name: scrollUp;
-	animation-duration: 1s;
-	animation-fill-mode: forwards;
-}
-
-.scrollDown {
-	animation-name: scrollDown;
-	animation-duration: 1s;
-	animation-fill-mode: forwards;
-}
-
-@keyframes scrollUp {
-	from { top: 100%; }
-	to { top: 5%; }
-}
-
-@keyframes scrollDown {
-	from { top: 5%; }
-	to { top: 100%; }
-}
-
-.close {
-  position: absolute;
-  right: 32px;
-  top: 32px;
-  width: 32px;
-  height: 32px;
-  opacity: 0.3;
-}
-.close:hover {
-  opacity: 1;
-}
-.close:before, .close:after {
-  position: absolute;
-  left: 15px;
-  content: ' ';
-  height: 33px;
-  width: 2px;
-  background-color: #333;
-}
-.close:before {
-  transform: rotate(45deg);
-}
-.close:after {
-  transform: rotate(-45deg);
 }

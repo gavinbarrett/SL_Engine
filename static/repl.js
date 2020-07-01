@@ -1,6 +1,4 @@
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -8,15 +6,21 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 import lexical_analysis from './parser.js';
 
@@ -27,551 +31,88 @@ var request = function request(url, method) {
   return xhr;
 };
 
-var Segment =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Segment, _React$Component);
+var Banner = /*#__PURE__*/function (_React$Component) {
+  _inherits(Banner, _React$Component);
 
-  function Segment(props) {
-    var _this;
-
-    _classCallCheck(this, Segment);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Segment).call(this, props));
-    _this.state = {
-      symbol: props.sym,
-      english: props.eng
-    };
-    return _this;
-  }
-
-  _createClass(Segment, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        className: "Segment"
-      }, React.createElement("div", {
-        className: "sym"
-      }, this.state.symbol), React.createElement("div", {
-        className: "eng"
-      }, this.state.english));
-    }
-  }]);
-
-  return Segment;
-}(React.Component);
-
-var Banner =
-/*#__PURE__*/
-function (_React$Component2) {
-  _inherits(Banner, _React$Component2);
+  var _super = _createSuper(Banner);
 
   function Banner(props) {
-    var _this2;
+    var _this;
 
     _classCallCheck(this, Banner);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(Banner).call(this, props));
-    _this2.state = {
-      negation: "~",
-      neg: "negation",
-      conjunction: "^",
-      con: "conjunction",
-      disjunction: "v",
-      dis: "disjunction",
-      conditional: "->",
-      cond: "conditional",
-      biconditional: "<->",
-      bicond: "biconditional"
+    _this = _super.call(this, props);
+
+    _defineProperty(_assertThisInitialized(_this), "valid", function () {
+      var ban_wrap = document.getElementById('BannerWrapper');
+      ban_wrap.style.color = "#2a9d8f";
+
+      _this.setState({
+        msg: 'Valid!'
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "invalid", function () {
+      var ban_wrap = document.getElementById('BannerWrapper');
+      ban_wrap.style.color = "#e76f51";
+
+      _this.setState({
+        msg: 'Invalid!'
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "reset", function () {
+      var ban_wrap = document.getElementById('BannerWrapper');
+      ban_wrap.style.color = "#264653";
+
+      _this.setState({
+        msg: 'Please Enter a WFF'
+      });
+    });
+
+    _this.state = {
+      msg: props.msg
     };
-    return _this2;
+    return _this;
   }
 
   _createClass(Banner, [{
     key: "render",
     value: function render() {
-      return React.createElement("div", {
+      return /*#__PURE__*/React.createElement("div", {
         id: "BannerWrapper"
-      }, React.createElement(Segment, {
-        sym: this.state.negation,
-        eng: this.state.neg
-      }), React.createElement(Segment, {
-        sym: this.state.conjunction,
-        eng: this.state.con
-      }), React.createElement(Segment, {
-        sym: this.state.disjunction,
-        eng: this.state.dis
-      }), React.createElement(Segment, {
-        sym: this.state.conditional,
-        eng: this.state.cond
-      }), React.createElement(Segment, {
-        sym: this.state.biconditional,
-        eng: this.state.bicond
-      }));
+      }, this.state.msg);
     }
   }]);
 
   return Banner;
 }(React.Component);
 
-var TruthTableRow =
-/*#__PURE__*/
-function (_React$Component3) {
-  _inherits(TruthTableRow, _React$Component3);
+var ReplContainer = /*#__PURE__*/function (_React$Component2) {
+  _inherits(ReplContainer, _React$Component2);
 
-  function TruthTableRow(props) {
-    var _this3;
-
-    _classCallCheck(this, TruthTableRow);
-
-    _this3 = _possibleConstructorReturn(this, _getPrototypeOf(TruthTableRow).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_this3), "addValues", function () {
-      var newRow = [];
-
-      for (var i = 0; i < _this3.state.r.length; i++) {
-        newRow.push(_this3.state.r[i]);
-      }
-
-      newRow.push(' ');
-
-      _this3.setState({
-        row: newRow
-      });
-    });
-
-    _this3.state = {
-      row: [],
-      r: props.row
-    };
-    return _this3;
-  }
-
-  _createClass(TruthTableRow, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.addValues();
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        className: "ttRow"
-      }, this.state.row);
-    }
-  }]);
-
-  return TruthTableRow;
-}(React.Component);
-
-var TruthTable =
-/*#__PURE__*/
-function (_React$Component4) {
-  _inherits(TruthTable, _React$Component4);
-
-  function TruthTable(props) {
-    var _this4;
-
-    _classCallCheck(this, TruthTable);
-
-    _this4 = _possibleConstructorReturn(this, _getPrototypeOf(TruthTable).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_this4), "addValues", function () {
-      var newTable = [];
-
-      for (var i = 0; i < _this4.state.t.length; i++) {
-        var tr = React.createElement(TruthTableRow, {
-          row: _this4.state.t[i],
-          key: i
-        });
-        newTable.push(tr);
-      } // rerender the page with the Truth Table
-
-
-      _this4.setState({
-        Table: newTable
-      });
-    });
-
-    _this4.state = {
-      Table: [],
-      t: props.Table,
-      exp: props.exp
-    };
-
-    _this4.addValues.bind(_assertThisInitialized(_this4));
-
-    return _this4;
-  }
-
-  _createClass(TruthTable, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.addValues();
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        className: "tt"
-      }, this.state.exp, React.createElement("hr", null), this.state.Table);
-    }
-  }]);
-
-  return TruthTable;
-}(React.Component);
-
-var TruthTableContainer =
-/*#__PURE__*/
-function (_React$Component5) {
-  _inherits(TruthTableContainer, _React$Component5);
-
-  function TruthTableContainer(props) {
-    _classCallCheck(this, TruthTableContainer);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(TruthTableContainer).call(this, props));
-  }
-
-  _createClass(TruthTableContainer, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        id: "ttContainer"
-      }, React.createElement(TruthTable, null));
-    }
-  }]);
-
-  return TruthTableContainer;
-}(React.Component);
-
-var Valid =
-/*#__PURE__*/
-function (_React$Component6) {
-  _inherits(Valid, _React$Component6);
-
-  function Valid(props) {
-    var _this5;
-
-    _classCallCheck(this, Valid);
-
-    _this5 = _possibleConstructorReturn(this, _getPrototypeOf(Valid).call(this, props));
-    _this5.state = {
-      valid: props.valid
-    };
-    return _this5;
-  }
-
-  _createClass(Valid, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        id: "Valid"
-      }, this.state.valid);
-    }
-  }]);
-
-  return Valid;
-}(React.Component);
-
-var Invalid =
-/*#__PURE__*/
-function (_React$Component7) {
-  _inherits(Invalid, _React$Component7);
-
-  function Invalid(props) {
-    var _this6;
-
-    _classCallCheck(this, Invalid);
-
-    _this6 = _possibleConstructorReturn(this, _getPrototypeOf(Invalid).call(this, props));
-    _this6.state = {
-      notvalid: props.invalid
-    };
-    return _this6;
-  }
-
-  _createClass(Invalid, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        id: "Invalid"
-      }, this.state.notvalid);
-    }
-  }]);
-
-  return Invalid;
-}(React.Component);
-
-var ValidOutput =
-/*#__PURE__*/
-function (_React$Component8) {
-  _inherits(ValidOutput, _React$Component8);
-
-  function ValidOutput(props) {
-    var _this7;
-
-    _classCallCheck(this, ValidOutput);
-
-    _this7 = _possibleConstructorReturn(this, _getPrototypeOf(ValidOutput).call(this, props));
-    _this7.state = {
-      valid: props.valid,
-      validity: props.validity,
-      scrollUp: props.scrollUp,
-      scrollDown: props.scrollDown
-    };
-    return _this7;
-  }
-
-  _createClass(ValidOutput, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      /* run scroll animation after object is created */
-      this.state.scrollUp('ValidContainer');
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        id: "ValidContainer",
-        className: "scrollUpHidden"
-      }, React.createElement("div", {
-        className: "close",
-        onClick: this.state.scrollDown
-      }), React.createElement("div", {
-        id: "outputWrapper"
-      }, React.createElement("div", {
-        id: "outputHeader"
-      }, this.state.validity), React.createElement("div", {
-        id: "outputTables"
-      }, this.state.valid)));
-    }
-  }]);
-
-  return ValidOutput;
-}(React.Component);
-
-var TableOutput =
-/*#__PURE__*/
-function (_React$Component9) {
-  _inherits(TableOutput, _React$Component9);
-
-  function TableOutput(props) {
-    var _this8;
-
-    _classCallCheck(this, TableOutput);
-
-    _this8 = _possibleConstructorReturn(this, _getPrototypeOf(TableOutput).call(this, props));
-    _this8.state = {
-      Tables: props.Tables,
-      scrollUp: props.scrollUp,
-      scrollDown: props.scrollDown
-    };
-    return _this8;
-  }
-
-  _createClass(TableOutput, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      /* run scroll animation after object is created */
-      this.state.scrollUp('TableContainer');
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        id: "TableContainer",
-        className: "scrollUpHidden"
-      }, React.createElement("div", {
-        className: "close",
-        onClick: this.state.scrollDown
-      }), this.state.Tables);
-    }
-  }]);
-
-  return TableOutput;
-}(React.Component);
-
-var Partition =
-/*#__PURE__*/
-function (_React$Component10) {
-  _inherits(Partition, _React$Component10);
-
-  function Partition(props) {
-    _classCallCheck(this, Partition);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Partition).call(this, props));
-  }
-
-  _createClass(Partition, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("hr", {
-        className: "Partition"
-      });
-    }
-  }]);
-
-  return Partition;
-}(React.Component);
-
-var Button =
-/*#__PURE__*/
-function (_React$Component11) {
-  _inherits(Button, _React$Component11);
-
-  function Button(props) {
-    var _this9;
-
-    _classCallCheck(this, Button);
-
-    _this9 = _possibleConstructorReturn(this, _getPrototypeOf(Button).call(this, props));
-    _this9.state = {
-      retrieve: props.retInput,
-      Button: 'calculate'
-    };
-    return _this9;
-  }
-
-  _createClass(Button, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        id: "Button",
-        onClick: this.state.retrieve
-      }, this.state.Button);
-    }
-  }]);
-
-  return Button;
-}(React.Component);
-
-var Truth =
-/*#__PURE__*/
-function (_React$Component12) {
-  _inherits(Truth, _React$Component12);
-
-  function Truth(props) {
-    var _this10;
-
-    _classCallCheck(this, Truth);
-
-    _this10 = _possibleConstructorReturn(this, _getPrototypeOf(Truth).call(this, props));
-    _this10.state = {
-      a: "1",
-      b: "0"
-    };
-    return _this10;
-  }
-
-  _createClass(Truth, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", null, this.state.a, React.createElement("hr", null), this.state.b);
-    }
-  }]);
-
-  return Truth;
-}(React.Component);
-
-var SelectorLink =
-/*#__PURE__*/
-function (_React$Component13) {
-  _inherits(SelectorLink, _React$Component13);
-
-  function SelectorLink(props) {
-    var _this11;
-
-    _classCallCheck(this, SelectorLink);
-
-    _this11 = _possibleConstructorReturn(this, _getPrototypeOf(SelectorLink).call(this, props));
-    _this11.state = {
-      link: props.link,
-      i: props.i,
-      l: props.l
-    };
-    return _this11;
-  }
-
-  _createClass(SelectorLink, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        id: this.state.i,
-        className: "SelectorLink",
-        onClick: this.state.l
-      }, this.state.link);
-    }
-  }]);
-
-  return SelectorLink;
-}(React.Component);
-
-var Selector =
-/*#__PURE__*/
-function (_React$Component14) {
-  _inherits(Selector, _React$Component14);
-
-  function Selector(props) {
-    var _this12;
-
-    _classCallCheck(this, Selector);
-
-    _this12 = _possibleConstructorReturn(this, _getPrototypeOf(Selector).call(this, props));
-    _this12.state = {
-      Tables: "Truth Tables",
-      validity: "Validity Check",
-      link: props.link
-    };
-    return _this12;
-  }
-
-  _createClass(Selector, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", {
-        id: "Selector"
-      }, React.createElement(SelectorLink, {
-        i: "t",
-        link: this.state.Tables,
-        l: this.state.link
-      }), React.createElement(SelectorLink, {
-        i: "v",
-        link: this.state.validity,
-        l: this.state.link
-      }));
-    }
-  }]);
-
-  return Selector;
-}(React.Component);
-
-var ReplContainer =
-/*#__PURE__*/
-function (_React$Component15) {
-  _inherits(ReplContainer, _React$Component15);
+  var _super2 = _createSuper(ReplContainer);
 
   function ReplContainer(props) {
-    var _this13;
+    var _this2;
 
     _classCallCheck(this, ReplContainer);
 
-    _this13 = _possibleConstructorReturn(this, _getPrototypeOf(ReplContainer).call(this, props));
-    _this13.state = {
-      b: props.b,
-      link: props.link
+    _this2 = _super2.call(this, props);
+    _this2.state = {
+      input: props.inp
     };
-    return _this13;
+    return _this2;
   }
 
   _createClass(ReplContainer, [{
     key: "render",
     value: function render() {
-      return React.createElement("div", {
+      return /*#__PURE__*/React.createElement("div", {
         id: "ReplContainer"
-      }, React.createElement(Selector, {
-        link: this.state.link
-      }), React.createElement("textarea", {
-        id: "ReplInput"
+      }, /*#__PURE__*/React.createElement("textarea", {
+        id: "ReplInput",
+        onChange: this.state.input
       }));
     }
   }]);
@@ -579,60 +120,71 @@ function (_React$Component15) {
   return ReplContainer;
 }(React.Component);
 
-var ReplPage =
-/*#__PURE__*/
-function (_React$Component16) {
-  _inherits(ReplPage, _React$Component16);
+var ReplPage = /*#__PURE__*/function (_React$Component3) {
+  _inherits(ReplPage, _React$Component3);
+
+  var _super3 = _createSuper(ReplPage);
 
   /* This page takes input and sends logical formulae to the server
    * for processing; The page will display the Truth Tables if the input was
    * accepted by the lexer */
   function ReplPage(props) {
-    var _this14;
+    var _this3;
 
     _classCallCheck(this, ReplPage);
 
-    _this14 = _possibleConstructorReturn(this, _getPrototypeOf(ReplPage).call(this, props));
+    _this3 = _super3.call(this, props);
 
-    _defineProperty(_assertThisInitialized(_this14), "selectSwitch", function (bool) {
-      /* return correct api function based on state */
-      //return (bool == true) ? '/Table':'/valid';
-      if (bool == "t") return "/Table";else return "/valid";
-    });
-
-    _defineProperty(_assertThisInitialized(_this14), "retrieveTruthTable", function (formulas, bool) {
+    _defineProperty(_assertThisInitialized(_this3), "retrieveTruthTable", function (formulas) {
       /*  takes in valid formulas and sends them to the server; displays
        * their Truth Tables upon return */
       // if nothing was input, do not send an AJAX request
-      if (!formulas) return; // select appropriate api function
-      //let api = this.selectSwitch(bool);
+      if (!formulas) {
+        _this3.banner.current.reset();
+
+        return;
+      } //formulas = [formulas];
+
+      /*
+      this.awaitValidity(formulas)
+      	.then(response => {
+      		let respText = JSON.parse(response);
+      		// output validity
+      		if (respText[0] == true) 
+      			this.banner.current.valid();
+      		else if (respText[0] == false)
+      			this.banner.current.invalid();
+      		else
+      			this.banner.current.reset();
+      	}
+      );
+      */
       // initialize http request
+      // FIXME: change to fetch
+
 
       var xhr = request('POST', '/valid');
 
       xhr.onload = function () {
         // parse retrieved JSON
-        var respText = JSON.parse(xhr.responseText);
-        /* output the Truth values */
+        var respText = JSON.parse(xhr.responseText); // output validity
 
-        bool == "t" ? _this14.showTT(respText, formulas) : _this14.showvalidity(respText, formulas);
+        if (respText[0] == true) _this3.banner.current.valid();else if (respText[0] == false) _this3.banner.current.invalid();else _this3.banner.current.reset();
       };
 
-      formulas = [formulas] + [bool];
-      /* send ajax request of the formulas */
+      formulas = [formulas]; //send ajax request of the formulas
 
       xhr.send(formulas);
     });
 
-    _defineProperty(_assertThisInitialized(_this14), "retrieveInput", function (event) {
+    _defineProperty(_assertThisInitialized(_this3), "retrieveInput", function (event) {
       var formulas = document.getElementById('ReplInput').value;
-      console.log("formulas: \n", formulas);
       if (formulas.slice(-1) != "\n") formulas += "\n";
       var fs = formulas.split('\n');
       var newForms = ""; // strip formulas of unnecessary inputs caused by newlines
 
       var fs2 = fs.filter(function (val) {
-        return val != "";
+        return val != "" && val != " ";
       });
 
       for (var f = 0; f < fs2.length; f++) {
@@ -640,16 +192,25 @@ function (_React$Component16) {
         newForms += a;
         /* call lexical_analysis() to check grammar */
 
-        var t = lexical_analysis(a);
-        if (!t) return;
+        var is_wff = 0;
+
+        try {
+          is_wff = lexical_analysis(a);
+        } catch (error) {
+          is_wff = error;
+
+          _this3.banner.current.reset();
+
+          return;
+        }
       }
       /* send data to be analyzed on the server */
 
 
-      _this14.retrieveTruthTable(newForms, _this14.state.b);
+      _this3.retrieveTruthTable(newForms);
     });
 
-    _defineProperty(_assertThisInitialized(_this14), "normalize", function (formulas) {
+    _defineProperty(_assertThisInitialized(_this3), "normalize", function (formulas) {
       /* normalize expressions by newline */
       var forms = [];
       var form = '';
@@ -667,189 +228,45 @@ function (_React$Component16) {
       return forms;
     });
 
-    _defineProperty(_assertThisInitialized(_this14), "showTT", function (respT, formulas) {
-      /* Display the individual Truth Tables */
-      formulas = _this14.normalize(formulas);
-      var TruthArray = [];
-      console.log("respT:");
-
-      for (var i = 0; i < respT.length; i++) {
-        /* Each respT[i] is a Truth Table */
-        var Table = React.createElement("div", {
-          className: "TableWrap"
-        }, React.createElement(TruthTable, {
-          Table: respT[i][2],
-          exp: respT[i][1],
-          key: i
-        }), React.createElement(TruthTable, {
-          Table: respT[i][0],
-          exp: formulas[i],
-          key: i
-        }));
-        TruthArray.push(Table);
-      }
-
-      var ttOut = React.createElement(TableOutput, {
-        Tables: TruthArray,
-        scrollUp: _this14.scrollUp,
-        scrollDown: _this14.scrollDown
-      });
-
-      _this14.setState({
-        out: ttOut
-      }, function () {
-        console.log(_this14.state.Tables);
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this14), "showvalidity", function (respT, formulas) {
-      /* test validity */
-      formulas = _this14.normalize(formulas);
-      var TruthArray = [];
-      var terms = respT[0];
-      var validity = respT.pop(); // save the correct message
-
-      var message = validity ? React.createElement(Valid, {
-        valid: "Valid!"
-      }) : React.createElement(Invalid, {
-        invalid: "Invalid!"
-      });
-      var init_vals = respT[1];
-      var init_Table = React.createElement("div", {
-        className: "TableWrap"
-      }, React.createElement(TruthTable, {
-        Table: init_vals,
-        exp: terms,
-        key: 0
-      }));
-      /* add initial Truth assignments */
-
-      TruthArray.push(init_Table);
-      var nextTable;
-      var p = React.createElement(Partition, null);
-      TruthArray.push(p);
-      /* add calculated Tables*/
-
-      for (var i = 2; i < respT.length; i++) {
-        nextTable = React.createElement("div", {
-          className: "TableWrap"
-        }, React.createElement(TruthTable, {
-          Table: respT[i],
-          exp: formulas[i - 2],
-          key: i
-        }));
-        TruthArray.push(nextTable);
-        p = React.createElement(Partition, null);
-        TruthArray.push(p);
-      }
-      /* package up all Tables */
-
-
-      var ttOut = React.createElement(ValidOutput, {
-        valid: TruthArray,
-        validity: message,
-        scrollUp: _this14.scrollUp,
-        scrollDown: _this14.scrollDown
-      });
-      /* change output state */
-
-      _this14.setState({
-        out: ttOut
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this14), "updateLink", function (event) {
-      /* update boolean to determine which api function to call 
-       * this method is called anytime the selector Buttons are clicked */
-      // access dom element
-      var sel = document.getElementById(event.target.id); // save the other selector to contrast selection highlighting
-
-      var unsel;
-      var ttOut;
-      var TruthArray = [];
-
-      if (event.target.id == "t") {
-        unsel = document.getElementById("v");
-      } else if (event.target.id == "v") {
-        unsel = document.getElementById("t");
-      } // change class membership if necessary
-
-
-      if (event.target.id == _this14.state.b) {//pass
-      } else {
-        unsel.classList.remove("SelectorSelected");
-        sel.classList.remove("SelectorUnselected");
-        unsel.classList.add("SelectorUnselected");
-        sel.classList.add("SelectorSelected");
-      } // update state property
-
-
-      _this14.setState({
-        b: event.target.id,
-        Tables: []
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this14), "clearTables", function () {
-      _this14.setState({
-        Tables: []
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this14), "scrollUp", function () {
-      /* move the output container into the user interface */
-      var s;
-      if (_this14.state.b == "t") s = document.getElementById('TableContainer');else s = document.getElementById('ValidContainer');
-      s.classList.toggle('scrollUpHidden');
-      s.classList.toggle('scrollUp');
-    });
-
-    _defineProperty(_assertThisInitialized(_this14), "scrollDown", function () {
-      /* move the output container out of the user interface */
-      var s;
-      if (_this14.state.b == "t") s = document.getElementById("TableContainer");else s = document.getElementById("ValidContainer");
-      s.classList.toggle('scrollDown');
-      setTimeout(function () {
-        _this14.setState({
-          out: undefined,
-          Tables: []
-        });
-      }, 1000);
-    });
-
-    _this14.state = {
-      Table: [],
+    _this3.banner = React.createRef();
+    _this3.state = {
       valid: undefined,
-      Tables: [],
-      out: [],
-      b: "t"
+      msg: "Please Enter a WFF"
     };
-    return _this14;
+    return _this3;
   }
+  /*
+  awaitValidity = async formulas => {
+  	const response = await fetch('/valid', { method: "POST", body: formulas });
+  	return await response.json();
+  }
+  */
+
 
   _createClass(ReplPage, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var tab = document.getElementById("t");
-      tab.classList.add("SelectorSelected");
-    }
-  }, {
     key: "render",
     value: function render() {
-      return React.createElement("div", {
+      return /*#__PURE__*/React.createElement("div", {
         id: "ReplPage"
-      }, React.createElement(Banner, null), React.createElement("div", {
+      }, /*#__PURE__*/React.createElement(Banner, {
+        msg: this.state.msg,
+        ref: this.banner
+      }), /*#__PURE__*/React.createElement("div", {
+        "class": "tooltip"
+      }, "What is a WFF?", /*#__PURE__*/React.createElement("span", {
+        "class": "tooltiptext"
+      }, "A WFF is composed of the following characters: ~, ^, v, -", ">", ", ", "<", "-", ">", ", (, ) ", /*#__PURE__*/React.createElement("a", {
+        id: "l",
+        href: "https://en.wikipedia.org/wiki/Well-formed_formula"
+      }, "Definition of WFF"))), /*#__PURE__*/React.createElement("div", {
         id: "pageContainer"
-      }, React.createElement(ReplContainer, {
-        b: this.state.b,
-        link: this.updateLink
-      }), React.createElement(Button, {
-        retInput: this.retrieveInput
-      })), this.state.out);
+      }, /*#__PURE__*/React.createElement(ReplContainer, {
+        inp: this.retrieveInput
+      })));
     }
   }]);
 
   return ReplPage;
 }(React.Component);
 
-export { ReplPage, ReplContainer, TableOutput, TruthTableContainer, TruthTableRow, TruthTable, Truth, Segment, Banner, Button };
+export { ReplPage, ReplContainer, Banner };
