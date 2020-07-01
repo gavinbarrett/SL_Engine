@@ -332,9 +332,4 @@ class Parser:
         # get the validity of the argument
         self.valid = self.check_if_valid(vTable)
         
-        #TODO: reformat return value
-        print(f"\nTotal: {total}")
-        print(f"Master: {master_list}")
-        print(f"Set: {set_trus}")
-        print(f"Valid: {self.valid}")
-        return [total] + [master_list] + set_trus + [self.valid]
+        return [self.valid]
