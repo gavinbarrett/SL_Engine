@@ -7,16 +7,18 @@ from src import lexer
 
 app = Flask(__name__)
 
-def respond(data, mode):
+def respond(data):
 	''' select correct function from parser interface '''
 	p = parser.Parser()
-	return p.get_tables(data) if mode == 't' else p.get_validity(data)
+	if data[-2] == ' ':
+		data = data[:-2]
+	return p.get_validity(data)
 
 @app.route('/valid_api', methods=['POST'])
 def valid_boolean():
 	data = request.get_data()
 	formulae = request.data.decode('UTF-8')
-	package = respond(formulae, 'v')
+	package = respond(formulae)
 	return json.dumps({'value':package[-1]})
 
 @app.route('/valid', methods=['POST'])
@@ -25,22 +27,8 @@ def valid_req():
 	# decode formulae
 	formulae = request.data.decode('UTF-8')
 	
-	# determine the mode for the request
-	# t -> truth tables
-	# v -> validity
-	mode = formulae[-1]
-	
-	# grab formulae
-	formulae = formulae[0:-1]
-	
-	#print(formulae)
-
 	# parse the formulae and return the truth matrices
-	package = respond(formulae, mode)
-	#for p in package:
-	#	print(p) 
-	print(package[-1])
-	return jsonify(package)
+	return jsonify(respond(formulae))
 
 @app.route("/")
 def server_static():
