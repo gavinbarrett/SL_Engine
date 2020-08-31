@@ -174,9 +174,8 @@ export default function lexical_analysis(string) {
 		try {
 			p.expression();
 		} catch (error) {
-			throw 0;
+			return 0;
 		}
 	});
 	return 1;
 }
-
